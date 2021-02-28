@@ -16,7 +16,7 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
     /// Image Picker with UIImagePickerController
     /// - Parameters:
     ///   - allowsEditing: does it allow editing
-    ///   - delegate: Imgage Picker Delegate
+    ///   - delegate: Image Picker Delegate
     public init(allowsEditing: Bool = true,
                 delegate: UIImagePickerControllerDelegate & UINavigationControllerDelegate) {
         self.allowsEditing = allowsEditing

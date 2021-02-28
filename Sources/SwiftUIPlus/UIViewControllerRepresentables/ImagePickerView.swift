@@ -17,7 +17,7 @@ public struct ImagePickerView: UIViewControllerRepresentable {
     /// - Parameters:
     ///   - filter: objects filter
     ///   - selectionLimit: objects selection limit
-    ///   - delegate: Imgage Picker Delegate
+    ///   - delegate: Image Picker Delegate
     public init(filter: PHPickerFilter = .images,
                 selectionLimit: Int = 1,
                 delegate: PHPickerViewControllerDelegate) {
