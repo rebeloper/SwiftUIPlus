@@ -16,19 +16,24 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
     /// Image Picker with UIImagePickerController
     /// - Parameters:
     ///   - allowsEditing: does it allow editing
+    ///   - sourceType: source
     ///   - delegate: Image Picker Delegate
     public init(allowsEditing: Bool = true,
+                sourceType: UIImagePickerController.SourceType = .photoLibrary,
                 delegate: UIImagePickerControllerDelegate & UINavigationControllerDelegate) {
         self.allowsEditing = allowsEditing
+        self.sourceType = sourceType
         self.delegate = delegate
     }
 
     private let allowsEditing: Bool
+    private let sourceType: UIImagePickerController.SourceType
     private let delegate: UIImagePickerControllerDelegate & UINavigationControllerDelegate
     
     public func makeUIViewController(context: UIViewControllerRepresentableContext<UIImagePickerView>) -> UIImagePickerController {
         let controller = UIImagePickerController()
         controller.allowsEditing = allowsEditing
+        controller.sourceType = sourceType
         controller.delegate = delegate
         return controller
     }
