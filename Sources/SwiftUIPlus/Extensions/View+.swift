@@ -170,4 +170,17 @@ public extension View {
     func customAlert<AlertContent: View>(manager: CustomAlertManager, content: @escaping () -> AlertContent, buttons: [CustomAlertButton]) -> some View {
         self.modifier(CustomAlertViewModifier(customAlertManager: manager, alertContent: content, buttons: buttons))
     }
+    
+    /// A view that pads this view inside the specified edge insets with a
+    /// system-calculated amount of padding.
+    /// - Parameters:
+    ///   - horizontal: The amount to inset this view on the horizontal edges. If
+    ///     `nil`, the amount is the system-default amount.
+    ///   - vertical: The amount to inset this view on the vertical edges. If
+    ///     `nil`, the amount is the system-default amount.
+    /// - Returns: A view that pads this view using the specified edge insets
+    ///   with specified amount of padding.
+    func padding(horizontal: CGFloat = nil, vertical: CGFloat = nil) -> some View {
+        self.padding(.horizontal, horizontal).padding(.vertical, vertical)
+    }
 }
