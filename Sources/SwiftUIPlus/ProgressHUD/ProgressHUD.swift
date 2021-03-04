@@ -155,19 +155,15 @@ public struct ProgressHUD: View {
                     switch config.type {
                     case .top:
                         VStack {
-                            ZStack {
+                            HStack(spacing: 20) {
+                                ProgressView()
+                                ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                            }
+                            .background(
                                 Color.white
                                     .blurEffect()
                                     .blurEffectStyle(.systemChromeMaterial)
-                                VStack {
-                                    HStack(spacing: 20) {
-                                        ProgressView()
-                                        ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
-                                    }
-                                    Spacer()
-                                }
-                                .padding()
-                            }
+                            )
                             .padding()
                             .cornerRadius(config.cornerRadius)
                             .overlay(
