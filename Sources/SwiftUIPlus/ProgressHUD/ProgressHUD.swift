@@ -11,6 +11,8 @@ import SwiftUI
 public struct ProgressHUDConfig: Hashable {
     var title: String?
     var caption: String?
+    
+    var type: ProgressHUDType
 
     var minSize: CGSize
     var cornerRadius: CGFloat
@@ -32,6 +34,7 @@ public struct ProgressHUDConfig: Hashable {
     var shouldDisableContent: Bool
 
     public init(
+        type: ProgressHUDType = .top,
         minSize: CGSize = CGSize(width: 100.0, height: 100.0),
         cornerRadius: CGFloat = 18.0,
         backgroundColor: Color = .clear,
@@ -46,6 +49,8 @@ public struct ProgressHUDConfig: Hashable {
         autoHideInterval: TimeInterval = 10.0,
         shouldDisableContent: Bool = true
     ) {
+        self.type = type
+        
         self.minSize = minSize
         self.cornerRadius = cornerRadius
 
@@ -68,7 +73,15 @@ public struct ProgressHUDConfig: Hashable {
     }
 }
 
+public enum ProgressHUDType {
+    case top
+    case centered
+}
+
 private struct ProgressHUDLabelView: View {
+    
+    var type: ProgressHUDType
+    
     var title: String?
     var caption: String?
     
@@ -76,20 +89,42 @@ private struct ProgressHUDLabelView: View {
     var captionForegroundColor: Color
     
     var body: some View {
-        VStack(spacing: 4) {
-            if let title = title {
-                Text(title)
-                    .font(.system(size: 21.0, weight: .semibold))
-                    .lineLimit(2)
-                    .foregroundColor(.primary)
+        Group {
+            switch type {
+            case .top:
+                VStack(spacing: 4) {
+                    if let title = title {
+                        Text(title)
+                            .font(.system(size: 12.0, weight: .semibold))
+                            .lineLimit(2)
+                            .foregroundColor(.primary)
+                    }
+                    if let caption = caption {
+                        Text(caption)
+                            .lineLimit(2)
+                            .font(.system(size: 10.0, weight: .regular))
+                            .foregroundColor(.secondary)
+                    }
+                }
+            case .centered:
+                VStack(spacing: 4) {
+                    if let title = title {
+                        Text(title)
+                            .font(.system(size: 16.0, weight: .semibold))
+                            .lineLimit(2)
+                            .foregroundColor(.primary)
+                    }
+                    if let caption = caption {
+                        Text(caption)
+                            .lineLimit(2)
+                            .font(.system(size: 14.0, weight: .regular))
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
-            if let caption = caption {
-                Text(caption)
-                    .lineLimit(2)
-                    .font(.headline)
-                    .foregroundColor(.secondary)
-            }
+            
         }
+        
         .multilineTextAlignment(.center)
         .vibrancyEffect()
         .vibrancyEffectStyle(.fill)
@@ -116,26 +151,52 @@ public struct ProgressHUD: View {
                     config.backgroundColor
                         .edgesIgnoringSafeArea(.all)
                     
-                    ZStack {
-                        Color.white
-                            .blurEffect()
-                            .blurEffectStyle(.systemChromeMaterial)
+                    switch config.type {
+                    case .top:
+                        ZStack {
+                            Color.white
+                                .blurEffect()
+                                .blurEffectStyle(.systemChromeMaterial)
+                            VStack {
+                                HStack(spacing: 20) {
+                                    ProgressView()
+                                    ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                }
+                                .frame(width: 200, height: 60)
+                                Spacer()
+                            }
+                            .padding()
+                        }
+                        .cornerRadius(config.cornerRadius)
+                        .overlay(
+                            // Fix required since .border can not be used with
+                            // RoundedRectangle clip shape
+                            RoundedRectangle(cornerRadius: config.cornerRadius)
+                                .stroke(config.borderColor, lineWidth: config.borderWidth)
+                        )
+                        .shadow(color: config.shadowColor, radius: config.shadowRadius)
                         
-                        VStack(spacing: 20) {
-                            ProgressView()
-                            ProgressHUDLabelView(title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
-                        }.padding()
+                    case .centered:
+                        ZStack {
+                            Color.white
+                                .blurEffect()
+                                .blurEffectStyle(.systemChromeMaterial)
+                            VStack(spacing: 20) {
+                                ProgressView()
+                                ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                            }.padding()
+                        }
+                        .cornerRadius(config.cornerRadius)
+                        .overlay(
+                            // Fix required since .border can not be used with
+                            // RoundedRectangle clip shape
+                            RoundedRectangle(cornerRadius: config.cornerRadius)
+                                .stroke(config.borderColor, lineWidth: config.borderWidth)
+                        )
+                        .aspectRatio(1, contentMode: .fit)
+                        .padding(geometry.size.width / 5)
+                        .shadow(color: config.shadowColor, radius: config.shadowRadius)
                     }
-                    .cornerRadius(config.cornerRadius)
-                    .overlay(
-                        // Fix required since .border can not be used with
-                        // RoundedRectangle clip shape
-                        RoundedRectangle(cornerRadius: config.cornerRadius)
-                            .stroke(config.borderColor, lineWidth: config.borderWidth)
-                    )
-                    .aspectRatio(1, contentMode: .fit)
-                    .padding(geometry.size.width / 5)
-                    .shadow(color: config.shadowColor, radius: config.shadowRadius)
                 }
             }
             .animation(.spring())
