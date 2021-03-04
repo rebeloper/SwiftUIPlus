@@ -165,6 +165,7 @@ public struct ProgressHUD: View {
                                     .blurEffect()
                                     .blurEffectStyle(.systemChromeMaterial)
                             )
+                            .padding()
                             .cornerRadius(config.cornerRadius)
                             .overlay(
                                 // Fix required since .border can not be used with
@@ -202,19 +203,16 @@ public struct ProgressHUD: View {
                         VStack {
                             Spacer()
                             
-                            ZStack {
+                            HStack(spacing: 20) {
+                                ProgressView()
+                                ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                            }
+                            .padding()
+                            .background(
                                 Color.white
                                     .blurEffect()
                                     .blurEffectStyle(.systemChromeMaterial)
-                                VStack {
-                                    Spacer()
-                                    HStack(spacing: 20) {
-                                        ProgressView()
-                                        ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
-                                    }
-                                }
-                                .padding()
-                            }
+                            )
                             .padding()
                             .cornerRadius(config.cornerRadius)
                             .overlay(
