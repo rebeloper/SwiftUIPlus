@@ -194,6 +194,7 @@ private struct ProgressHUDLabelView: View {
         .multilineTextAlignment(.center)
         .vibrancyEffect()
         .vibrancyEffectStyle(.fill)
+        .frame(maxWidth: .infinity)
     }
 }
 

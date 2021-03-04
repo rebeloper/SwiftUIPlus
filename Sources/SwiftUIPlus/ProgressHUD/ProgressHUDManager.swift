@@ -17,7 +17,7 @@ public class ProgressHUDManager: ObservableObject {
         self.config = config
     }
     
-    public func show(_ title: String?, caption: String?) {
+    public func show(_ title: String?, caption: String? = nil) {
         self.config.title = title
         self.config.caption = caption
         withAnimation {
@@ -25,7 +25,7 @@ public class ProgressHUDManager: ObservableObject {
         }
     }
     
-    public func update(_ title: String?, caption: String?) {
+    public func update(_ title: String?, caption: String? = nil) {
         show(title, caption: caption)
     }
     
@@ -35,7 +35,7 @@ public class ProgressHUDManager: ObservableObject {
         }
     }
     
-    public func hide(_ title: String?, caption: String?) {
+    public func hide(_ title: String?, caption: String? = nil) {
         self.config.title = title
         self.config.caption = caption
         isPresented = true
