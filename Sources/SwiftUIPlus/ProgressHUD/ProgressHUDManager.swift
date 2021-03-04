@@ -11,10 +11,10 @@ public class ProgressHUDManager: ObservableObject {
     
     @Published public var isPresented: Bool = false
     
-    public var config: ProgressHUDConfig
+    @Published public var config: ProgressHUDConfig = ProgressHUDConfig()
     
-    public init(config: ProgressHUDConfig = ProgressHUDConfig()) {
-        self.config = config
+    public init(config: Published<ProgressHUDConfig>) {
+        self._config = config
     }
     
     public func show(_ title: String?, caption: String? = nil) {
@@ -26,10 +26,8 @@ public class ProgressHUDManager: ObservableObject {
     }
     
     public func update(_ title: String?, caption: String? = nil) {
-        isPresented = false
         self.config.title = title
         self.config.caption = caption
-        isPresented = true
     }
     
     public func hide() {
