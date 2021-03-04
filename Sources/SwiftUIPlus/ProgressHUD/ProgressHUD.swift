@@ -191,7 +191,9 @@ public struct ProgressHUD: View {
                             )
                             .shadow(color: config.shadowColor, radius: config.shadowRadius)
                             
-                            Spacer()
+                            if config.title != nil {
+                                Spacer()
+                            }
                         }
                         
                     case .centered:
@@ -201,7 +203,9 @@ public struct ProgressHUD: View {
                                 .blurEffectStyle(.systemChromeMaterial)
                             VStack(spacing: 20) {
                                 ProgressView()
-                                ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                if config.title != nil {
+                                    ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                }
                             }.padding()
                         }
                         .cornerRadius(config.cornerRadius)
@@ -217,7 +221,9 @@ public struct ProgressHUD: View {
                         
                     case .bottom:
                         VStack {
-                            Spacer()
+                            if config.title != nil {
+                                Spacer()
+                            }
                             
                             HStack(spacing: 20) {
                                 ProgressView()
