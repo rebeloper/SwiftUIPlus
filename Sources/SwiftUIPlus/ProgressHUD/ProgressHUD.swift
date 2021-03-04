@@ -153,28 +153,32 @@ public struct ProgressHUD: View {
                     
                     switch config.type {
                     case .top:
-                        ZStack {
-                            Color.white
-                                .blurEffect()
-                                .blurEffectStyle(.systemChromeMaterial)
-                            VStack {
-                                HStack(spacing: 20) {
-                                    ProgressView()
-                                    ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                        VStack {
+                            ZStack {
+                                Color.white
+                                    .blurEffect()
+                                    .blurEffectStyle(.systemChromeMaterial)
+                                VStack {
+                                    HStack(spacing: 20) {
+                                        ProgressView()
+                                        ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                    }
+                                    Spacer()
                                 }
-                                .frame(width: 200, height: 60)
-                                Spacer()
+                                .padding()
                             }
-                            .padding()
+                            .frame(width: 200, height: 60)
+                            .cornerRadius(config.cornerRadius)
+                            .overlay(
+                                // Fix required since .border can not be used with
+                                // RoundedRectangle clip shape
+                                RoundedRectangle(cornerRadius: config.cornerRadius)
+                                    .stroke(config.borderColor, lineWidth: config.borderWidth)
+                            )
+                            .shadow(color: config.shadowColor, radius: config.shadowRadius)
+                            
+                            Spacer()
                         }
-                        .cornerRadius(config.cornerRadius)
-                        .overlay(
-                            // Fix required since .border can not be used with
-                            // RoundedRectangle clip shape
-                            RoundedRectangle(cornerRadius: config.cornerRadius)
-                                .stroke(config.borderColor, lineWidth: config.borderWidth)
-                        )
-                        .shadow(color: config.shadowColor, radius: config.shadowRadius)
                         
                     case .centered:
                         ZStack {
