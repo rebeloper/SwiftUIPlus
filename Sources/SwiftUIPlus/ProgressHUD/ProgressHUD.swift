@@ -159,12 +159,12 @@ public struct ProgressHUD: View {
                                 ProgressView()
                                 ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
                             }
+                            .padding()
                             .background(
                                 Color.white
                                     .blurEffect()
                                     .blurEffectStyle(.systemChromeMaterial)
                             )
-                            .padding()
                             .cornerRadius(config.cornerRadius)
                             .overlay(
                                 // Fix required since .border can not be used with
