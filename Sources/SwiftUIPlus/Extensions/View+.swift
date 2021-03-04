@@ -180,7 +180,7 @@ public extension View {
     ///     `nil`, the amount is the system-default amount.
     /// - Returns: A view that pads this view using the specified edge insets
     ///   with specified amount of padding.
-    func padding(horizontal: CGFloat = nil, vertical: CGFloat = nil) -> some View {
+    func padding(horizontal: CGFloat? = nil, vertical: CGFloat? = nil) -> some View {
         self.padding(.horizontal, horizontal).padding(.vertical, vertical)
     }
 }
