@@ -34,16 +34,5 @@ public class ProgressHUDManager: ObservableObject {
             isPresented = false
         }
     }
-    
-    public func hide(_ title: String?, caption: String? = nil) {
-        self.config.title = title
-        self.config.caption = caption
-        isPresented = true
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
-            withAnimation {
-                self.isPresented = false
-            }
-        }
-    }
 }
 
