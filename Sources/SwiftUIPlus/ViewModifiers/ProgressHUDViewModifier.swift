@@ -19,7 +19,7 @@ public struct ProgressHUDViewModifier: ViewModifier {
             
             if hudManager.isPresented {
                 
-                ProgressHUD($hudManager.isPresented)
+                ProgressHUD($hudManager.isPresented, config: hudManager.config)
                 
             }
         }

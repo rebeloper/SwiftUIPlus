@@ -9,15 +9,15 @@ import SwiftUI
 
 public class ProgressHUDManager: ObservableObject {
     
-    public var message: String = ""
     @Published public var isPresented: Bool = false
     public var showsProgress: Bool = true
+    public var config: ProgressHUDConfig = ProgressHUDConfig()
     
     public init() { }
     
     public func show(_ message: String) {
         self.showsProgress = true
-        self.message = message
+        self.config.title = message
         withAnimation {
             isPresented = true
         }
@@ -35,7 +35,7 @@ public class ProgressHUDManager: ObservableObject {
     
     public func hide(_ message: String) {
         self.showsProgress = false
-        self.message = message
+        self.config.title = message
         isPresented = true
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
             withAnimation {
