@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-public struct TTProgressHUDConfig: Hashable {
-    var type = TTProgressHUDType.loading
+public struct ProgressHUDConfig: Hashable {
+    var type = ProgressHUDType.loading
     var title: String?
     var caption: String?
 
@@ -45,28 +45,28 @@ public struct TTProgressHUDConfig: Hashable {
     var hapticsEnabled: Bool
 
     public init(
-        type: TTProgressHUDType         = .loading,
-        title: String?                  = nil,
-        caption: String?                = nil,
-        minSize: CGSize                 = CGSize(width: 100.0, height: 100.0),
-        cornerRadius: CGFloat           = 12.0,
-        backgroundColor: Color          = .clear,
-        titleForegroundColor: Color     = .primary,
-        captionForegroundColor: Color   = .secondary,
-        shadowColor: Color              = .clear,
-        shadowRadius: CGFloat           = 0.0,
-        borderColor: Color              = .clear,
-        borderWidth: CGFloat            = 0.0,
-        lineWidth: CGFloat              = 10.0,
-        imageViewSize: CGSize           = CGSize(width: 100, height: 100),
+        type: ProgressHUDType = .loading,
+        title: String? = nil,
+        caption: String? = nil,
+        minSize: CGSize = CGSize(width: 100.0, height: 100.0),
+        cornerRadius: CGFloat = 12.0,
+        backgroundColor: Color = .clear,
+        titleForegroundColor: Color = .primary,
+        captionForegroundColor: Color = .secondary,
+        shadowColor: Color = .clear,
+        shadowRadius: CGFloat = 0.0,
+        borderColor: Color = .clear,
+        borderWidth: CGFloat = 0.0,
+        lineWidth: CGFloat = 10.0,
+        imageViewSize: CGSize = CGSize(width: 100, height: 100),
         imageViewForegroundColor: Color = .primary,
-        successImage: String            = "checkmark.circle",
-        warningImage: String            = "exclamationmark.circle",
-        errorImage: String              = "xmark.circle",
-        shouldAutoHide: Bool            = false,
-        allowsTapToHide: Bool           = false,
-        autoHideInterval: TimeInterval  = 10.0,
-        hapticsEnabled: Bool            = true
+        successImage: String = "checkmark.circle",
+        warningImage: String = "exclamationmark.circle",
+        errorImage: String = "xmark.circle",
+        shouldAutoHide: Bool = false,
+        allowsTapToHide: Bool = false,
+        autoHideInterval: TimeInterval = 10.0,
+        hapticsEnabled: Bool = true
     ) {
         self.type = type
 
@@ -104,14 +104,14 @@ public struct TTProgressHUDConfig: Hashable {
     }
 }
 
-public enum TTProgressHUDType {
+public enum ProgressHUDType {
     case loading
     case success
     case warning
     case error
 }
 
-private struct IndefiniteAnimatedView: View {
+private struct ProgressHUDIndefiniteAnimatedView: View {
     var animatedViewSize: CGSize
     var animatedViewForegroundColor: Color
     
@@ -145,8 +145,8 @@ private struct IndefiniteAnimatedView: View {
     }
 }
 
-private struct ImageView: View {
-    var type: TTProgressHUDType
+private struct ProgressHUDImageView: View {
+    var type: ProgressHUDType
     
     var imageViewSize: CGSize
     var imageViewForegroundColor: Color
@@ -176,7 +176,7 @@ private struct ImageView: View {
     }
 }
 
-private struct LabelView: View {
+private struct ProgressHUDLabelView: View {
     var title: String?
     var caption: String?
     
@@ -201,25 +201,25 @@ private struct LabelView: View {
     }
 }
 
-public struct TTProgressHUD: View {
+public struct ProgressHUD: View {
     @Binding var isVisible: Bool
-    var config: TTProgressHUDConfig
+    var config: ProgressHUDConfig
     
     @Environment(\.colorScheme) private var colorScheme
     
-    public init(_ isVisible: Binding<Bool>, config: TTProgressHUDConfig) {
+    public init(_ isVisible: Binding<Bool>, config: ProgressHUDConfig) {
         self._isVisible = isVisible
         self.config = config
     }
     
     public init(
         _ isVisible: Binding<Bool>,
-        title: String?          = nil,
-        caption: String?        = nil,
-        type: TTProgressHUDType = .loading
+        title: String? = nil,
+        caption: String? = nil,
+        type: ProgressHUDType = .loading
     ) {
         self._isVisible = isVisible
-        self.config = TTProgressHUDConfig(
+        self.config = ProgressHUDConfig(
             type: type,
             title: title,
             caption: caption
@@ -242,13 +242,13 @@ public struct TTProgressHUD: View {
                         
                         VStack(spacing: 20) {
                             if config.type == .loading {
-                                IndefiniteAnimatedView(
+                                ProgressHUDIndefiniteAnimatedView(
                                     animatedViewSize: config.imageViewSize,
                                     animatedViewForegroundColor: config.imageViewForegroundColor,
                                     lineWidth: config.lineWidth
                                 )
                             } else {
-                                ImageView(
+                                ProgressHUDImageView(
                                     type: config.type,
                                     imageViewSize: config.imageViewSize,
                                     imageViewForegroundColor: config.imageViewForegroundColor,
@@ -257,7 +257,7 @@ public struct TTProgressHUD: View {
                                     errorImage: config.errorImage
                                 )
                             }
-                            LabelView(title: config.title, caption: config.caption)
+                            ProgressHUDLabelView(title: config.title, caption: config.caption)
                         }.padding()
                     }
                     .cornerRadius(config.cornerRadius)
@@ -297,7 +297,7 @@ public struct TTProgressHUD: View {
         }
     }
     
-    func generateHapticNotification(for type: TTProgressHUDType) {
+    func generateHapticNotification(for type: ProgressHUDType) {
         let generator = UINotificationFeedbackGenerator()
         generator.prepare()
         
