@@ -197,29 +197,27 @@ public struct ProgressHUD: View {
                         }
                         
                     case .center:
-                        VStack {
-                            HStack(spacing: 20) {
-                                ProgressView()
-                                if config.title != nil {
-                                    ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
-                                }
+                        VStack(spacing: 20) {
+                            ProgressView()
+                            if config.title != nil {
+                                ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
                             }
-                            .padding()
-                            .background(
-                                Color.white
-                                    .blurEffect()
-                                    .blurEffectStyle(.systemChromeMaterial)
-                            )
-                            .cornerRadius(config.cornerRadius)
-                            .padding()
-                            .overlay(
-                                // Fix required since .border can not be used with
-                                // RoundedRectangle clip shape
-                                RoundedRectangle(cornerRadius: config.cornerRadius)
-                                    .stroke(config.borderColor, lineWidth: config.borderWidth)
-                            )
-                            .shadow(color: config.shadowColor, radius: config.shadowRadius)
                         }
+                        .padding()
+                        .background(
+                            Color.white
+                                .blurEffect()
+                                .blurEffectStyle(.systemChromeMaterial)
+                        )
+                        .cornerRadius(config.cornerRadius)
+                        .padding()
+                        .overlay(
+                            // Fix required since .border can not be used with
+                            // RoundedRectangle clip shape
+                            RoundedRectangle(cornerRadius: config.cornerRadius)
+                                .stroke(config.borderColor, lineWidth: config.borderWidth)
+                        )
+                        .shadow(color: config.shadowColor, radius: config.shadowRadius)
                         
                     case .bottom:
                         VStack {
