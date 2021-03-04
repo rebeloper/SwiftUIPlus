@@ -91,7 +91,7 @@ public struct ProgressHUDConfig: Hashable {
 
 public enum ProgressHUDType {
     case top
-    case centered
+    case center
     case bottom
 }
 
@@ -123,7 +123,7 @@ private struct ProgressHUDLabelView: View {
                             .foregroundColor(.secondary)
                     }
                 }
-            case .centered:
+            case .center:
                 VStack(spacing: 4) {
                     if let title = title {
                         Text(title)
@@ -196,28 +196,30 @@ public struct ProgressHUD: View {
                             Spacer()
                         }
                         
-                    case .centered:
-                        ZStack {
-                            Color.white
-                                .blurEffect()
-                                .blurEffectStyle(.systemChromeMaterial)
-                            VStack(spacing: 20) {
+                    case .center:
+                        VStack {
+                            HStack(spacing: 20) {
                                 ProgressView()
                                 if config.title != nil {
                                     ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
                                 }
-                            }.padding()
+                            }
+                            .padding()
+                            .background(
+                                Color.white
+                                    .blurEffect()
+                                    .blurEffectStyle(.systemChromeMaterial)
+                            )
+                            .cornerRadius(config.cornerRadius)
+                            .padding()
+                            .overlay(
+                                // Fix required since .border can not be used with
+                                // RoundedRectangle clip shape
+                                RoundedRectangle(cornerRadius: config.cornerRadius)
+                                    .stroke(config.borderColor, lineWidth: config.borderWidth)
+                            )
+                            .shadow(color: config.shadowColor, radius: config.shadowRadius)
                         }
-                        .cornerRadius(config.cornerRadius)
-                        .overlay(
-                            // Fix required since .border can not be used with
-                            // RoundedRectangle clip shape
-                            RoundedRectangle(cornerRadius: config.cornerRadius)
-                                .stroke(config.borderColor, lineWidth: config.borderWidth)
-                        )
-                        .aspectRatio(1, contentMode: .fit)
-                        .padding(geometry.size.width * (config.title != nil ? 0.2 : 0.45))
-                        .shadow(color: config.shadowColor, radius: config.shadowRadius)
                         
                     case .bottom:
                         VStack {
