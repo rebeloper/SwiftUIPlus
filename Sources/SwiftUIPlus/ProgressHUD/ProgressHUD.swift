@@ -92,7 +92,7 @@ private struct ProgressHUDLabelView: View {
     var body: some View {
         Group {
             switch type {
-            case .top:
+            case .top, .bottom:
                 VStack(spacing: 4) {
                     if let title = title {
                         Text(title)
