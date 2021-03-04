@@ -46,8 +46,6 @@ public struct ProgressHUDConfig: Hashable {
 
     public init(
         type: ProgressHUDType = .loading,
-        title: String? = nil,
-        caption: String? = nil,
         minSize: CGSize = CGSize(width: 100.0, height: 100.0),
         cornerRadius: CGFloat = 12.0,
         backgroundColor: Color = .clear,
@@ -69,9 +67,6 @@ public struct ProgressHUDConfig: Hashable {
         hapticsEnabled: Bool = true
     ) {
         self.type = type
-
-        self.title = title
-        self.caption = caption
 
         self.minSize = minSize
         self.cornerRadius = cornerRadius
@@ -106,6 +101,7 @@ public struct ProgressHUDConfig: Hashable {
 
 public enum ProgressHUDType {
     case loading
+    case activity
     case success
     case warning
     case error
@@ -212,20 +208,6 @@ public struct ProgressHUD: View {
         self.config = config
     }
     
-    public init(
-        _ isVisible: Binding<Bool>,
-        title: String? = nil,
-        caption: String? = nil,
-        type: ProgressHUDType = .loading
-    ) {
-        self._isVisible = isVisible
-        self.config = ProgressHUDConfig(
-            type: type,
-            title: title,
-            caption: caption
-        )
-    }
-    
     public var body: some View {
         let hideTimer = Timer.publish(every: config.autoHideInterval, on: .main, in: .common).autoconnect()
         
@@ -247,6 +229,8 @@ public struct ProgressHUD: View {
                                     animatedViewForegroundColor: config.imageViewForegroundColor,
                                     lineWidth: config.lineWidth
                                 )
+                            } else if config.type == .activity {
+                                ProgressView()
                             } else {
                                 ProgressHUDImageView(
                                     type: config.type,
