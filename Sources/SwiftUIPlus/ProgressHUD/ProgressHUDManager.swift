@@ -26,7 +26,10 @@ public class ProgressHUDManager: ObservableObject {
     }
     
     public func update(_ title: String?, caption: String? = nil) {
-        show(title, caption: caption)
+        isPresented = false
+        self.config.title = title
+        self.config.caption = caption
+        isPresented = true
     }
     
     public func hide() {
