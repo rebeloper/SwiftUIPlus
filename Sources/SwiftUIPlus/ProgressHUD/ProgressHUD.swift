@@ -231,6 +231,7 @@ public struct ProgressHUD: View {
                                 )
                             } else if config.type == .activity {
                                 ProgressView()
+                                    .frame(width: config.imageViewSize.width, height: config.imageViewSize.height)
                             } else {
                                 ProgressHUDImageView(
                                     type: config.type,

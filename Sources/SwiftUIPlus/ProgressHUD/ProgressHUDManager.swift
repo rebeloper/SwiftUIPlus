@@ -17,15 +17,16 @@ public class ProgressHUDManager: ObservableObject {
         self.config = config
     }
     
-    public func show(_ message: String) {
-        self.config.title = message
+    public func show(_ title: String?, caption: String?) {
+        self.config.title = title
+        self.config.caption = caption
         withAnimation {
             isPresented = true
         }
     }
     
-    public func update(_ message: String) {
-        show(message)
+    public func update(_ title: String?, caption: String?) {
+        show(title, caption: caption)
     }
     
     public func hide() {
@@ -34,8 +35,9 @@ public class ProgressHUDManager: ObservableObject {
         }
     }
     
-    public func hide(_ message: String) {
-        self.config.title = message
+    public func hide(_ title: String?, caption: String?) {
+        self.config.title = title
+        self.config.caption = caption
         isPresented = true
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
             withAnimation {
