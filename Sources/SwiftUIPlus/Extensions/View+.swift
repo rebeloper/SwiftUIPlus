@@ -174,13 +174,64 @@ public extension View {
     /// A view that pads this view inside the specified edge insets with a
     /// system-calculated amount of padding.
     /// - Parameters:
-    ///   - horizontal: The amount to inset this view on the horizontal edges. If
-    ///     `nil`, the amount is the system-default amount.
-    ///   - vertical: The amount to inset this view on the vertical edges. If
-    ///     `nil`, the amount is the system-default amount.
+    ///   - horizontal: The amount to inset this view on the horizontal edges.
+    ///   - vertical: The amount to inset this view on the vertical edges.
     /// - Returns: A view that pads this view using the specified edge insets
     ///   with specified amount of padding.
-    func padding(horizontal: CGFloat? = nil, vertical: CGFloat? = nil) -> some View {
+    func padding(horizontal: CGFloat, vertical: CGFloat) -> some View {
         self.padding(.horizontal, horizontal).padding(.vertical, vertical)
+    }
+    
+    /// Creates a blur effect.
+    func blurEffect() -> some View {
+        ModifiedContent(content: self, modifier: BlurEffectModifier())
+    }
+    
+    /**
+     Sets the style for blur effects within this view.
+     
+     To set a specific style for all blur effects and vibrancy effects containing blur effects within a view, use the `blurEffectStyle(_:)` modifier:
+     ```
+     ZStack {
+     backgroundContent
+     .blurEffect()
+     
+     foregroundContent
+     .vibrancyEffect()
+     }
+     .blurEffectStyle(.systemMaterial)
+     ```
+     */
+    func blurEffectStyle(_ style: UIBlurEffect.Style) -> some View {
+        environment(\.blurEffectStyle, style)
+    }
+    
+    /// Creates a vibrancy effect.
+    func vibrancyEffect() -> some View {
+        ModifiedContent(content: self, modifier: VibrancyEffectModifier())
+    }
+    
+    /**
+     Sets the style for vibrancy effects within this view.
+     
+     To set a specific style for all vibrancy effects within a view, use the `vibrancyEffectStyle(_:)` modifier:
+     ```
+     ZStack {
+     backgroundContent
+     .blurEffect()
+     
+     VStack {
+     topContent
+     .vibrancyEffect()
+     
+     bottomContent
+     .vibrancyEffect()
+     }
+     .vibrancyEffectStyle(.fill)
+     }
+     ```
+     */
+    func vibrancyEffectStyle(_ style: UIVibrancyEffectStyle) -> some View {
+        environment(\.vibrancyEffectStyle, style)
     }
 }
