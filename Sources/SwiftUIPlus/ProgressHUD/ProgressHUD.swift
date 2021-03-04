@@ -76,6 +76,7 @@ public struct ProgressHUDConfig: Hashable {
 public enum ProgressHUDType {
     case top
     case centered
+    case bottom
 }
 
 private struct ProgressHUDLabelView: View {
@@ -158,9 +159,12 @@ public struct ProgressHUD: View {
                                 Color.white
                                     .blurEffect()
                                     .blurEffectStyle(.systemChromeMaterial)
-                                HStack(spacing: 20) {
-                                    ProgressView()
-                                    ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                VStack {
+                                    HStack(spacing: 20) {
+                                        ProgressView()
+                                        ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                    }
+                                    Spacer()
                                 }
                                 .padding()
                             }
@@ -197,7 +201,37 @@ public struct ProgressHUD: View {
                         .aspectRatio(1, contentMode: .fit)
                         .padding(geometry.size.width / 5)
                         .shadow(color: config.shadowColor, radius: config.shadowRadius)
+                        
+                    case .bottom:
+                        VStack {
+                            Spacer()
+                            
+                            ZStack {
+                                Color.white
+                                    .blurEffect()
+                                    .blurEffectStyle(.systemChromeMaterial)
+                                VStack {
+                                    Spacer()
+                                    HStack(spacing: 20) {
+                                        ProgressView()
+                                        ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                    }
+                                }
+                                .padding()
+                            }
+                            .padding()
+                            .cornerRadius(config.cornerRadius)
+                            .overlay(
+                                // Fix required since .border can not be used with
+                                // RoundedRectangle clip shape
+                                RoundedRectangle(cornerRadius: config.cornerRadius)
+                                    .stroke(config.borderColor, lineWidth: config.borderWidth)
+                            )
+                            .shadow(color: config.shadowColor, radius: config.shadowRadius)
+                        }
+                        
                     }
+                    
                 }
             }
             .animation(.spring())
