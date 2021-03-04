@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public class ProgressHUDConfig: ObservableObject {
+public struct ProgressHUDConfig: Hashable {
     var title: String?
     var caption: String?
 
