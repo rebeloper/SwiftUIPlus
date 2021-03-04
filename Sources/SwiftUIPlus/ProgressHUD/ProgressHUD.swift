@@ -173,7 +173,9 @@ public struct ProgressHUD: View {
                         VStack {
                             HStack(spacing: 20) {
                                 ProgressView()
-                                ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                if config.title != nil {
+                                    ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                }
                             }
                             .padding()
                             .background(
@@ -191,9 +193,7 @@ public struct ProgressHUD: View {
                             )
                             .shadow(color: config.shadowColor, radius: config.shadowRadius)
                             
-                            if config.title != nil {
-                                Spacer()
-                            }
+                            Spacer()
                         }
                         
                     case .centered:
@@ -216,18 +216,18 @@ public struct ProgressHUD: View {
                                 .stroke(config.borderColor, lineWidth: config.borderWidth)
                         )
                         .aspectRatio(1, contentMode: .fit)
-                        .padding(geometry.size.width / 5)
+                        .padding(geometry.size.width * config.title != nil ? 0.2 : 0.45)
                         .shadow(color: config.shadowColor, radius: config.shadowRadius)
                         
                     case .bottom:
                         VStack {
-                            if config.title != nil {
-                                Spacer()
-                            }
+                            Spacer()
                             
                             HStack(spacing: 20) {
                                 ProgressView()
-                                ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                if config.title != nil {
+                                    ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                }
                             }
                             .padding()
                             .background(
