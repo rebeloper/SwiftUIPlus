@@ -127,7 +127,7 @@ public struct ProgressHUD: View {
                             .stroke(config.borderColor, lineWidth: config.borderWidth)
                     )
                     .aspectRatio(1, contentMode: .fit)
-                    .padding(geometry.size.width / 10)
+                    .padding(geometry.size.width / 5)
                     .shadow(color: config.shadowColor, radius: config.shadowRadius)
                 }
             }
