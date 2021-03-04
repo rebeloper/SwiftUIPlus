@@ -165,8 +165,8 @@ public struct ProgressHUD: View {
                                     .blurEffect()
                                     .blurEffectStyle(.systemChromeMaterial)
                             )
-                            .padding()
                             .cornerRadius(config.cornerRadius)
+                            .padding()
                             .overlay(
                                 // Fix required since .border can not be used with
                                 // RoundedRectangle clip shape
@@ -213,8 +213,8 @@ public struct ProgressHUD: View {
                                     .blurEffect()
                                     .blurEffectStyle(.systemChromeMaterial)
                             )
-                            .padding()
                             .cornerRadius(config.cornerRadius)
+                            .padding()
                             .overlay(
                                 // Fix required since .border can not be used with
                                 // RoundedRectangle clip shape
