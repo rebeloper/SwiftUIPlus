@@ -32,7 +32,23 @@ public struct ProgressHUDConfig: Hashable {
     var allowsTapToHide: Bool
     var autoHideInterval: TimeInterval
     var shouldDisableContent: Bool
-
+    
+    /// Creates a configuration for ProgressHUD
+    /// - Parameters:
+    ///   - type: hud type
+    ///   - minSize: minimum size of the hud
+    ///   - cornerRadius: hud corenre radius
+    ///   - backgroundColor: hud background color
+    ///   - titleForegroundColor: title foreground color
+    ///   - captionForegroundColor: caption foreground color
+    ///   - shadowColor: hud shadow color
+    ///   - shadowRadius: hud shadow radius
+    ///   - borderColor: hud border color
+    ///   - borderWidth: hud border width
+    ///   - shouldAutoHide: should the hud auto hide
+    ///   - allowsTapToHide: should the hud allow tap to hide
+    ///   - autoHideInterval: autohide time
+    ///   - shouldDisableContent: should the hud disable the underlying content
     public init(
         type: ProgressHUDType = .top,
         minSize: CGSize = CGSize(width: 100.0, height: 100.0),
@@ -103,7 +119,7 @@ private struct ProgressHUDLabelView: View {
                     if let caption = caption {
                         Text(caption)
                             .lineLimit(2)
-                            .font(.system(size: 10.0, weight: .regular))
+                            .font(.system(size: 11.0, weight: .regular))
                             .foregroundColor(.secondary)
                     }
                 }

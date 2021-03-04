@@ -13,11 +13,17 @@ public class ProgressHUDManager: ObservableObject {
     
     public var config: ProgressHUDConfig
     
+    /// Creates a ProgressHUD manager
+    /// - Parameter config: ProgressHUD Configuration
     public init(config: ProgressHUDConfig = ProgressHUDConfig()) {
         self.config = config
     }
     
-    public func show(_ title: String?, caption: String? = nil) {
+    /// Shows a hud
+    /// - Parameters:
+    ///   - title: title of the hud
+    ///   - caption: caption of the hud
+    public func show(_ title: String? = nil, caption: String? = nil) {
         self.config.title = title
         self.config.caption = caption
         withAnimation {
@@ -25,6 +31,7 @@ public class ProgressHUDManager: ObservableObject {
         }
     }
     
+    /// Hides a ProgressHUD
     public func hide() {
         withAnimation {
             isPresented = false

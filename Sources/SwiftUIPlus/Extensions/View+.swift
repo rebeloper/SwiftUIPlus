@@ -235,7 +235,10 @@ public extension View {
         environment(\.vibrancyEffectStyle, style)
     }
     
-    func uses(_ hudManager: ProgressHUDManager) -> some View {
-        modifier(ProgressHUDViewModifier(hudManager: hudManager))
+    /// Adds a ProgressHUDManager to the view
+    /// - Parameter hudManager: Progress HUD Manager
+    /// - Returns: a view with a ProgressHUDManager
+    func uses(_ progressHUDManager: ProgressHUDManager) -> some View {
+        modifier(ProgressHUDViewModifier(progressHUDManager: progressHUDManager))
     }
 }
