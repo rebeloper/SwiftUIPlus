@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Configure the ProgressHUD
 public struct ProgressHUDConfig: Hashable {
     var title: String?
     var caption: String?
@@ -25,14 +26,14 @@ public struct ProgressHUDConfig: Hashable {
     var borderColor: Color
     var borderWidth: CGFloat
 
-    // Auto hide
     var shouldAutoHide: Bool
     var allowsTapToHide: Bool
     var autoHideInterval: TimeInterval
+    var shouldDisableContent: Bool
 
     public init(
         minSize: CGSize = CGSize(width: 100.0, height: 100.0),
-        cornerRadius: CGFloat = 12.0,
+        cornerRadius: CGFloat = 18.0,
         backgroundColor: Color = .clear,
         titleForegroundColor: Color = .primary,
         captionForegroundColor: Color = .secondary,
@@ -42,7 +43,8 @@ public struct ProgressHUDConfig: Hashable {
         borderWidth: CGFloat = 0.0,
         shouldAutoHide: Bool = false,
         allowsTapToHide: Bool = false,
-        autoHideInterval: TimeInterval = 10.0
+        autoHideInterval: TimeInterval = 10.0,
+        shouldDisableContent: Bool = true
     ) {
         self.minSize = minSize
         self.cornerRadius = cornerRadius
@@ -61,6 +63,8 @@ public struct ProgressHUDConfig: Hashable {
         self.shouldAutoHide = shouldAutoHide
         self.allowsTapToHide = allowsTapToHide
         self.autoHideInterval = autoHideInterval
+        
+        self.shouldDisableContent = shouldDisableContent
     }
 }
 
@@ -68,12 +72,15 @@ private struct ProgressHUDLabelView: View {
     var title: String?
     var caption: String?
     
+    var titleForegroundColor: Color
+    var captionForegroundColor: Color
+    
     var body: some View {
         VStack(spacing: 4) {
             if let title = title {
                 Text(title)
                     .font(.system(size: 21.0, weight: .semibold))
-                    .lineLimit(1)
+                    .lineLimit(2)
                     .foregroundColor(.primary)
             }
             if let caption = caption {
@@ -116,7 +123,7 @@ public struct ProgressHUD: View {
                         
                         VStack(spacing: 20) {
                             ProgressView()
-                            ProgressHUDLabelView(title: config.title, caption: config.caption)
+                            ProgressHUDLabelView(title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
                         }.padding()
                     }
                     .cornerRadius(config.cornerRadius)

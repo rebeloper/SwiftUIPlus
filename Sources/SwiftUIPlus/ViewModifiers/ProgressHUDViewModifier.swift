@@ -13,15 +13,8 @@ public struct ProgressHUDViewModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         ZStack(alignment: .top) {
-            content
-                .disabled(hudManager.isPresented)
-                
-            
-            if hudManager.isPresented {
-                
-                ProgressHUD($hudManager.isPresented, config: hudManager.config)
-                
-            }
+            content.disabled(hudManager.config.shouldDisableContent ? hudManager.isPresented : false)
+            ProgressHUD($hudManager.isPresented, config: hudManager.config)
         }
     }
 }
