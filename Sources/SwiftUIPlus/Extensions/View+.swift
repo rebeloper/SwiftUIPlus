@@ -234,4 +234,8 @@ public extension View {
     func vibrancyEffectStyle(_ style: UIVibrancyEffectStyle) -> some View {
         environment(\.vibrancyEffectStyle, style)
     }
+    
+    func uses(_ hudManager: ProgressHUDManager) -> some View {
+        modifier(ProgressHUDViewModifier(hudManager: hudManager))
+    }
 }
