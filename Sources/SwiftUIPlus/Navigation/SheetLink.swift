@@ -31,7 +31,7 @@ public struct SheetLink<Destination: View>: View {
     }
     
     public var body: some View {
-        VStack {
+        Group {
             if isFullScreen {
                 Button {
                     isActive.toggle()
