@@ -171,7 +171,7 @@ public struct ProgressHUD: View {
                     switch config.type {
                     case .top:
                         VStack {
-                            HStack {
+                            HStack(spacing: 12) {
                                 ProgressView()
                                 if config.title != nil {
                                     ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
@@ -223,7 +223,7 @@ public struct ProgressHUD: View {
                         VStack {
                             Spacer()
                             
-                            HStack {
+                            HStack(spacing: 12) {
                                 ProgressView()
                                 if config.title != nil {
                                     ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
