@@ -24,13 +24,13 @@ public struct FlexibleSheet<Destination: View, Label: View>: View {
     ///   - destination: A closure returning the content of the sheet.
     ///   - onDismiss: A closure executed when the sheet dismisses.
     ///   - label: A view that is embeded into a Button.
-    public init(flexibleSheetManager: FlexibleSheetManager,
+    public init(flexibleSheetManager: ObservedObject<FlexibleSheetManager>,
                 swipesToDismiss: Bool = true,
                 ignoresSafeArea: Bool = false,
                 destination: @escaping () -> Destination,
                 onDismiss: @escaping () -> () = {},
                 label: @escaping () -> Label) {
-        self.flexibleSheetManager = flexibleSheetManager
+        self._flexibleSheetManager = flexibleSheetManager
         self.swipesToDismiss = swipesToDismiss
         self.ignoresSafeArea = ignoresSafeArea
         self.destination = destination
