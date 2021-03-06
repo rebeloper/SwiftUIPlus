@@ -23,15 +23,23 @@ public class FlexibleSheetManager: ObservableObject {
     }
     
     public func present(@ViewBuilder destination: () -> AnyView, onDismiss: @escaping () -> () = {}, config: FlexibleSheetConfig = FlexibleSheetConfig()) {
-        self.destination = destination()
-        self.onDismiss = onDismiss
-        self.config = config
+        setup(destination: {
+            destination()
+        }, onDismiss: {
+            onDismiss()
+        }, config: config)
         self.isActive = true
     }
     
     public func dismiss() {
         self.onDismiss()
         self.isActive = false
+    }
+    
+    public func setup(@ViewBuilder destination: () -> AnyView, onDismiss: @escaping () -> () = {}, config: FlexibleSheetConfig = FlexibleSheetConfig()) {
+        self.destination = destination()
+        self.onDismiss = onDismiss
+        self.config = config
     }
 }
 

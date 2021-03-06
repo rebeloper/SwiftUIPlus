@@ -18,13 +18,13 @@ public struct FlexibleSheet<Destination: View, Label: View>: View {
     
     /// Button that presents a sheet.
     /// - Parameters:
-    ///   - flexibleSheetManager: a @StateObject FlexibleSheetManager
+    ///   - flexibleSheetManager: a FlexibleSheetManager.
     ///   - swipesToDismiss: Should the sheet be able to be dismissed with a swipe.
     ///   - ignoresSafeArea: Should the sheet content ignore the safe area.
     ///   - destination: A closure returning the content of the sheet.
     ///   - onDismiss: A closure executed when the sheet dismisses.
     ///   - label: A view that is embeded into a Button.
-    public init(flexibleSheetManager: FlexibleSheetManager,
+    public init(_ flexibleSheetManager: FlexibleSheetManager,
                 swipesToDismiss: Bool = true,
                 ignoresSafeArea: Bool = false,
                 destination: @escaping () -> Destination,
