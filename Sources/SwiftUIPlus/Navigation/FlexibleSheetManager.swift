@@ -32,8 +32,8 @@ public class FlexibleSheetManager: ObservableObject {
     }
     
     public func dismiss() {
-        self.onDismiss()
         self.isActive = false
+        self.onDismiss()
     }
     
     public func setup(@ViewBuilder destination: () -> AnyView, onDismiss: @escaping () -> () = {}, config: FlexibleSheetConfig = FlexibleSheetConfig()) {
