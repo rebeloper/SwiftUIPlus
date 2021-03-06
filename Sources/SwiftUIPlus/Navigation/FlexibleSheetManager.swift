@@ -28,12 +28,15 @@ public class FlexibleSheetManager: ObservableObject {
         }, onDismiss: {
             onDismiss()
         }, config: config)
-        self.isActive = true
+        withAnimation {
+            isActive = true
+        }
+        
     }
     
     public func dismiss() {
-        self.isActive = false
-        self.onDismiss()
+        isActive = false
+        onDismiss()
     }
     
     public func setup(@ViewBuilder destination: () -> AnyView, onDismiss: @escaping () -> () = {}, config: FlexibleSheetConfig = FlexibleSheetConfig()) {
