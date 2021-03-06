@@ -28,10 +28,7 @@ public class FlexibleSheetManager: ObservableObject {
         }, onDismiss: {
             onDismiss()
         }, config: config)
-        withAnimation {
-            isActive = true
-        }
-        
+        isActive = true
     }
     
     public func dismiss() {
