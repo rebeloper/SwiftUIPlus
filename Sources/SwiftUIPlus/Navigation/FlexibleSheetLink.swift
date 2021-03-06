@@ -41,16 +41,15 @@ public struct FlexibleSheetLink<Destination: View>: View {
     public var body: some View {
         Button {
             self.isActive.toggle()
-            if isActive {
-                flexibleSheetManager.present(destination: {
-                    destination().anyView()
-                }, onDismiss: {
-                    onDismiss()
-                }, config: flexibleSheetManager.config)
-            }
         } label: {
             EmptyView()
         }
+        .flexibleSheet(isActive: $isActive, swipesToDismiss: flexibleSheetManager.config.swipesToDismiss, ignoresSafeArea: flexibleSheetManager.config.ignoresSafeArea) {
+            destination().anyView()
+        } onDismiss: {
+            onDismiss()
+        }
+
     }
 }
 
