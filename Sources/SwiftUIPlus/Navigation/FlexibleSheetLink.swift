@@ -16,6 +16,9 @@ public struct FlexibleSheetLink<Destination: View>: View {
     private let destination: () -> Destination
     private let onDismiss: () -> ()
     
+    @State private var currentIsActive: Bool = false
+    @State private var isDismissed: Bool = false
+    
     /// Button that presents a sheet.
     /// - Parameters:
     ///   - isActive: A binding to whether the sheet is presented.
@@ -39,19 +42,28 @@ public struct FlexibleSheetLink<Destination: View>: View {
     }
     
     public var body: some View {
-        EmptyView()
-            .onReceive([isActive].publisher, perform: { output in
-                print("isActive: \(output)")
-                if output {
-                    flexibleSheetManager.present(destination: {
-                        destination().anyView()
-                    }, onDismiss: {
-                        onDismiss()
-                    }, config: flexibleSheetManager.config)
-                } else {
-                    flexibleSheetManager.dismiss()
-                }
-            })
+        Button(action: {}, label: {
+            EmptyView()
+        })
+        .onReceive([isActive].publisher, perform: { isActive in
+            if currentIsActive == isActive { return }
+            currentIsActive = isActive
+            if isActive {
+                flexibleSheetManager.present(destination: {
+                    destination().anyView()
+                }, onDismiss: {
+                    currentIsActive = false
+                    onDismiss()
+                }, config: flexibleSheetManager.config)
+            } else {
+                flexibleSheetManager.dismiss()
+            }
+        })
+        .onReceive(flexibleSheetManager.$isActive) { (isActive) in
+            if !isActive {
+                self.isActive = isActive
+            }
+        }
     }
     
 }
