@@ -46,7 +46,9 @@ public struct FlexibleSheetView<Destination: View, Label: View>: View {
     }
     
     public var body: some View {
-        Button(action: {}, label: {
+        Button(action: {
+            isActive.toggle()
+        }, label: {
             label()
         })
         .onReceive([isActive].publisher, perform: { isActive in
