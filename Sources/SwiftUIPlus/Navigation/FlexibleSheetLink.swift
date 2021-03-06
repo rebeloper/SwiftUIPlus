@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct FlexibleSheetLink<Destination: View, Label: View>: View {
+public struct FlexibleSheetLink<Destination: View>: View {
     
     @Binding private var isActive: Bool
     private var flexibleSheetManager: FlexibleSheetManager
