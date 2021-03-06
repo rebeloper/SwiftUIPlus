@@ -9,8 +9,7 @@ import SwiftUI
 
 public struct FlexibleSheet<Destination: View, Label: View>: View {
     
-    @State private var isActive = false
-    
+    @ObservedObject private var flexibleSheetManager: FlexibleSheetManager
     private let swipesToDismiss: Bool
     private let ignoresSafeArea: Bool
     private let destination: () -> Destination
@@ -19,16 +18,19 @@ public struct FlexibleSheet<Destination: View, Label: View>: View {
     
     /// Button that presents a sheet.
     /// - Parameters:
+    ///   - flexibleSheetManager: a @StateObject FlexibleSheetManager
     ///   - swipesToDismiss: Should the sheet be able to be dismissed with a swipe.
     ///   - ignoresSafeArea: Should the sheet content ignore the safe area.
     ///   - destination: A closure returning the content of the sheet.
     ///   - onDismiss: A closure executed when the sheet dismisses.
     ///   - label: A view that is embeded into a Button.
-    public init(swipesToDismiss: Bool = true,
+    public init(flexibleSheetManager: FlexibleSheetManager,
+                swipesToDismiss: Bool = true,
                 ignoresSafeArea: Bool = false,
                 destination: @escaping () -> Destination,
                 onDismiss: @escaping () -> () = {},
                 label: @escaping () -> Label) {
+        self.flexibleSheetManager = flexibleSheetManager
         self.swipesToDismiss = swipesToDismiss
         self.ignoresSafeArea = ignoresSafeArea
         self.destination = destination
@@ -38,14 +40,13 @@ public struct FlexibleSheet<Destination: View, Label: View>: View {
     
     public var body: some View {
         Button {
-            isActive.toggle()
+            flexibleSheetManager.present(destination: {
+                destination().anyView()
+            }, onDismiss: {
+                onDismiss()
+            }, config: flexibleSheetManager.config)
         } label: {
             label()
-        }
-        .flexibleSheet(isActive: $isActive, swipesToDismiss: swipesToDismiss, ignoresSafeArea: ignoresSafeArea) {
-            destination()
-        } onDismiss: {
-            onDismiss()
         }
     }
 }
