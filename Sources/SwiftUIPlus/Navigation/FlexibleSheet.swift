@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct FlexibleSheet<Destination: View, Label: View>: View {
     
-    @ObservedObject private var flexibleSheetManager: FlexibleSheetManager
+    private var flexibleSheetManager: FlexibleSheetManager
     private let swipesToDismiss: Bool
     private let ignoresSafeArea: Bool
     private let destination: () -> Destination
@@ -24,13 +24,13 @@ public struct FlexibleSheet<Destination: View, Label: View>: View {
     ///   - destination: A closure returning the content of the sheet.
     ///   - onDismiss: A closure executed when the sheet dismisses.
     ///   - label: A view that is embeded into a Button.
-    public init(flexibleSheetManager: ObservedObject<FlexibleSheetManager>,
+    public init(flexibleSheetManager: FlexibleSheetManager,
                 swipesToDismiss: Bool = true,
                 ignoresSafeArea: Bool = false,
                 destination: @escaping () -> Destination,
                 onDismiss: @escaping () -> () = {},
                 label: @escaping () -> Label) {
-        self._flexibleSheetManager = flexibleSheetManager
+        self.flexibleSheetManager = flexibleSheetManager
         self.swipesToDismiss = swipesToDismiss
         self.ignoresSafeArea = ignoresSafeArea
         self.destination = destination
