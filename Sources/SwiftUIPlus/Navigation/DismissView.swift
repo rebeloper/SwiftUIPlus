@@ -7,23 +7,22 @@
 
 import SwiftUI
 
-public struct DismissView<Label: View>: View {
+public struct DismissView<Content: View>: View {
     
     @Environment(\.presentationMode) private var presentationMode
     
-    private let label: () -> Label
+    private let content: () -> Content
     
-    /// A Button that dismisses the currently presented view
-    /// - Parameter label: a view that is embeded into the button
-    public init(label: @escaping () -> Label) {
-        self.label = label
+    /// A View that when tapped on dismisses the currently presented view
+    /// - Parameter content: a view
+    public init(content: @escaping () -> Content) {
+        self.content = content
     }
     
     public var body: some View {
-        Button(action: {
-            presentationMode.wrappedValue.dismiss()
-        }, label: {
-            label()
-        })
+        content()
+            .onTapGesture {
+                presentationMode.wrappedValue.dismiss()
+            }
     }
 }
