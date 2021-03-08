@@ -43,3 +43,12 @@ public class FlexibleSheetManager: ObservableObject {
     }
 }
 
+public extension View {
+    /// Adds a FlexibleSheetManager to the view
+    /// - Parameter flexibleSheetManager: Flexible Sheet Manager
+    /// - Returns: a view with a FlexibleSheetManager
+    func uses(_ flexibleSheetManager: FlexibleSheetManager) -> some View {
+        modifier(FlexibleSheetViewModifier(flexibleSheetManager: flexibleSheetManager))
+    }
+}
+

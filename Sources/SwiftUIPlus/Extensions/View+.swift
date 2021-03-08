@@ -21,21 +21,12 @@ public extension View {
         AnyView(self)
     }
     
-    /// Wraps the View in a Group
-    /// - Returns: A view embeded in a Group
-    func gouped() -> some View {
-        Group { self }
-    }
-    
     /// Positions this view within an invisible frame with the specified size with a set .center alignment.
     /// - Parameters:
     ///   - width: A fixed width for the resulting view. If `width` is `nil`,
     ///     the resulting view assumes this view's sizing behavior.
     ///   - height: A fixed height for the resulting view. If `height` is `nil`,
     ///     the resulting view assumes this view's sizing behavior.
-    ///   - alignment: The alignment of this view inside the resulting view.
-    ///     `alignment` applies if this view is smaller than the size given by
-    ///     the resulting frame.
     ///
     /// - Returns: A view with fixed dimensions of `width` and `height`, for the
     ///   parameters that are non-`nil`.
@@ -91,86 +82,6 @@ public extension View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     
-    /// Disables swipe to dismiss on a Sheet / FullScreenCover
-    /// - Returns: a view that cannot be dismissed by swiping down
-    func disableSwipeToDismiss() -> some View {
-        self.background(SwipeToDismissView(dismissable: { false }))
-    }
-    
-    /// Allows or forbids swipe to dismiss on a Sheet / FullScreenCover
-    /// - Returns: a view that can or cannot be dismissed by swiping down
-    func allowsSwipeToDismiss(_ dismissable: Bool) -> some View {
-        self.background(SwipeToDismissView(dismissable: { dismissable }))
-    }
-    
-    /// Large navigation bar
-    /// - Parameters:
-    ///   - titleView: A view representing the title of the navigation bar
-    ///   - leadingView: A view at the leading side of the navigation bar
-    ///   - trailingView: A view at the trailing side of the navigation bar
-    ///   - backgroundView: A view that is the background of the navigation bar
-    /// - Returns: Large navigation bar
-    func largeNavigationBar<TitleView: View, LeadingView: View, TrailingView: View, BackgroundView: View>(titleView: TitleView, leadingView: LeadingView, trailingView: TrailingView, backgroundView: BackgroundView) -> some View {
-        modifier(LargeNavigationBarViewModifier(titleView: {
-            titleView
-        }, leadingView: {
-            leadingView
-        }, trailingView: {
-            trailingView
-        }, backgroundView: {
-            backgroundView
-        }))
-    }
-    
-    /// Inline navigation bar
-    /// - Parameters:
-    ///   - titleView: A view representing the title of the navigation bar
-    ///   - leadingView: A view at the leading side of the navigation bar
-    ///   - trailingView: A view at the trailing side of the navigation bar
-    ///   - backgroundView: A view that is the background of the navigation bar
-    /// - Returns: Inline navigation bar
-    func inlineNavigationBar<TitleView: View, LeadingView: View, TrailingView: View, BackgroundView: View>(titleView: TitleView, leadingView: LeadingView, trailingView: TrailingView, backgroundView: BackgroundView) -> some View {
-        modifier(InlineNavigationBarViewModifier(titleView: {
-            titleView
-        }, leadingView: {
-            leadingView
-        }, trailingView: {
-            trailingView
-        }, backgroundView: {
-            backgroundView
-        }))
-    }
-    
-    /// Custom navigation bar
-    /// - Parameters:
-    ///   - titleView: A view representing the title of the navigation bar
-    ///   - backgroundView: A view that is the background of the navigation bar
-    /// - Returns: Custom navigation bar
-    func customNavigationBar<TitleView: View, BackgroundView: View>(titleView: TitleView, backgroundView: BackgroundView) -> some View {
-        modifier(CustomNavigationBarViewModifier(titleView: {
-            titleView
-        }, backgroundView: {
-            backgroundView
-        }))
-    }
-    
-    /// Makes AlertManager available
-    /// - Parameter alertManager: alertManager
-    /// - Returns: a view that can use AlertManager
-    func uses(_ alertManager: AlertManager) -> some View {
-        self.modifier(AlertViewModifier(alertManager: alertManager))
-    }
-    
-    /// Creates a custom alert
-    /// - Parameters:
-    ///   - manager: the custom alert manager
-    ///   - content: content of the custom alert
-    ///   - buttons: buttons for the custom alert
-    /// - Returns: a custom alert that can be trigerred by the custom alert manager
-    func customAlert<AlertContent: View>(manager: CustomAlertManager, content: @escaping () -> AlertContent, buttons: [CustomAlertButton]) -> some View {
-        self.modifier(CustomAlertViewModifier(customAlertManager: manager, alertContent: content, buttons: buttons))
-    }
-    
     /// A view that pads this view inside the specified edge insets with a
     /// system-calculated amount of padding.
     /// - Parameters:
@@ -182,70 +93,4 @@ public extension View {
         self.padding(.horizontal, horizontal).padding(.vertical, vertical)
     }
     
-    /// Creates a blur effect.
-    func blurEffect() -> some View {
-        ModifiedContent(content: self, modifier: BlurEffectModifier())
-    }
-    
-    /**
-     Sets the style for blur effects within this view.
-     
-     To set a specific style for all blur effects and vibrancy effects containing blur effects within a view, use the `blurEffectStyle(_:)` modifier:
-     ```
-     ZStack {
-     backgroundContent
-     .blurEffect()
-     
-     foregroundContent
-     .vibrancyEffect()
-     }
-     .blurEffectStyle(.systemMaterial)
-     ```
-     */
-    func blurEffectStyle(_ style: UIBlurEffect.Style) -> some View {
-        environment(\.blurEffectStyle, style)
-    }
-    
-    /// Creates a vibrancy effect.
-    func vibrancyEffect() -> some View {
-        ModifiedContent(content: self, modifier: VibrancyEffectModifier())
-    }
-    
-    /**
-     Sets the style for vibrancy effects within this view.
-     
-     To set a specific style for all vibrancy effects within a view, use the `vibrancyEffectStyle(_:)` modifier:
-     ```
-     ZStack {
-     backgroundContent
-     .blurEffect()
-     
-     VStack {
-     topContent
-     .vibrancyEffect()
-     
-     bottomContent
-     .vibrancyEffect()
-     }
-     .vibrancyEffectStyle(.fill)
-     }
-     ```
-     */
-    func vibrancyEffectStyle(_ style: UIVibrancyEffectStyle) -> some View {
-        environment(\.vibrancyEffectStyle, style)
-    }
-    
-    /// Adds a ProgressHUDManager to the view
-    /// - Parameter hudManager: Progress HUD Manager
-    /// - Returns: a view with a ProgressHUDManager
-    func uses(_ progressHUDManager: ProgressHUDManager) -> some View {
-        modifier(ProgressHUDViewModifier(progressHUDManager: progressHUDManager))
-    }
-    
-    /// Adds a FlexibleSheetManager to the view
-    /// - Parameter flexibleSheetManager: Flexible Sheet Manager
-    /// - Returns: a view with a FlexibleSheetManager
-    func uses(_ flexibleSheetManager: FlexibleSheetManager) -> some View {
-        modifier(FlexibleSheetViewModifier(flexibleSheetManager: flexibleSheetManager))
-    }
 }

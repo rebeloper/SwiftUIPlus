@@ -46,3 +46,24 @@ public struct LargeNavigationBarView<TitleView: View, LeadingView: View, Trailin
         }
     }
 }
+
+public extension View {
+    /// Large navigation bar
+    /// - Parameters:
+    ///   - titleView: A view representing the title of the navigation bar
+    ///   - leadingView: A view at the leading side of the navigation bar
+    ///   - trailingView: A view at the trailing side of the navigation bar
+    ///   - backgroundView: A view that is the background of the navigation bar
+    /// - Returns: Large navigation bar
+    func largeNavigationBar<TitleView: View, LeadingView: View, TrailingView: View, BackgroundView: View>(titleView: TitleView, leadingView: LeadingView, trailingView: TrailingView, backgroundView: BackgroundView) -> some View {
+        modifier(LargeNavigationBarViewModifier(titleView: {
+            titleView
+        }, leadingView: {
+            leadingView
+        }, trailingView: {
+            trailingView
+        }, backgroundView: {
+            backgroundView
+        }))
+    }
+}

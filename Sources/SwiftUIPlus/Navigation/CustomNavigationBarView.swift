@@ -28,3 +28,17 @@ public struct CustomNavigationBarView<TitleView: View, BackgroundView: View, Con
     }
 }
 
+public extension View {
+    /// Custom navigation bar
+    /// - Parameters:
+    ///   - titleView: A view representing the title of the navigation bar
+    ///   - backgroundView: A view that is the background of the navigation bar
+    /// - Returns: Custom navigation bar
+    func customNavigationBar<TitleView: View, BackgroundView: View>(titleView: TitleView, backgroundView: BackgroundView) -> some View {
+        modifier(CustomNavigationBarViewModifier(titleView: {
+            titleView
+        }, backgroundView: {
+            backgroundView
+        }))
+    }
+}

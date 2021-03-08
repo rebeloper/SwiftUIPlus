@@ -41,3 +41,24 @@ public struct InlineNavigationBarView<TitleView: View, LeadingView: View, Traili
         }
     }
 }
+
+public extension View {
+    /// Inline navigation bar
+    /// - Parameters:
+    ///   - titleView: A view representing the title of the navigation bar
+    ///   - leadingView: A view at the leading side of the navigation bar
+    ///   - trailingView: A view at the trailing side of the navigation bar
+    ///   - backgroundView: A view that is the background of the navigation bar
+    /// - Returns: Inline navigation bar
+    func inlineNavigationBar<TitleView: View, LeadingView: View, TrailingView: View, BackgroundView: View>(titleView: TitleView, leadingView: LeadingView, trailingView: TrailingView, backgroundView: BackgroundView) -> some View {
+        modifier(InlineNavigationBarViewModifier(titleView: {
+            titleView
+        }, leadingView: {
+            leadingView
+        }, trailingView: {
+            trailingView
+        }, backgroundView: {
+            backgroundView
+        }))
+    }
+}

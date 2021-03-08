@@ -43,3 +43,17 @@ public struct SwipeToDismissView: UIViewControllerRepresentable {
         }
     }
 }
+
+public extension View {
+    /// Disables swipe to dismiss on a Sheet / FullScreenCover
+    /// - Returns: a view that cannot be dismissed by swiping down
+    func disableSwipeToDismiss() -> some View {
+        self.background(SwipeToDismissView(dismissable: { false }))
+    }
+    
+    /// Allows or forbids swipe to dismiss on a Sheet / FullScreenCover
+    /// - Returns: a view that can or cannot be dismissed by swiping down
+    func allowsSwipeToDismiss(_ dismissable: Bool) -> some View {
+        self.background(SwipeToDismissView(dismissable: { dismissable }))
+    }
+}

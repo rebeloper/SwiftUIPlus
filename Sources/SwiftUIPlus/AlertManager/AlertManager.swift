@@ -32,3 +32,12 @@ public class AlertManager: ObservableObject {
     }
     
 }
+
+public extension View {
+    /// Makes AlertManager available
+    /// - Parameter alertManager: alertManager
+    /// - Returns: a view that can use AlertManager
+    func uses(_ alertManager: AlertManager) -> some View {
+        self.modifier(AlertViewModifier(alertManager: alertManager))
+    }
+}
