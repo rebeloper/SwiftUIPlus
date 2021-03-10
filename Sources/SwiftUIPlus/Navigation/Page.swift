@@ -9,6 +9,8 @@ import SwiftUI
 
 public struct Page<Destination: View, Label: View>: View {
     
+    @State private var isActive = false
+    
     private var pageType: PageType
     private let destination: () -> Destination
     private let onDismiss: (() -> Void)?
@@ -34,11 +36,25 @@ public struct Page<Destination: View, Label: View>: View {
         Group {
             switch pageType {
             case .push:
-                Push(destination: destination, onDismiss: onDismiss, label: label)
+                NavigationLink(destination: destination().onDisappear(perform: {
+                    onDismiss?()
+                })) {
+                    label()
+                }
             case .sheet:
-                Sheet(isFullScreen: false, destination: destination, onDismiss: onDismiss, label: label)
+                Button {} label: {
+                    label()
+                }
+                .sheet(isPresented: $isActive, onDismiss: onDismiss) {
+                    destination()
+                }
             case .fullScreenSheet:
-                Sheet(isFullScreen: true, destination: destination, onDismiss: onDismiss, label: label)
+                Button {} label: {
+                    label()
+                }
+                .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
+                    destination()
+                }
             }
         }
     }
