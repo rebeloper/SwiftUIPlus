@@ -1,0 +1,47 @@
+//
+//  PageLink.swift
+//  
+//
+//  Created by Alex Nagy on 10.03.2021.
+//
+
+import SwiftUI
+
+public struct PageLink<Destination: View>: View {
+    
+    private var pageType: PageType
+    @Binding private var isActive: Bool
+    private let destination: () -> Destination
+    private let onDismiss: (() -> Void)?
+    
+    /// Empty View that controls a navigation presentation when a given condition is true.
+    /// - Parameters:
+    ///   - pageType: The page type presented. Default is .push.
+    ///   - isActive: A binding to whether the destination is presented.
+    ///   - destination: A closure returning the content of the destination.
+    ///   - onDismiss: A closure executed when the push dismisses.
+    public init(_ pageType: PageType = .push,
+                isActive: Binding<Bool>,
+                destination: @escaping () -> Destination,
+                onDismiss: (() -> Void)? = nil) {
+        self.pageType = pageType
+        self._isActive = isActive
+        self.destination = destination
+        self.onDismiss = onDismiss
+    }
+    
+    public var body: some View {
+        Group {
+            switch pageType {
+            case .push:
+                PushLink(isActive: $isActive, destination: destination, onDismiss: onDismiss)
+            case .sheet:
+                SheetLink(isFullScreen: false, isActive: $isActive, destination: destination, onDismiss: onDismiss)
+            case .fullScreenSheet:
+                SheetLink(isFullScreen: true, isActive: $isActive, destination: destination, onDismiss: onDismiss)
+            }
+        }
+    }
+}
+
+
