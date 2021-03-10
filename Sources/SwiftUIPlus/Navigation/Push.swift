@@ -1,5 +1,5 @@
 //
-//  Page.swift
+//  Push.swift
 //  
 //
 //  Created by Alex Nagy on 28.02.2021.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct Page<Destination: View, Label: View>: View {
+public struct Push<Destination: View, Label: View>: View {
     
     private var destination: () -> Destination
     private let onDismiss: (() -> Void)?
