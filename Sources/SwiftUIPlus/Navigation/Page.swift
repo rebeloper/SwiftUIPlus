@@ -21,7 +21,6 @@ public struct Page<Destination: View, Label: View>: View {
     ///   - onDismiss: A closure executed when the push dismisses.
     ///   - label: A view that is embeded into a NavigationLink.
     public init(pageType: PageType,
-                isActive: Binding<Bool>,
                 destination: @escaping () -> Destination,
                 onDismiss: (() -> Void)? = nil,
                 label: @escaping () -> Label) {
