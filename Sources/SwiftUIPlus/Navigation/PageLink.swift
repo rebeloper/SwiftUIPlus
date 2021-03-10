@@ -31,7 +31,7 @@ public struct PageLink<Destination: View>: View {
     }
     
     public var body: some View {
-        Group {
+        VStack {
             switch pageType {
             case .push:
                 NavigationLink(destination: destination().onDisappear(perform: {
