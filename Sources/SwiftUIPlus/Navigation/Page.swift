@@ -42,14 +42,18 @@ public struct Page<Destination: View, Label: View>: View {
                     label()
                 }
             case .sheet:
-                Button {} label: {
+                Button {
+                    isActive.toggle()
+                } label: {
                     label()
                 }
                 .sheet(isPresented: $isActive, onDismiss: onDismiss) {
                     destination()
                 }
             case .fullScreenSheet:
-                Button {} label: {
+                Button {
+                    isActive.toggle()
+                } label: {
                     label()
                 }
                 .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
