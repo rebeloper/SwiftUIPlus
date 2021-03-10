@@ -26,3 +26,5 @@ public struct TightVStack<Content: View>: View {
         })
     }
 }
+
+public typealias ViewBody = TightVStack
