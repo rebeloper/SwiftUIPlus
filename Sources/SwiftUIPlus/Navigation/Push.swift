@@ -16,6 +16,7 @@ public struct Push<Destination: View, Label: View>: View {
     /// A view that controls a navigation presentation..
     /// - Parameters:
     ///   - destination: A closure returning the content of the destination.
+    ///   - onDismiss: A closure executed when the push dismisses.
     ///   - label: A view that is embeded into a NavigationLink.
     public init(destination: @escaping () -> Destination,
                 onDismiss: (() -> Void)? = nil,
