@@ -16,11 +16,11 @@ public struct Page<Destination: View, Label: View>: View {
     
     /// NavigationLink that controls a navigation presentation when a given condition is true.
     /// - Parameters:
-    ///   - pageType: The page type presented.
+    ///   - pageType: The page type presented. Default is .push.
     ///   - destination: A closure returning the content of the destination.
     ///   - onDismiss: A closure executed when the push dismisses.
     ///   - label: A view that is embeded into a NavigationLink.
-    public init(pageType: PageType,
+    public init(_ pageType: PageType = .push,
                 destination: @escaping () -> Destination,
                 onDismiss: (() -> Void)? = nil,
                 label: @escaping () -> Label) {
