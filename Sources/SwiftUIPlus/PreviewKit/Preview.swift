@@ -82,7 +82,7 @@ public struct Preview: Codable, Hashable {
 
 public struct PreviewData: Codable {
     
-    private let previews: [Preview]
+    public let previews: [Preview]
     
     /// Preview Data from a Preview
     /// - Parameter preview: Preview

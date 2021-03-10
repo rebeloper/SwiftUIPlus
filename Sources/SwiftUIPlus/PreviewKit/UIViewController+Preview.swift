@@ -25,7 +25,7 @@ public extension UIViewController {
     
     /// Creates a Preview View from a UIViewController
     /// - Returns: a view that can be used for Preview
-    public func toPreview() -> some View {
+    func toPreview() -> some View {
         // inject self (the current view controller) for the preview
         UIPreview(viewController: self)
     }
