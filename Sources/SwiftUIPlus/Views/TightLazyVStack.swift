@@ -14,7 +14,7 @@ public struct TightLazyVStack<Content: View>: View {
     private var spacing: CGFloat
     private var content: () -> Content
     
-    public init(alignment: HorizontalAlignment, spacing: CGFloat = 0, content: @escaping () -> Content) {
+    public init(alignment: HorizontalAlignment = .center, spacing: CGFloat = 0, content: @escaping () -> Content) {
         self.alignment = alignment
         self.spacing = spacing
         self.content = content
