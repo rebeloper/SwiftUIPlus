@@ -16,7 +16,7 @@ public struct Page<Destination: View, Label: View>: View {
     private var pageType: PageType
     private let destination: () -> Destination
     private let onDismiss: (() -> Void)?
-    private let label: () -> Label
+    private let label: (() -> Label)?
     
     /// Button that controls a navigation presentation when a given condition is true.
     /// - Parameters:
@@ -27,7 +27,7 @@ public struct Page<Destination: View, Label: View>: View {
     public init(_ pageType: PageType = .push,
                 destination: @escaping () -> Destination,
                 onDismiss: (() -> Void)? = nil,
-                label: @escaping () -> Label) {
+                label: (() -> Label)?) {
         self.pageKind = .button
         self.pageType = pageType
         self._isBindingActive = .constant(false)
@@ -51,7 +51,7 @@ public struct Page<Destination: View, Label: View>: View {
         self._isBindingActive = isActive
         self.destination = destination
         self.onDismiss = onDismiss
-        self.label = { EmptyView() as! Label }
+        self.label = nil
     }
     
     public var body: some View {
@@ -63,7 +63,7 @@ public struct Page<Destination: View, Label: View>: View {
                     NavigationLink(destination: destination().onDisappear(perform: {
                         onDismiss?()
                     })) {
-                        label()
+                        label!()
                     }
                 case .link:
                     NavigationLink(destination: destination().onDisappear(perform: {
@@ -79,7 +79,7 @@ public struct Page<Destination: View, Label: View>: View {
                     Button {
                         isStateActive.toggle()
                     } label: {
-                        label()
+                        label!()
                     }
                     .sheet(isPresented: $isStateActive, onDismiss: onDismiss) {
                         destination()
@@ -99,7 +99,7 @@ public struct Page<Destination: View, Label: View>: View {
                     Button {
                         isStateActive.toggle()
                     } label: {
-                        label()
+                        label!()
                     }
                     .fullScreenCover(isPresented: $isStateActive, onDismiss: onDismiss) {
                         destination()
