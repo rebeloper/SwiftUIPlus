@@ -34,11 +34,25 @@ public struct PageLink<Destination: View>: View {
         Group {
             switch pageType {
             case .push:
-                PushLink(isActive: $isActive, destination: destination, onDismiss: onDismiss)
+                NavigationLink(destination: destination().onDisappear(perform: {
+                    onDismiss?()
+                }), isActive: $isActive) {
+                    EmptyView()
+                }
             case .sheet:
-                SheetLink(isFullScreen: false, isActive: $isActive, destination: destination, onDismiss: onDismiss)
+                Button {} label: {
+                    EmptyView()
+                }
+                .sheet(isPresented: $isActive, onDismiss: onDismiss) {
+                    destination()
+                }
             case .fullScreenSheet:
-                SheetLink(isFullScreen: true, isActive: $isActive, destination: destination, onDismiss: onDismiss)
+                Button {} label: {
+                    EmptyView()
+                }
+                .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
+                    destination()
+                }
             }
         }
     }
