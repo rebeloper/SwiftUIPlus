@@ -2,10 +2,26 @@
 //  Page.swift
 //  
 //
-//  Created by Alex Nagy on 10.03.2021.
+//  Created by Alex Nagy on 11.03.2021.
 //
 
 import SwiftUI
+
+public extension Page where Label == EmptyView {
+    
+    init(_ type: PageType = .push,
+         isActive: Binding<Bool>,
+         destination: @escaping () -> Destination,
+         label: @escaping () -> Label,
+         onDismiss: (() -> Void)? = nil) {
+        self.pageStyle = .link
+        self.pageType = type
+        self._isActiveBinding = isActive
+        self.destination = destination
+        self.label =  { EmptyView() }
+        self.onDismiss = onDismiss
+    }
+}
 
 public struct Page<Destination: View, Label: View>: View {
     
@@ -13,6 +29,7 @@ public struct Page<Destination: View, Label: View>: View {
     
     private var pageStyle: PageStyle
     private var pageType: PageType
+    @Binding private var isActiveBinding: Bool
     private let destination: () -> Destination
     private let label: () -> Label
     private let onDismiss: (() -> Void)?
@@ -31,6 +48,7 @@ public struct Page<Destination: View, Label: View>: View {
                 onDismiss: (() -> Void)? = nil) {
         self.pageStyle = style
         self.pageType = type
+        self._isActiveBinding = .constant(false)
         self.destination = destination
         self.label = label
         self.onDismiss = onDismiss
@@ -51,7 +69,17 @@ public struct Page<Destination: View, Label: View>: View {
                     label().onTapGesture {
                         isActive.toggle()
                     }
-                    PageLink(.push, isActive: $isActive, destination: destination, onDismiss: onDismiss)
+                    NavigationLink(destination: destination().onDisappear(perform: {
+                        onDismiss?()
+                    }), isActive: $isActive) {
+                        EmptyView()
+                    }
+                case .link:
+                    NavigationLink(destination: destination().onDisappear(perform: {
+                        onDismiss?()
+                    }), isActive: $isActiveBinding) {
+                        EmptyView()
+                    }
                 }
                 
             case .sheet:
@@ -69,7 +97,19 @@ public struct Page<Destination: View, Label: View>: View {
                     label().onTapGesture {
                         isActive.toggle()
                     }
-                    PageLink(.sheet, isActive: $isActive, destination: destination, onDismiss: onDismiss)
+                    Button {} label: {
+                        EmptyView()
+                    }
+                    .sheet(isPresented: $isActive, onDismiss: onDismiss) {
+                        destination()
+                    }
+                case .link:
+                    Button {} label: {
+                        EmptyView()
+                    }
+                    .sheet(isPresented: $isActiveBinding, onDismiss: onDismiss) {
+                        destination()
+                    }
                 }
                 
             case .fullScreenSheet:
@@ -87,9 +127,20 @@ public struct Page<Destination: View, Label: View>: View {
                     label().onTapGesture {
                         isActive.toggle()
                     }
-                    PageLink(.fullScreenSheet, isActive: $isActive, destination: destination, onDismiss: onDismiss)
+                    Button {} label: {
+                        EmptyView()
+                    }
+                    .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
+                        destination()
+                    }
+                case .link:
+                    Button {} label: {
+                        EmptyView()
+                    }
+                    .fullScreenCover(isPresented: $isActiveBinding, onDismiss: onDismiss) {
+                        destination()
+                    }
                 }
-                
             }
         }
     }
@@ -104,4 +155,5 @@ public enum PageType {
 public enum PageStyle {
     case button
     case view
+    case link
 }
