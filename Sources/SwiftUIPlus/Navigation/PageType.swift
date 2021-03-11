@@ -12,3 +12,8 @@ public enum PageType {
     case sheet
     case fullScreenSheet
 }
+
+public enum PageStyle {
+    case button
+    case view
+}
