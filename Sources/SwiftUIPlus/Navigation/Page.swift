@@ -95,3 +95,13 @@ public struct Page<Destination: View, Label: View>: View {
     }
 }
 
+public enum PageType {
+    case push
+    case sheet
+    case fullScreenSheet
+}
+
+public enum PageStyle {
+    case button
+    case view
+}
