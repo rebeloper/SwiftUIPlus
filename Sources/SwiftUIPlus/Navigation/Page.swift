@@ -9,7 +9,7 @@ import SwiftUI
 
 public extension Page where Label == EmptyView {
     
-    /// Empty view thet controls a navigation presentation when a given condition is true.
+    /// `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
     /// - Parameters:
     ///   - type: The page type presented. Default is .push.
     ///   - isActive: A binding string whether the destination is presented.
@@ -38,7 +38,7 @@ public struct Page<Destination: View, Label: View>: View {
     private let label: () -> Label
     private let onDismiss: (() -> Void)?
     
-    /// View that controls a navigation presentation when a given condition is true.
+    /// `View` that when tapped presents a `Destination` view.
     /// - Parameters:
     ///   - style: The style of the view that triggers the page. Default is .button.
     ///   - type: The page type presented. Default is .push.
