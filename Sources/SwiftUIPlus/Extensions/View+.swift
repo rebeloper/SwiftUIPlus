@@ -15,6 +15,12 @@ public extension View {
         NavigationView { self }
     }
     
+    /// Wraps the View in a NavigationView with StackNavigationViewStyle
+    /// - Returns: A view embeded in a NavigationView
+    func embedInStackNavigationView() -> some View {
+        NavigationView { self }.navigationViewStyle(StackNavigationViewStyle())
+    }
+    
     /// Wraps the View in AnyView
     /// - Returns: AnyView
     func anyView() -> AnyView {
