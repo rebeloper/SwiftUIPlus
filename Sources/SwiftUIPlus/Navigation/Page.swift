@@ -9,12 +9,16 @@ import SwiftUI
 
 public extension Page where Label == EmptyView {
     
+    /// Empty view thet controls a navigation presentation when a given condition is true.
+    /// - Parameters:
+    ///   - type: The page type presented. Default is .push.
+    ///   - isActive: A binding string whether the destination is presented.
+    ///   - destination: A closure returning the content of the destination.
+    ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
     init(_ type: PageType = .push,
          isActive: Binding<Bool>,
          destination: @escaping () -> Destination,
-         label: @escaping () -> Label,
          onDismiss: (() -> Void)? = nil) {
-        self.pageStyle = .link
         self.pageType = type
         self._isActiveBinding = isActive
         self.destination = destination
@@ -27,20 +31,20 @@ public struct Page<Destination: View, Label: View>: View {
     
     @State private var isActive = false
     
-    private var pageStyle: PageStyle
+    private var pageStyle: PageStyle? = nil
     private var pageType: PageType
     @Binding private var isActiveBinding: Bool
     private let destination: () -> Destination
     private let label: () -> Label
     private let onDismiss: (() -> Void)?
     
-    /// Controls a navigation presentation when a given condition is true.
+    /// View that controls a navigation presentation when a given condition is true.
     /// - Parameters:
     ///   - style: The style of the view that triggers the page. Default is .button.
     ///   - type: The page type presented. Default is .push.
     ///   - destination: A closure returning the content of the destination.
-    ///   - label: A view that is embeded into a NavigationLink.
-    ///   - onDismiss: A closure executed when the push dismisses.
+    ///   - label: A tappable view that triggers the navigation.
+    ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
     public init(_ style: PageStyle = .button,
                 type: PageType = .push,
                 destination: @escaping () -> Destination,
@@ -58,23 +62,25 @@ public struct Page<Destination: View, Label: View>: View {
         VStack {
             switch pageType {
             case .push:
-                switch pageStyle {
-                case .button:
-                    NavigationLink(destination: destination().onDisappear(perform: {
-                        onDismiss?()
-                    })) {
-                        label()
+                if let pageStyle = pageStyle {
+                    switch pageStyle {
+                    case .button:
+                        NavigationLink(destination: destination().onDisappear(perform: {
+                            onDismiss?()
+                        })) {
+                            label()
+                        }
+                    case .view:
+                        label().onTapGesture {
+                            isActive.toggle()
+                        }
+                        NavigationLink(destination: destination().onDisappear(perform: {
+                            onDismiss?()
+                        }), isActive: $isActive) {
+                            EmptyView()
+                        }
                     }
-                case .view:
-                    label().onTapGesture {
-                        isActive.toggle()
-                    }
-                    NavigationLink(destination: destination().onDisappear(perform: {
-                        onDismiss?()
-                    }), isActive: $isActive) {
-                        EmptyView()
-                    }
-                case .link:
+                } else {
                     NavigationLink(destination: destination().onDisappear(perform: {
                         onDismiss?()
                     }), isActive: $isActiveBinding) {
@@ -83,27 +89,30 @@ public struct Page<Destination: View, Label: View>: View {
                 }
                 
             case .sheet:
-                switch pageStyle {
-                case .button:
-                    Button {
-                        isActive.toggle()
-                    } label: {
-                        label()
+                if let pageStyle = pageStyle {
+                    switch pageStyle {
+                    case .button:
+                        Button {
+                            isActive.toggle()
+                        } label: {
+                            label()
+                        }
+                        .sheet(isPresented: $isActive, onDismiss: onDismiss) {
+                            destination()
+                        }
+                    case .view:
+                        label().onTapGesture {
+                            isActive.toggle()
+                        }
+                        Button {} label: {
+                            EmptyView()
+                        }
+                        .sheet(isPresented: $isActive, onDismiss: onDismiss) {
+                            destination()
+                        }
+                        
                     }
-                    .sheet(isPresented: $isActive, onDismiss: onDismiss) {
-                        destination()
-                    }
-                case .view:
-                    label().onTapGesture {
-                        isActive.toggle()
-                    }
-                    Button {} label: {
-                        EmptyView()
-                    }
-                    .sheet(isPresented: $isActive, onDismiss: onDismiss) {
-                        destination()
-                    }
-                case .link:
+                } else {
                     Button {} label: {
                         EmptyView()
                     }
@@ -113,27 +122,30 @@ public struct Page<Destination: View, Label: View>: View {
                 }
                 
             case .fullScreenSheet:
-                switch pageStyle {
-                case .button:
-                    Button {
-                        isActive.toggle()
-                    } label: {
-                        label()
+                if let pageStyle = pageStyle {
+                    switch pageStyle {
+                    case .button:
+                        Button {
+                            isActive.toggle()
+                        } label: {
+                            label()
+                        }
+                        .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
+                            destination()
+                        }
+                    case .view:
+                        label().onTapGesture {
+                            isActive.toggle()
+                        }
+                        Button {} label: {
+                            EmptyView()
+                        }
+                        .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
+                            destination()
+                        }
+                        
                     }
-                    .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
-                        destination()
-                    }
-                case .view:
-                    label().onTapGesture {
-                        isActive.toggle()
-                    }
-                    Button {} label: {
-                        EmptyView()
-                    }
-                    .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
-                        destination()
-                    }
-                case .link:
+                } else {
                     Button {} label: {
                         EmptyView()
                     }
@@ -141,19 +153,19 @@ public struct Page<Destination: View, Label: View>: View {
                         destination()
                     }
                 }
+                
             }
         }
     }
+}
+
+public enum PageStyle {
+    case button
+    case view
 }
 
 public enum PageType {
     case push
     case sheet
     case fullScreenSheet
-}
-
-public enum PageStyle {
-    case button
-    case view
-    case link
 }
