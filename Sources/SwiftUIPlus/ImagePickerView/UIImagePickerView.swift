@@ -64,7 +64,7 @@ extension UIImagePickerView {
                 image = originalImage
             }
             isPresented = false
-            didSelect(UIImagePickerResult(picker: picker, image: image))
+            didSelect(UIImagePickerResult(picker: picker, image: image, info: info))
         }
         
         public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -78,4 +78,5 @@ extension UIImagePickerView {
 public struct UIImagePickerResult {
     public let picker: UIImagePickerController
     public let image: UIImage
+    public let info: [UIImagePickerController.InfoKey : Any]
 }
