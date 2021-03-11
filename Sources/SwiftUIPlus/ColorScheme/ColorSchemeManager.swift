@@ -57,7 +57,7 @@ public class ColorSchemeManager: ObservableObject {
     
 }
 
-extension View {
+public extension View {
     /// Sets the ColorSchemeManager for the root view. The ColorSchemeManager should be a @StateObject on the app root view; and an @EnvironmentObject on the other root views.
     /// - Parameter colorSchemeManager: ColorSchemeManager
     /// - Returns: a color schemeable view
