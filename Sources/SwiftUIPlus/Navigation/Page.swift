@@ -17,7 +17,7 @@ public struct Page<Destination: View, Label: View>: View {
     private let label: () -> Label
     private let onDismiss: (() -> Void)?
     
-    /// Button that controls a navigation presentation when a given condition is true.
+    /// Controls a navigation presentation when a given condition is true.
     /// - Parameters:
     ///   - style: The style of the view that triggers the page. Default is .button.
     ///   - type: The page type presented. Default is .push.
