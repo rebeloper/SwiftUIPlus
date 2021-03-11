@@ -12,6 +12,7 @@ public struct LargeNavigationBarView<TitleView: View, LeadingView: View, Trailin
     public let leadingView: LeadingView
     public let trailingView: TrailingView
     public let backgroundView: BackgroundView
+    public let showsDivider: Bool
     public let content: Content
     
     public var body: some View {
@@ -38,12 +39,27 @@ public struct LargeNavigationBarView<TitleView: View, LeadingView: View, Trailin
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
                 .background(backgroundView)
-                Divider().ignoresSafeArea()
+                if showsDivider {
+                    Divider().ignoresSafeArea()
+                }
                 Spacer().frame(height: 0)
                 content.frame(width: proxy.size.width)
             }
             .navigationBarHidden(true)
         }
+    }
+}
+
+public struct LargeNavigationBarViewModifier<TitleView: View, LeadingView: View, TrailingView: View, BackgroundView: View>: ViewModifier {
+    
+    public var titleView: () -> TitleView
+    public var leadingView: () -> LeadingView
+    public var trailingView: () -> TrailingView
+    public var backgroundView: () -> BackgroundView
+    public var showsDivider: Bool
+    
+    public func body(content: Content) -> some View {
+        LargeNavigationBarView(titleView: titleView(), leadingView: leadingView(), trailingView: trailingView(), backgroundView: backgroundView(), showsDivider: showsDivider, content: content)
     }
 }
 
@@ -55,7 +71,7 @@ public extension View {
     ///   - trailingView: A view at the trailing side of the navigation bar
     ///   - backgroundView: A view that is the background of the navigation bar
     /// - Returns: Large navigation bar
-    func largeNavigationBar<TitleView: View, LeadingView: View, TrailingView: View, BackgroundView: View>(titleView: TitleView, leadingView: LeadingView, trailingView: TrailingView, backgroundView: BackgroundView) -> some View {
+    func largeNavigationBar<TitleView: View, LeadingView: View, TrailingView: View, BackgroundView: View>(titleView: TitleView, leadingView: LeadingView, trailingView: TrailingView, backgroundView: BackgroundView, showsDivider: Bool = true) -> some View {
         modifier(LargeNavigationBarViewModifier(titleView: {
             titleView
         }, leadingView: {
@@ -64,6 +80,6 @@ public extension View {
             trailingView
         }, backgroundView: {
             backgroundView
-        }))
+        }, showsDivider: showsDivider))
     }
 }
