@@ -10,10 +10,10 @@ import UIKit
 
 /// Class that wraps the CAEmitterCell in a class compatible with SwiftUI
 public struct ParticlesEmitterView: UIViewRepresentable {
-    var center: CGPoint = .zero
-    var emitterSize: CGSize = .init(width: 1, height: 1)
-    var shape: CAEmitterLayerEmitterShape = .line
-    var cells: [CAEmitterCell] = []
+    public var center: CGPoint = .zero
+    public var emitterSize: CGSize = .init(width: 1, height: 1)
+    public var shape: CAEmitterLayerEmitterShape = .line
+    public var cells: [CAEmitterCell] = []
     
     public func updateUIView(_ uiView: InternalParticlesView, context: UIViewRepresentableContext<ParticlesEmitterView>) {
         uiView.emit(from: center,
@@ -32,7 +32,7 @@ public struct ParticlesEmitterView: UIViewRepresentable {
     }
 }
 
-extension ParticlesEmitterView {
+public extension ParticlesEmitterView {
     func emitterSize(_ size: CGSize) -> Self {
         return ParticlesEmitterView(center: self.center, emitterSize: size, shape: shape, cells: self.cells)
     }
@@ -69,13 +69,13 @@ public final class InternalParticlesView: UIView {
 }
 
 @_functionBuilder
-struct EmitterCellBuilder {
-    static func buildBlock(_ cells: CAEmitterCell...) -> [CAEmitterCell] {
+public struct EmitterCellBuilder {
+    public static func buildBlock(_ cells: CAEmitterCell...) -> [CAEmitterCell] {
       Array(cells)
     }
 }
 
-extension ParticlesEmitterView {
+public extension ParticlesEmitterView {
     init(@EmitterCellBuilder _ content: () -> [CAEmitterCell]) {
       self.init(cells: content())
     }
