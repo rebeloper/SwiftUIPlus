@@ -85,25 +85,25 @@ extension ParticlesEmitterView {
     }
 }
 
-class EmitterCell: CAEmitterCell {
-    override init() {
+public class EmitterCell: CAEmitterCell {
+    public override init() {
         super.init()
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
-    func copyEmitter() -> EmitterCell {
+    public func copyEmitter() -> EmitterCell {
         return super.copy() as! EmitterCell
     }
 }
 
 
-extension EmitterCell {
+public extension EmitterCell {
     /// Content for the emitter cell, it is either an image, or a circle.
     /// NB: It could easily be extended for other shapes.
-    public enum Content {
+    enum Content {
         case image(UIImage)
         case circle(CGFloat)
     }
@@ -204,7 +204,7 @@ extension EmitterCell {
     }
 }
 
-fileprivate extension EmitterCell.Content {
+public extension EmitterCell.Content {
     var image: UIImage {
         switch self {
         case let .image(image):
