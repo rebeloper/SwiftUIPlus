@@ -19,10 +19,11 @@ public extension Page where Label == EmptyView {
          isActive: Binding<Bool>,
          destination: @escaping () -> Destination,
          onDismiss: (() -> Void)? = nil) {
+        self.pageStyle = .emptyView
         self.pageType = type
         self._isActiveBinding = isActive
         self.destination = destination
-        self.label =  { EmptyView() }
+        self.label = { EmptyView() }
         self.onDismiss = onDismiss
     }
 }
@@ -31,7 +32,7 @@ public struct Page<Destination: View, Label: View>: View {
     
     @State private var isActive = false
     
-    private var pageStyle: PageStyle? = nil
+    private var pageStyle: PageStyle
     private var pageType: PageType
     @Binding private var isActiveBinding: Bool
     private let destination: () -> Destination
@@ -62,25 +63,23 @@ public struct Page<Destination: View, Label: View>: View {
         VStack {
             switch pageType {
             case .push:
-                if let pageStyle = pageStyle {
-                    switch pageStyle {
-                    case .button:
-                        NavigationLink(destination: destination().onDisappear(perform: {
-                            onDismiss?()
-                        })) {
-                            label()
-                        }
-                    case .view:
-                        label().onTapGesture {
-                            isActive.toggle()
-                        }
-                        NavigationLink(destination: destination().onDisappear(perform: {
-                            onDismiss?()
-                        }), isActive: $isActive) {
-                            EmptyView()
-                        }
+                switch pageStyle {
+                case .button:
+                    NavigationLink(destination: destination().onDisappear(perform: {
+                        onDismiss?()
+                    })) {
+                        label()
                     }
-                } else {
+                case .view:
+                    label().onTapGesture {
+                        isActive.toggle()
+                    }
+                    NavigationLink(destination: destination().onDisappear(perform: {
+                        onDismiss?()
+                    }), isActive: $isActive) {
+                        EmptyView()
+                    }
+                case .emptyView:
                     NavigationLink(destination: destination().onDisappear(perform: {
                         onDismiss?()
                     }), isActive: $isActiveBinding) {
@@ -89,30 +88,27 @@ public struct Page<Destination: View, Label: View>: View {
                 }
                 
             case .sheet:
-                if let pageStyle = pageStyle {
-                    switch pageStyle {
-                    case .button:
-                        Button {
-                            isActive.toggle()
-                        } label: {
-                            label()
-                        }
-                        .sheet(isPresented: $isActive, onDismiss: onDismiss) {
-                            destination()
-                        }
-                    case .view:
-                        label().onTapGesture {
-                            isActive.toggle()
-                        }
-                        Button {} label: {
-                            EmptyView()
-                        }
-                        .sheet(isPresented: $isActive, onDismiss: onDismiss) {
-                            destination()
-                        }
-                        
+                switch pageStyle {
+                case .button:
+                    Button {
+                        isActive.toggle()
+                    } label: {
+                        label()
                     }
-                } else {
+                    .sheet(isPresented: $isActive, onDismiss: onDismiss) {
+                        destination()
+                    }
+                case .view:
+                    label().onTapGesture {
+                        isActive.toggle()
+                    }
+                    Button {} label: {
+                        EmptyView()
+                    }
+                    .sheet(isPresented: $isActive, onDismiss: onDismiss) {
+                        destination()
+                    }
+                case .emptyView:
                     Button {} label: {
                         EmptyView()
                     }
@@ -122,30 +118,27 @@ public struct Page<Destination: View, Label: View>: View {
                 }
                 
             case .fullScreenSheet:
-                if let pageStyle = pageStyle {
-                    switch pageStyle {
-                    case .button:
-                        Button {
-                            isActive.toggle()
-                        } label: {
-                            label()
-                        }
-                        .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
-                            destination()
-                        }
-                    case .view:
-                        label().onTapGesture {
-                            isActive.toggle()
-                        }
-                        Button {} label: {
-                            EmptyView()
-                        }
-                        .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
-                            destination()
-                        }
-                        
+                switch pageStyle {
+                case .button:
+                    Button {
+                        isActive.toggle()
+                    } label: {
+                        label()
                     }
-                } else {
+                    .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
+                        destination()
+                    }
+                case .view:
+                    label().onTapGesture {
+                        isActive.toggle()
+                    }
+                    Button {} label: {
+                        EmptyView()
+                    }
+                    .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
+                        destination()
+                    }
+                case .emptyView:
                     Button {} label: {
                         EmptyView()
                     }
@@ -162,6 +155,7 @@ public struct Page<Destination: View, Label: View>: View {
 public enum PageStyle {
     case button
     case view
+    case emptyView
 }
 
 public enum PageType {
