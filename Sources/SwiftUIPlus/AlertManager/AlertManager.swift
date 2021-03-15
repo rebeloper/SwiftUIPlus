@@ -38,6 +38,6 @@ public extension View {
     /// - Parameter alertManager: alertManager
     /// - Returns: a view that can use AlertManager
     func uses(_ alertManager: AlertManager) -> some View {
-        self.modifier(AlertViewModifier(alertManager: alertManager))
+        self.environmentObject(alertManager).modifier(AlertViewModifier(alertManager: alertManager))
     }
 }
