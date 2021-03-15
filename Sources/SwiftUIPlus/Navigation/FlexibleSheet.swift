@@ -17,15 +17,11 @@ public extension FlexibleSheet where Label == EmptyView {
     ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
     init(_ flexibleSheetManager: FlexibleSheetManager,
          isActive: Binding<Bool>,
-         swipesToDismiss: Bool = true,
-         ignoresSafeArea: Bool = false,
          destination: @escaping () -> Destination,
          onDismiss: @escaping () -> () = {}) {
         self.flexibleSheetManager = flexibleSheetManager
         self.flexibleSheetStyle = .emptyView
         self._isActiveBinding = isActive
-        self.swipesToDismiss = swipesToDismiss
-        self.ignoresSafeArea = ignoresSafeArea
         self.destination = destination
         self.label = { EmptyView() }
         self.onDismiss = onDismiss
@@ -40,24 +36,18 @@ public struct FlexibleSheet<Destination: View, Label: View>: View {
     private var flexibleSheetManager: FlexibleSheetManager
     private var flexibleSheetStyle: FlexibleSheetStyle
     @Binding private var isActiveBinding: Bool
-    private let swipesToDismiss: Bool
-    private let ignoresSafeArea: Bool
     private let destination: () -> Destination
     private let label: () -> Label
     private let onDismiss: () -> ()
     
     public init(_ flexibleSheetManager: FlexibleSheetManager,
                 style: FlexibleSheetStyle = .button,
-                swipesToDismiss: Bool = true,
-                ignoresSafeArea: Bool = false,
                 destination: @escaping () -> Destination,
                 label: @escaping () -> Label,
                 onDismiss: @escaping () -> () = {}) {
         self.flexibleSheetManager = flexibleSheetManager
         self.flexibleSheetStyle = style
         self._isActiveBinding = .constant(false)
-        self.swipesToDismiss = swipesToDismiss
-        self.ignoresSafeArea = ignoresSafeArea
         self.destination = destination
         self.label = label
         self.onDismiss = onDismiss

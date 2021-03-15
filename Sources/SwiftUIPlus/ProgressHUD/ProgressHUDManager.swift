@@ -45,7 +45,7 @@ public extension View {
     /// - Parameter hudManager: Progress HUD Manager
     /// - Returns: a view with a ProgressHUDManager
     func uses(_ progressHUDManager: ProgressHUDManager) -> some View {
-        self.environmentObject(progressHUDManager).modifier(ProgressHUDViewModifier(progressHUDManager: progressHUDManager))
+        self.modifier(ProgressHUDViewModifier(progressHUDManager: progressHUDManager))
     }
 }
 
