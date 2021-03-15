@@ -12,11 +12,13 @@ public struct FlexibleSheetViewModifier: ViewModifier {
     @ObservedObject public var flexibleSheetManager: FlexibleSheetManager
     
     public func body(content: Content) -> some View {
-        content.flexibleSheet(isActive: $flexibleSheetManager.isActive, swipesToDismiss: flexibleSheetManager.config.swipesToDismiss, ignoresSafeArea: flexibleSheetManager.config.ignoresSafeArea) {
-            flexibleSheetManager.destination
-        } onDismiss: {
-            flexibleSheetManager.onDismiss()
-        }
+        content
+            .environmentObject(flexibleSheetManager)
+            .flexibleSheet(isActive: $flexibleSheetManager.isActive, swipesToDismiss: flexibleSheetManager.config.swipesToDismiss, ignoresSafeArea: flexibleSheetManager.config.ignoresSafeArea) {
+                flexibleSheetManager.destination
+            } onDismiss: {
+                flexibleSheetManager.onDismiss()
+            }
 
     }
 }
