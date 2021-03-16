@@ -16,8 +16,8 @@ public extension Bundle {
     }
     
     struct Key {
-        static let CFBundleDisplayName = "CFBundleDisplayName"
-        static let CFBundleShortVersionString = "CFBundleShortVersionString"
-        static let CFBundleVersion = "CFBundleVersion"
+        public static let CFBundleDisplayName = "CFBundleDisplayName"
+        public static let CFBundleShortVersionString = "CFBundleShortVersionString"
+        public static let CFBundleVersion = "CFBundleVersion"
     }
 }
