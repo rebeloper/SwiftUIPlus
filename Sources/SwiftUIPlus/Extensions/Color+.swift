@@ -47,6 +47,10 @@ public extension Color {
     static let systemGray5 = Color(UIColor.systemGray5)
     static let systemGray6 = Color(UIColor.systemGray6)
     
+    // Adaptable black and white
+    static let systemBlack = Color(UIColor.label)
+    static let systemWhite = Color(UIColor.systemBackground)
+    
     // Adaptable text colors
     static let label = Color(UIColor.label)
     static let secondaryLabel = Color(UIColor.secondaryLabel)
