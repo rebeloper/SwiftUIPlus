@@ -13,6 +13,11 @@ public struct VideoPlayerView<VideoOverlay: View>: View {
     private let player: AVPlayer?
     private let videoOverlay: () -> VideoOverlay
     
+    /// Creates a VideoPlayer
+    /// - Parameters:
+    ///   - url: URL of the media
+    ///   - shouldAutoPlay: should auto play
+    ///   - videoOverlay: a view that is overlaying the video player
     public init(_ url: URL, shouldAutoPlay: Bool = false, @ViewBuilder videoOverlay: @escaping () -> VideoOverlay) {
         let player = AVPlayer(url: url)
         if shouldAutoPlay {

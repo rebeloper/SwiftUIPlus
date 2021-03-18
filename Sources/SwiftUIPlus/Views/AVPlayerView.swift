@@ -14,6 +14,10 @@ public struct AVPlayerView: UIViewControllerRepresentable {
     private var url: URL?
     private var shouldAutoPlay: Bool
     
+    /// Creates an AVPlayerViewController as a View
+    /// - Parameters:
+    ///   - url: URL of the media
+    ///   - shouldAutoPlay: should auto play
     public init(_ url: URL?, shouldAutoPlay: Bool = false) {
         self.url = url
         self.shouldAutoPlay = shouldAutoPlay
