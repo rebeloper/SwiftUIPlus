@@ -11,8 +11,13 @@ import AVKit
 public struct AVPlayerView: UIViewControllerRepresentable {
     public typealias UIViewControllerType = AVPlayerViewController
     
-    public var url: URL?
-    public var shouldAutoPlay: Bool
+    private var url: URL?
+    private var shouldAutoPlay: Bool
+    
+    public init(_ url: URL?, shouldAutoPlay: Bool = false) {
+        self.url = url
+        self.shouldAutoPlay = shouldAutoPlay
+    }
     
     public func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
