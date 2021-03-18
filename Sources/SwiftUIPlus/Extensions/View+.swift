@@ -40,6 +40,13 @@ public extension View {
         self.frame(width: width, height: height, alignment: .center)
     }
     
+    /// Positions this view within an invisible frame with the specified size with a set .center alignment.
+    /// - Parameter square: A fixed width and height for the resulting view. If `width` is `nil`, the resulting view assumes this view's sizing behavior.
+    /// - Returns: A square view with fixed dimensions of `width` and `height`.
+    func frame(square: CGFloat) -> some View {
+        self.frame(width: square, height: square, alignment: .center)
+    }
+    
     /// Wraps the View in a LazyScrollView
     /// - Parameters:
     ///   - axis: ScrollView axis
