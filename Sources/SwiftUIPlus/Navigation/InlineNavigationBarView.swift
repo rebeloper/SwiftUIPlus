@@ -71,9 +71,21 @@ public extension View {
         modifier(InlineNavigationBarViewModifier(titleView: {
             titleView
         }, leadingView: {
-            leadingView
+            Group {
+                if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                    leadingView
+                } else {
+                    trailingView
+                }
+            }
         }, trailingView: {
-            trailingView
+            Group {
+                if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                    trailingView
+                } else {
+                    leadingView
+                }
+            }
         }, backgroundView: {
             backgroundView
         }, showsDivider: showsDivider))
