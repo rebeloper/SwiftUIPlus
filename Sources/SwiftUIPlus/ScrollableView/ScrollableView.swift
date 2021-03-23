@@ -180,11 +180,6 @@ public struct ScrollableView<Content: View>: View {
             .onReceive(keyboardWillHidePublisher) { (output) in
                 isKeyboardVisible = false
             }
-            .onReceive([isPullToRefreshFinished].publisher) { (didFinish) in
-                if didFinish {
-                    onFinishedRefreshing()
-                }
-            }
         }
     }
     
@@ -233,6 +228,7 @@ public struct ScrollableViewModifier: ViewModifier {
     ///   - pinnedViews: Lazy Stack pinned views
     ///   - scrollsToId: scroll to id when created
     ///   - scrollsToIdWhenKeyboardWillShow: scroll to id when keyboard is shown
+    ///   - usesPullToRefreshView: should enable pull to refres, default is `false`
     ///   - isPullToRefreshFinished: `Binding` containing the refresh state
     ///   - onRefreshPulled: callback when a pull to refresh is trigerred
     public init(_ axis: Axis.Set = .vertical,
@@ -279,6 +275,7 @@ public extension View {
     ///   - pinnedViews: Lazy Stack pinned views
     ///   - scrollsToId: scroll to id when created
     ///   - scrollsToIdWhenKeyboardWillShow: scroll to id when keyboard is shown
+    ///   - usesPullToRefreshView: should enable pull to refres, default is `false`
     ///   - isPullToRefreshFinished: `Binding` containing the refresh state
     ///   - onRefreshPulled: callback when a pull to refresh is trigerred
     /// - Returns: an advanced scroll view

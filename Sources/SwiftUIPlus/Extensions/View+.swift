@@ -70,31 +70,6 @@ public extension View {
         modifier(LazyScrollViewModifier(axis, showsIndicators: showsIndicators, horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment, spacing: spacing, pinnedViews: pinnedViews, scrollsToId: scrollsToId, scrollsToIdWhenKeyboardWillShow: scrollsToIdWhenKeyboardWillShow))
     }
     
-    /// Wraps the View in a Grid
-    /// - Parameters:
-    ///   - items: array of GridItem to style the layout of the grid
-    ///   - axis: ScrollView axis
-    ///   - showsIndicators: ScrollView indicators visibility
-    ///   - horizontalAlignment: LazyVStack alignment; avalable only in .vertical ScrollView
-    ///   - verticalAlignment: LazyHStack alignment; avalable only in .horizontal ScrollView
-    ///   - spacing: spacing between elements
-    ///   - pinnedViews: Lazy Stack pinned views
-    ///   - scrollsToId: scroll to id when created
-    ///   - scrollsToIdWhenKeyboardWillShow: scroll to id when keyboard is shown
-    ///   - content: content of the ScrollView
-    /// - Returns: an advanced scroll view
-    func embedInGrid(_ items: [GridItem] = [GridItem(.fixed(20))],
-                     axis: Axis.Set = .vertical,
-                     showsIndicators: Bool = true,
-                     horizontalAlignment: HorizontalAlignment = .center,
-                     verticalAlignment: VerticalAlignment = .center,
-                     spacing: CGFloat? = nil,
-                     pinnedViews: PinnedScrollableViews = .init(),
-                     scrollsToId: Int? = nil,
-                     scrollsToIdWhenKeyboardWillShow: Bool? = nil) -> some View {
-        modifier(GridViewModifier(items, axis: axis, showsIndicators: showsIndicators, horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment, spacing: spacing, pinnedViews: pinnedViews, scrollsToId: scrollsToId, scrollsToIdWhenKeyboardWillShow: scrollsToIdWhenKeyboardWillShow))
-    }
-    
     /// Hides / unhides a view
     /// - Parameter shouldHide: hidden value
     /// - Returns: a view that is hidden or not
