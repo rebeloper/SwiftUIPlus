@@ -195,7 +195,7 @@ public struct ScrollableView<Content: View>: View {
                     } else {
                         if let pullToRefreshView = pullToRefreshView {
                             pullToRefreshView()
-                                .offset(y: -30)
+                                .offset(x: -30)
                                 .opacity(scrollRefresher.offset != scrollRefresher.startOffset ? 1 : 0)
                         } else {
                             Image(systemName: "arrow.right")
