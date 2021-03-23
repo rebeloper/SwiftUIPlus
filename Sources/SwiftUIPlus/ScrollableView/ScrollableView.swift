@@ -31,7 +31,6 @@ public struct ScrollableView<Content: View>: View {
     private let scrollsToIdWhenKeyboardWillShow: Bool?
     private let content: () -> Content
     private let usesPullToRefreshView: Bool
-    private let pullToRefreshView: (() -> AnyView?)?
     @Binding private var isPullToRefreshFinished: Bool
     private var onRefreshPulled: (() -> ())?
     
@@ -50,7 +49,6 @@ public struct ScrollableView<Content: View>: View {
     ///   - content: content of the ScrollView
     ///   - usesPullToRefreshView: should enable pull to refres, default is `false`
     ///   - isPullToRefreshFinished: `Binding` containing the refresh state
-    ///   - pullToRefreshView: a view representing the putt to refresh view
     ///   - onRefreshPulled: callback when a pull to refresh is trigerred
     public init(_ axis: Axis.Set = .vertical,
                 showsIndicators: Bool = true,
@@ -63,7 +61,6 @@ public struct ScrollableView<Content: View>: View {
                 content: @escaping () -> Content,
                 usesPullToRefreshView: Bool = false,
                 isPullToRefreshFinished: Binding<Bool> = .constant(true),
-                pullToRefreshView: (() -> AnyView?)? = nil,
                 onRefreshPulled: (() -> ())? = nil) {
         self.axis = axis
         self.showsIndicators = showsIndicators
@@ -76,7 +73,6 @@ public struct ScrollableView<Content: View>: View {
         self.content = content
         self.usesPullToRefreshView = usesPullToRefreshView
         self._isPullToRefreshFinished = isPullToRefreshFinished
-        self.pullToRefreshView = pullToRefreshView
         self.onRefreshPulled = onRefreshPulled
     }
     
@@ -113,17 +109,13 @@ public struct ScrollableView<Content: View>: View {
                         ProgressView()
                             .offset(y: -32)
                     } else {
-                        if let pullToRefreshView = pullToRefreshView {
-                            pullToRefreshView()
-                                .offset(y: -30)
-                                .opacity(scrollRefresher.offset != scrollRefresher.startOffset ? 1 : 0)
-                        } else {
-                            Image(systemName: "arrow.down")
-                                .font(.system(size: 16, weight: .heavy))
-                                .foregroundColor(Color.gray.opacity(0.5))
-                                .offset(y: -30)
-                                .opacity(scrollRefresher.offset != scrollRefresher.startOffset ? 1 : 0)
-                        }
+                        Image(systemName: "arrow.down")
+                            .font(.system(size: 16, weight: .heavy))
+                            .foregroundColor(Color.gray.opacity(0.5))
+                            .rotationEffect(.init(degrees: scrollRefresher.started ? 180 : 0))
+                            .offset(y: -30)
+                            .animation(.easeIn)
+                            .opacity(scrollRefresher.offset != scrollRefresher.startOffset ? 1 : 0)
                     }
                     
                     VStack {
@@ -146,7 +138,6 @@ public struct ScrollableView<Content: View>: View {
                     .frame(maxWidth: .infinity)
                 }
                 .offset(y: usesPullToRefreshView ? scrollRefresher.released ? 40 : 0 : 0)
-                
                 
             })
             .onReceive(keyboardWillAppearPublisher) { (output) in
@@ -230,7 +221,6 @@ public struct ScrollableViewModifier: ViewModifier {
     private let scrollsToIdWhenKeyboardWillShow: Bool?
     private let usesPullToRefreshView: Bool
     @Binding private var isPullToRefreshFinished: Bool
-    private var pullToRefreshView: (() -> AnyView?)?
     private var onRefreshPulled: (() -> ())?
     
     /// An advanced ScrollView
@@ -244,7 +234,6 @@ public struct ScrollableViewModifier: ViewModifier {
     ///   - scrollsToId: scroll to id when created
     ///   - scrollsToIdWhenKeyboardWillShow: scroll to id when keyboard is shown
     ///   - isPullToRefreshFinished: `Binding` containing the refresh state
-    ///   - pullToRefreshView: a view representing the putt to refresh view
     ///   - onRefreshPulled: callback when a pull to refresh is trigerred
     public init(_ axis: Axis.Set = .vertical,
                 showsIndicators: Bool = true,
@@ -256,7 +245,6 @@ public struct ScrollableViewModifier: ViewModifier {
                 scrollsToIdWhenKeyboardWillShow: Bool? = nil,
                 usesPullToRefreshView: Bool = false,
                 isPullToRefreshFinished: Binding<Bool> = .constant(true),
-                pullToRefreshView: (() -> AnyView?)? = nil,
                 onRefreshPulled: (() -> ())? = nil) {
         self.axis = axis
         self.showsIndicators = showsIndicators
@@ -268,16 +256,13 @@ public struct ScrollableViewModifier: ViewModifier {
         self.scrollsToIdWhenKeyboardWillShow = scrollsToIdWhenKeyboardWillShow
         self.usesPullToRefreshView = usesPullToRefreshView
         self._isPullToRefreshFinished = isPullToRefreshFinished
-        self.pullToRefreshView = pullToRefreshView
         self.onRefreshPulled = onRefreshPulled
     }
     
     public func body(content: Content) -> some View {
         ScrollableView<ScrollableViewModifier.Content>(axis, showsIndicators: showsIndicators, horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment, spacing: spacing, pinnedViews: pinnedViews, scrollsToId: scrollsToId, scrollsToIdWhenKeyboardWillShow: scrollsToIdWhenKeyboardWillShow, content: {
             content
-        }, usesPullToRefreshView: usesPullToRefreshView, isPullToRefreshFinished: $isPullToRefreshFinished, pullToRefreshView: {
-            pullToRefreshView?()
-        }, onRefreshPulled: {
+        }, usesPullToRefreshView: usesPullToRefreshView, isPullToRefreshFinished: $isPullToRefreshFinished, onRefreshPulled: {
             onRefreshPulled?()
         })
     }
@@ -295,7 +280,6 @@ public extension View {
     ///   - scrollsToId: scroll to id when created
     ///   - scrollsToIdWhenKeyboardWillShow: scroll to id when keyboard is shown
     ///   - isPullToRefreshFinished: `Binding` containing the refresh state
-    ///   - pullToRefreshView: a view representing the putt to refresh view
     ///   - onRefreshPulled: callback when a pull to refresh is trigerred
     /// - Returns: an advanced scroll view
     func embedInScrollableView(_ axis: Axis.Set = .vertical,
@@ -308,11 +292,8 @@ public extension View {
                                scrollsToIdWhenKeyboardWillShow: Bool? = nil,
                                usesPullToRefreshView: Bool = false,
                                isPullToRefreshFinished: Binding<Bool> = .constant(true),
-                               pullToRefreshView: (() -> AnyView)? = nil,
                                onRefreshPulled: (() -> ())? = nil) -> some View {
-        modifier(ScrollableViewModifier(axis, showsIndicators: showsIndicators, horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment, spacing: spacing, pinnedViews: pinnedViews, scrollsToId: scrollsToId, scrollsToIdWhenKeyboardWillShow: scrollsToIdWhenKeyboardWillShow, usesPullToRefreshView: usesPullToRefreshView, isPullToRefreshFinished: isPullToRefreshFinished, pullToRefreshView: {
-            pullToRefreshView?()
-        }, onRefreshPulled: {
+        modifier(ScrollableViewModifier(axis, showsIndicators: showsIndicators, horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment, spacing: spacing, pinnedViews: pinnedViews, scrollsToId: scrollsToId, scrollsToIdWhenKeyboardWillShow: scrollsToIdWhenKeyboardWillShow, usesPullToRefreshView: usesPullToRefreshView, isPullToRefreshFinished: isPullToRefreshFinished, onRefreshPulled: {
             onRefreshPulled?()
         }))
     }
