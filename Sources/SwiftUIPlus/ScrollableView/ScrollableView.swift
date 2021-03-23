@@ -225,7 +225,7 @@ public struct ScrollableView<Content: View>: View {
                     }
                     .frame(maxHeight: .infinity)
                 }
-                .offset(x: scrollRefresher.released ? 40 : 0)
+                .offset(x: usesPullToRefreshView ? scrollRefresher.released ? 40 : 0 : 0)
                 
                 
             })
