@@ -163,70 +163,24 @@ public struct ScrollableView<Content: View>: View {
             
         } else {
             ScrollView(axis, showsIndicators: showsIndicators, content: {
-                
-                GeometryReader { proxy -> AnyView in
-                    DispatchQueue.main.async {
-                        if scrollRefresher.startOffset == 0 {
-                            scrollRefresher.startOffset = proxy.frame(in: .global).minX
-                        }
-                        scrollRefresher.offset = proxy.frame(in: .global).minX
-                        if scrollRefresher.offset - scrollRefresher.startOffset > 80 && !scrollRefresher.started {
-                            scrollRefresher.started = true
-                        }
-                        if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && !scrollRefresher.released {
-                            withAnimation(Animation.linear) {
-                                scrollRefresher.released = true
-                            }
-                            didPullToRefresh()
-                        }
-                        if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && scrollRefresher.released && scrollRefresher.invalid {
-                            scrollRefresher.invalid = false
-                            didPullToRefresh()
-                        }
-                    }
-                    return AnyView(Color.black.frame(width: 0, height: 0))
-                }
-                .frame(width: 0, height: 0)
-                
-                ZStack(alignment: Alignment(horizontal: .leading, vertical: .center)) {
-                    if scrollRefresher.started && scrollRefresher.released {
-                        ProgressView()
-                            .offset(x: -32)
-                    } else {
-                        if let pullToRefreshView = pullToRefreshView {
-                            pullToRefreshView()
-                                .offset(x: -30)
-                                .opacity(scrollRefresher.offset != scrollRefresher.startOffset ? 1 : 0)
-                        } else {
-                            Image(systemName: "arrow.right")
-                                .font(.system(size: 16, weight: .heavy))
-                                .foregroundColor(Color.gray.opacity(0.5))
-                                .offset(x: -30)
-                                .opacity(scrollRefresher.offset != scrollRefresher.startOffset ? 1 : 0)
-                        }
-                    }
-                    
-                    HStack {
-                        ScrollViewReader { proxy in
-                            LazyHStack(alignment: verticalAlignment, spacing: spacing, pinnedViews: pinnedViews, content: {
-                                content()
-                                
-                                if isKeyboardVisible {
-                                    if let scrollsToIdWhenKeyboardWillShow = scrollsToIdWhenKeyboardWillShow,
-                                       scrollsToIdWhenKeyboardWillShow,
-                                       let scrollsToId = scrollsToId {
-                                        ScrollTo(id: scrollsToId, proxy: proxy)
-                                    }
-                                } else if let scrollsToId = scrollsToId {
+                HStack {
+                    ScrollViewReader { proxy in
+                        LazyHStack(alignment: verticalAlignment, spacing: spacing, pinnedViews: pinnedViews, content: {
+                            content()
+                            
+                            if isKeyboardVisible {
+                                if let scrollsToIdWhenKeyboardWillShow = scrollsToIdWhenKeyboardWillShow,
+                                   scrollsToIdWhenKeyboardWillShow,
+                                   let scrollsToId = scrollsToId {
                                     ScrollTo(id: scrollsToId, proxy: proxy)
                                 }
-                            })
-                        }
+                            } else if let scrollsToId = scrollsToId {
+                                ScrollTo(id: scrollsToId, proxy: proxy)
+                            }
+                        })
                     }
-                    .frame(maxHeight: .infinity)
                 }
-                .offset(x: usesPullToRefreshView ? scrollRefresher.released ? 40 : 0 : 0)
-                
+                .frame(maxHeight: .infinity)
                 
             })
             .onReceive(keyboardWillAppearPublisher) { (output) in
@@ -244,10 +198,12 @@ public struct ScrollableView<Content: View>: View {
     }
     
     func didPullToRefresh() {
+        if axis != .vertical { return }
         onRefreshPulled?()
     }
     
     func onFinishedRefreshing() {
+        if axis != .vertical { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             withAnimation(Animation.linear) {
                 if scrollRefresher.startOffset == scrollRefresher.offset {
