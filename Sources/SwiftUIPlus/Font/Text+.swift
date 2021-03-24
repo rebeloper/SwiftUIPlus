@@ -27,22 +27,22 @@ public extension Text {
     }
 }
 
-public extension Text {
+public extension View {
     /// Create a custom font with the given `name` and `size` that scales with
     /// the body text style.
-    func customFont(_ name: String, size: CGFloat) -> Text {
+    @ViewBuilder func customFont(_ name: String, size: CGFloat) -> some View {
         self.font(Font.custom(name, size: size))
     }
     
     /// Create a custom font with the given `name` and `size` that scales
     /// relative to the given `textStyle`.
-    func customFont(_ name: String, size: CGFloat, relativeTo: Font.TextStyle) -> Text {
+    @ViewBuilder func customFont(_ name: String, size: CGFloat, relativeTo: Font.TextStyle) -> some View {
         self.font(Font.custom(name, size: size, relativeTo: relativeTo))
     }
     
     /// Create a custom font with the given `name` and a fixed `size` that does
     /// not scale with Dynamic Type.
-    func customFont(_ name: String, fixedSize: CGFloat) -> Text {
+    @ViewBuilder func customFont(_ name: String, fixedSize: CGFloat) -> some View {
         self.font(Font.custom(name, fixedSize: fixedSize))
     }
 }
