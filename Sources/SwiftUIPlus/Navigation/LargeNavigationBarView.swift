@@ -77,17 +77,17 @@ public extension View {
         }, leadingView: {
             Group {
                 if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                    leadingView
-                } else {
                     trailingView
+                } else {
+                    leadingView
                 }
             }
         }, trailingView: {
             Group {
                 if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                    trailingView
-                } else {
                     leadingView
+                } else {
+                    trailingView
                 }
             }
         }, backgroundView: {
