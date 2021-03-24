@@ -84,3 +84,43 @@ public extension View {
     }
     
 }
+
+public extension View {
+    /// Create a custom system font with the given `name` and `size` that scales with
+    /// the body text style.
+    @ViewBuilder func customSystemFont(_ font: CustomSystemFont, size: CGFloat) -> some View {
+        self.font(Font.custom(font, size: size))
+    }
+    
+    /// Create a custom system font with the given `name` and `size` that scales
+    /// relative to the given `textStyle`.
+    @ViewBuilder func customSystemFont(_ font: CustomSystemFont, size: CGFloat, relativeTo: Font.TextStyle) -> some View {
+        self.font(Font.custom(font, size: size, relativeTo: relativeTo))
+    }
+    
+    /// Create a custom system font with the given `name` and a fixed `size` that does
+    /// not scale with Dynamic Type.
+    @ViewBuilder func customSystemFont(_ font: CustomSystemFont, fixedSize: CGFloat) -> some View {
+        self.font(Font.custom(font, fixedSize: fixedSize))
+    }
+}
+
+public extension View {
+    /// Create a custom font with the given `name` and `size` that scales with
+    /// the body text style.
+    @ViewBuilder func customFont(_ name: String, size: CGFloat) -> some View {
+        self.font(Font.custom(name, size: size))
+    }
+    
+    /// Create a custom font with the given `name` and `size` that scales
+    /// relative to the given `textStyle`.
+    @ViewBuilder func customFont(_ name: String, size: CGFloat, relativeTo: Font.TextStyle) -> some View {
+        self.font(Font.custom(name, size: size, relativeTo: relativeTo))
+    }
+    
+    /// Create a custom font with the given `name` and a fixed `size` that does
+    /// not scale with Dynamic Type.
+    @ViewBuilder func customFont(_ name: String, fixedSize: CGFloat) -> some View {
+        self.font(Font.custom(name, fixedSize: fixedSize))
+    }
+}
