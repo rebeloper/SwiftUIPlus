@@ -38,7 +38,7 @@ public struct InlineNavigationBarView<TitleView: View, LeadingView: View, Traili
                     Divider().ignoresSafeArea()
                 }
                 Spacer().frame(height: 0)
-                content
+                content.frame(width: proxy.size.width)
             }
             .navigationBarHidden(true)
         }

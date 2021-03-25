@@ -13,15 +13,17 @@ public struct CustomNavigationBarView<TitleView: View, BackgroundView: View, Con
     public let content: Content
     
     public var body: some View {
-        VStack(alignment: .center, spacing: 0) {
-            titleView
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(backgroundView)
-            Spacer().frame(height: 0)
-            content
+        GeometryReader { proxy in
+            VStack(alignment: .center, spacing: 0) {
+                titleView
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(backgroundView)
+                Spacer().frame(height: 0)
+                content.frame(width: proxy.size.width)
+            }
+            .navigationBarHidden(true)
         }
-        .navigationBarHidden(true)
     }
 }
 
