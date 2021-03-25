@@ -80,42 +80,46 @@ public struct ScrollableView<Content: View>: View {
         if axis == .vertical {
             ScrollView(axis, showsIndicators: showsIndicators, content: {
                 
-                GeometryReader { proxy -> AnyView in
-                    DispatchQueue.main.async {
-                        if scrollRefresher.startOffset == 0 {
-                            scrollRefresher.startOffset = proxy.frame(in: .global).minY
-                        }
-                        scrollRefresher.offset = proxy.frame(in: .global).minY
-                        if scrollRefresher.offset - scrollRefresher.startOffset > 80 && !scrollRefresher.started {
-                            scrollRefresher.started = true
-                        }
-                        if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && !scrollRefresher.released {
-                            withAnimation(Animation.linear) {
-                                scrollRefresher.released = true
+                if usesPullToRefreshView {
+                    GeometryReader { proxy -> AnyView in
+                        DispatchQueue.main.async {
+                            if scrollRefresher.startOffset == 0 {
+                                scrollRefresher.startOffset = proxy.frame(in: .global).minY
                             }
-                            didPullToRefresh()
+                            scrollRefresher.offset = proxy.frame(in: .global).minY
+                            if scrollRefresher.offset - scrollRefresher.startOffset > 80 && !scrollRefresher.started {
+                                scrollRefresher.started = true
+                            }
+                            if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && !scrollRefresher.released {
+                                withAnimation(Animation.linear) {
+                                    scrollRefresher.released = true
+                                }
+                                didPullToRefresh()
+                            }
+                            if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && scrollRefresher.released && scrollRefresher.invalid {
+                                scrollRefresher.invalid = false
+                                didPullToRefresh()
+                            }
                         }
-                        if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && scrollRefresher.released && scrollRefresher.invalid {
-                            scrollRefresher.invalid = false
-                            didPullToRefresh()
-                        }
+                        return AnyView(Color.black.frame(width: 0, height: 0))
                     }
-                    return AnyView(Color.black.frame(width: 0, height: 0))
+                    .frame(width: 0, height: 0)
                 }
-                .frame(width: 0, height: 0)
                 
                 ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
-                    if scrollRefresher.started && scrollRefresher.released {
-                        ProgressView()
-                            .offset(y: -32)
-                    } else {
-                        Image(systemName: "arrow.down")
-                            .font(.system(size: 16, weight: .heavy))
-                            .foregroundColor(Color.gray.opacity(0.5))
-                            .rotationEffect(.init(degrees: scrollRefresher.started ? 180 : 0))
-                            .offset(y: -30)
-                            .animation(.easeIn)
-                            .opacity(scrollRefresher.offset != scrollRefresher.startOffset ? 1 : 0)
+                    if usesPullToRefreshView {
+                        if scrollRefresher.started && scrollRefresher.released {
+                            ProgressView()
+                                .offset(y: -32)
+                        } else {
+                            Image(systemName: "arrow.down")
+                                .font(.system(size: 16, weight: .heavy))
+                                .foregroundColor(Color.gray.opacity(0.5))
+                                .rotationEffect(.init(degrees: scrollRefresher.started ? 180 : 0))
+                                .offset(y: -30)
+                                .animation(.easeIn)
+                                .opacity(scrollRefresher.offset != scrollRefresher.startOffset ? 1 : 0)
+                        }
                     }
                     
                     VStack {
@@ -184,20 +188,24 @@ public struct ScrollableView<Content: View>: View {
     }
     
     func didPullToRefresh() {
-        if axis != .vertical { return }
-        onRefreshPulled?()
+        if usesPullToRefreshView {
+            if axis != .vertical { return }
+            onRefreshPulled?()
+        }
     }
     
     func onFinishedRefreshing() {
-        if axis != .vertical { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            withAnimation(Animation.linear) {
-                if scrollRefresher.startOffset == scrollRefresher.offset {
-                    isPullToRefreshFinished = false
-                    scrollRefresher.released = false
-                    scrollRefresher.started = false
-                } else {
-                    scrollRefresher.invalid = true
+        if usesPullToRefreshView {
+            if axis != .vertical { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(Animation.linear) {
+                    if scrollRefresher.startOffset == scrollRefresher.offset {
+                        isPullToRefreshFinished = false
+                        scrollRefresher.released = false
+                        scrollRefresher.started = false
+                    } else {
+                        scrollRefresher.invalid = true
+                    }
                 }
             }
         }
