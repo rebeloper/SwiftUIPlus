@@ -39,7 +39,7 @@ public extension View {
     ///   - buttons: buttons for the custom alert
     ///   - offset: offset for the custom alert
     /// - Returns: a custom alert that can be trigerred by the custom alert manager
-    func customAlert<AlertContent: View>(manager: CustomAlertManager, content: @escaping () -> AlertContent, buttons: [CustomAlertButton], offset: CGSize = .zero) -> some View {
+    func customAlert<AlertContent: View>(manager: CustomAlertManager, content: @escaping () -> AlertContent, buttons: [CustomAlertButton], offset: CGPoint = .zero) -> some View {
         self.modifier(CustomAlertViewModifier(customAlertManager: manager, alertContent: content, buttons: buttons, offset: offset))
     }
 }

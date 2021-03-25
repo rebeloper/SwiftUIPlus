@@ -12,7 +12,7 @@ public struct CustomAlertViewModifier<AlertContent: View>: ViewModifier {
     @ObservedObject public var customAlertManager: CustomAlertManager
     public var alertContent: () -> AlertContent
     public var buttons: [CustomAlertButton]
-    public var offset: CGSize
+    public var offset: CGPoint
     
     public var requireHorizontalPositioning: Bool {
         let maxButtonPositionedHorizontally = 2
@@ -45,7 +45,7 @@ public struct CustomAlertViewModifier<AlertContent: View>: ViewModifier {
                         }
                         Spacer()
                     }
-                    .offset(offset)
+                    .offset(x: offset.x, y: offset.y)
                 }
             }
             
