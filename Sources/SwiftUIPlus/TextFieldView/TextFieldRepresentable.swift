@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TextFieldRepresentable: UIViewRepresentable {
     @Binding var text: String
+    var font: UIFont?
     var isFocused: Binding<Bool>?
     @Binding var height: CGFloat
     var returnKeyType: TextFieldView.ReturnKeyType
@@ -17,7 +18,7 @@ struct TextFieldRepresentable: UIViewRepresentable {
     // MARK: - Make
     func makeUIView(context: Context) -> UITextView {
         let view = CustomUITextView(rep: self)
-        view.font = UIFont.preferredFont(forTextStyle: .body)
+        view.font = font
         view.backgroundColor = .clear
         view.delegate = context.coordinator
         view.textContainerInset = .zero

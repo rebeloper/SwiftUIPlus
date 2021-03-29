@@ -10,6 +10,7 @@ import SwiftUI
 public struct TextFieldView: View {
     var title: String
     @Binding var text: String
+    var font: UIFont
     var isFocused: Binding<Bool>?
     @State var height: CGFloat = 0
     var returnKeyType: ReturnKeyType
@@ -28,12 +29,14 @@ public struct TextFieldView: View {
     public init<S: StringProtocol>(
         _ title: S,
         text: Binding<String>,
+        font: UIFont,
         isFocused: Binding<Bool>? = nil,
         returnKeyType: ReturnKeyType = .default,
         onCommit: (() -> Void)? = nil
     ) {
         self.title = String(title)
         _text = text
+        self.font = font
         self.isFocused = isFocused
         self.returnKeyType = returnKeyType
         self.onCommit = onCommit
@@ -44,10 +47,12 @@ public struct TextFieldView: View {
             Text(title)
                 .foregroundColor(.secondary)
                 .opacity(text.isEmpty ? 0.5 : 0)
+                .font(Font(font))
                 .animation(nil)
             
             TextFieldRepresentable (
                 text: $text,
+                font: font,
                 isFocused: isFocused,
                 height: $height,
                 returnKeyType: returnKeyType,
