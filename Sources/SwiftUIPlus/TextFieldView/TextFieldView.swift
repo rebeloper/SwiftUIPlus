@@ -15,9 +15,9 @@ public struct TextFieldView: UIViewRepresentable {
         @Binding private var nextResponder: Bool?
         @Binding private var isResponder: Bool?
         @Binding private var previousResponder: Bool?
-        @Binding private var textFieldIsEditing: Bool
+        @Binding private var textFieldIsEditing: Bool?
         
-        public init(text: Binding<String>, nextResponder: Binding<Bool?>, isResponder: Binding<Bool?>, previousResponder: Binding<Bool?>, textFieldIsEditing: Binding<Bool>) {
+        public init(text: Binding<String>, nextResponder: Binding<Bool?>, isResponder: Binding<Bool?>, previousResponder: Binding<Bool?>, textFieldIsEditing: Binding<Bool?>) {
             _text = text
             _isResponder = isResponder
             _nextResponder = nextResponder
@@ -59,12 +59,21 @@ public struct TextFieldView: UIViewRepresentable {
         
     }
     
-    @Binding public var text: String
-    @Binding public var nextResponder: Bool?
-    @Binding public var isResponder: Bool?
-    @Binding public var previousResponder: Bool?
-    @Binding public var textFieldIsEditing: Bool
-    @State public var config: TextFieldViewConfig
+    @Binding private var text: String
+    @Binding private var nextResponder: Bool?
+    @Binding private var isResponder: Bool?
+    @Binding private var previousResponder: Bool?
+    @Binding private var textFieldIsEditing: Bool?
+    private var config: TextFieldViewConfig
+    
+    public init(text: Binding<String>, nextResponder: Binding<Bool?> = .constant(nil), isResponder: Binding<Bool?> = .constant(true), previousResponder: Binding<Bool?> = .constant(nil), textFieldIsEditing: Binding<Bool?> = .constant(nil), config: TextFieldViewConfig = TextFieldViewConfig()) {
+        _text = text
+        _nextResponder = nextResponder
+        _isResponder = isResponder
+        _previousResponder = previousResponder
+        _textFieldIsEditing = textFieldIsEditing
+        self.config = config
+    }
     
     public func makeUIView(context: UIViewRepresentableContext<TextFieldView>) -> UITextField {
         let textField = makeUITextField()
@@ -158,6 +167,8 @@ public struct TextFieldViewConfig {
     var inputView: UIView? = nil
     var inputAccessoryView: UIView? = nil
     var clearsOnInsertion: Bool = false
+    
+    public init() {}
 }
 
 
