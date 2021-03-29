@@ -23,8 +23,13 @@ struct TextFieldRepresentable: UIViewRepresentable {
         view.textContainerInset = .zero
         view.textContainer.lineFragmentPadding = 0
         view.keyboardDismissMode = .interactive
+        
+        view.isSecureTextEntry = config.isSecureTextEntry
         view.font = config.font
+        view.autocapitalizationType = config.autocapitalizationType
+        view.keyboardType = config.keyboardType
         view.returnKeyType = config.returnKeyType.uiReturnKey
+        
         DispatchQueue.main.async {
             view.text = text
             height = view.textHeight()
@@ -121,8 +126,21 @@ extension UITextView {
 }
 
 public struct TextFieldViewConfig {
-    var font: UIFont = UIFont.preferredFont(forTextStyle: .body)
-    var returnKeyType: TextFieldView.ReturnKeyType = .default
+    var isSecureTextEntry: Bool
+    var font: UIFont
+    var autocapitalizationType: UITextAutocapitalizationType
+    var keyboardType: UIKeyboardType
+    var returnKeyType: TextFieldView.ReturnKeyType
     
-    public init() {}
+    public init(isSecureTextEntry: Bool = false,
+                font: UIFont = UIFont.preferredFont(forTextStyle: .body),
+                autocapitalizationType: UITextAutocapitalizationType = .sentences,
+                keyboardType: UIKeyboardType = .default,
+                returnKeyType: TextFieldView.ReturnKeyType = .default) {
+        self.isSecureTextEntry = isSecureTextEntry
+        self.font = font
+        self.autocapitalizationType = autocapitalizationType
+        self.keyboardType = keyboardType
+        self.returnKeyType = returnKeyType
+    }
 }
