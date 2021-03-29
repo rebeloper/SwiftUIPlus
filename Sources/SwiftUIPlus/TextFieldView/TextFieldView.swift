@@ -54,7 +54,10 @@ public struct TextFieldView: UIViewRepresentable {
     }
     
     public func updateUIView(_ uiView: UITextField, context _: UIViewRepresentableContext<TextFieldView>) {
-        uiView.text = text
+//        uiView.text = text
+        if let text = uiView.text {
+            self.text = text
+        }
         if isResponder ?? false {
             uiView.becomeFirstResponder()
         }
