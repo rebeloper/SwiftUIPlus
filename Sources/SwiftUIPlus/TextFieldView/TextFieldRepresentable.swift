@@ -75,7 +75,10 @@ struct TextFieldRepresentable: UIViewRepresentable {
         }
         
         func textView(_: UITextView, shouldChangeTextIn _: NSRange, replacementText text: String) -> Bool {
-            guard let onCommit = rep.onCommit, text == "\n" else { return true }
+            guard let onCommit = rep.onCommit, text == "\n" else {
+                onCommit()
+                return true
+            }
             onCommit()
             return false
         }
