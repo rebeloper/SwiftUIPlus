@@ -84,3 +84,19 @@ public extension View {
     }
     
 }
+
+public extension View {
+    /// Gives option to modify the view if a condition is `true`
+    /// - Parameters:
+    ///   - condition: the condition
+    ///   - content: the content
+    /// - Returns: a modified view when a given condition is `true`
+    @ViewBuilder
+    func `if`<Content: View>(_ condition: Bool, content: (Self) -> Content) -> some View {
+        if condition {
+            content(self)
+        } else {
+            self
+        }
+    }
+}
