@@ -10,11 +10,11 @@ import SwiftUI
 public struct TextFieldView: View {
     var title: String
     @Binding var text: String
-    var font: UIFont
     var isFocused: Binding<Bool>?
-    @State var height: CGFloat = 0
-    var returnKeyType: ReturnKeyType
+    var config: TextFieldViewConfig
     var onCommit: (() -> Void)?
+    
+    @State var height: CGFloat = 0
     
     /// Creates a multiline text field with a text label.
     ///
@@ -22,23 +22,21 @@ public struct TextFieldView: View {
     ///   - title: The title of the text field.
     ///   - text: The text to display and edit.
     ///   - isFocused: Whether or not the field should be focused.
-    ///   - returnKeyType: The type of return key to be used.
+    ///   - config: The text field view configuration.
     ///   - onCommit: An action to perform when the user presses the
     ///     Return key while the text field has focus. If `nil`, a newline
     ///     will be inserted.
     public init<S: StringProtocol>(
         _ title: S,
         text: Binding<String>,
-        font: UIFont,
         isFocused: Binding<Bool>? = nil,
-        returnKeyType: ReturnKeyType = .default,
+        config: TextFieldViewConfig = TextFieldViewConfig(),
         onCommit: (() -> Void)? = nil
     ) {
         self.title = String(title)
         _text = text
-        self.font = font
         self.isFocused = isFocused
-        self.returnKeyType = returnKeyType
+        self.config = config
         self.onCommit = onCommit
     }
     
@@ -47,16 +45,15 @@ public struct TextFieldView: View {
             Text(title)
                 .foregroundColor(.secondary)
                 .opacity(text.isEmpty ? 0.5 : 0)
-                .font(Font(font))
+                .font(Font(config.font))
                 .animation(nil)
             
             TextFieldRepresentable (
                 text: $text,
-                font: font,
                 isFocused: isFocused,
-                height: $height,
-                returnKeyType: returnKeyType,
-                onCommit: onCommit
+                config: config,
+                onCommit: onCommit,
+                height: $height
             )
             .frame(height: height)
         }

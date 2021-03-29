@@ -9,22 +9,22 @@ import SwiftUI
 
 struct TextFieldRepresentable: UIViewRepresentable {
     @Binding var text: String
-    var font: UIFont?
     var isFocused: Binding<Bool>?
-    @Binding var height: CGFloat
-    var returnKeyType: TextFieldView.ReturnKeyType
+    var config: TextFieldViewConfig
     var onCommit: (() -> Void)?
+    
+    @Binding var height: CGFloat
     
     // MARK: - Make
     func makeUIView(context: Context) -> UITextView {
         let view = CustomUITextView(rep: self)
-        view.font = font
         view.backgroundColor = .clear
         view.delegate = context.coordinator
         view.textContainerInset = .zero
         view.textContainer.lineFragmentPadding = 0
         view.keyboardDismissMode = .interactive
-        view.returnKeyType = returnKeyType.uiReturnKey
+        view.font = config.font
+        view.returnKeyType = config.returnKeyType.uiReturnKey
         DispatchQueue.main.async {
             view.text = text
             height = view.textHeight()
@@ -34,8 +34,8 @@ struct TextFieldRepresentable: UIViewRepresentable {
     
     // MARK: - Update
     func updateUIView(_ view: UITextView, context: Context) {
-        if view.returnKeyType != returnKeyType.uiReturnKey {
-            view.returnKeyType = returnKeyType.uiReturnKey
+        if view.returnKeyType != config.returnKeyType.uiReturnKey {
+            view.returnKeyType = config.returnKeyType.uiReturnKey
             view.reloadInputViews()
             return
         }
@@ -118,4 +118,11 @@ extension UITextView {
     func textHeight() -> CGFloat {
         sizeThatFits(bounds.size).height
     }
+}
+
+public struct TextFieldViewConfig {
+    var font: UIFont = UIFont.preferredFont(forTextStyle: .body)
+    var returnKeyType: TextFieldView.ReturnKeyType = .default
+    
+    public init() {}
 }
