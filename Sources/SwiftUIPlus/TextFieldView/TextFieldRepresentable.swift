@@ -24,7 +24,6 @@ struct TextFieldRepresentable: UIViewRepresentable {
         view.textContainer.lineFragmentPadding = 0
         view.keyboardDismissMode = .interactive
         
-        view.isSecureTextEntry = config.isSecureTextEntry
         view.font = config.font
         view.autocapitalizationType = config.autocapitalizationType
         view.keyboardType = config.keyboardType
@@ -126,18 +125,15 @@ extension UITextView {
 }
 
 public struct TextFieldViewConfig {
-    var isSecureTextEntry: Bool
     var font: UIFont
     var autocapitalizationType: UITextAutocapitalizationType
     var keyboardType: UIKeyboardType
     var returnKeyType: TextFieldView.ReturnKeyType
     
-    public init(isSecureTextEntry: Bool = false,
-                font: UIFont = UIFont.preferredFont(forTextStyle: .body),
+    public init(font: UIFont = UIFont.preferredFont(forTextStyle: .body),
                 autocapitalizationType: UITextAutocapitalizationType = .sentences,
                 keyboardType: UIKeyboardType = .default,
                 returnKeyType: TextFieldView.ReturnKeyType = .default) {
-        self.isSecureTextEntry = isSecureTextEntry
         self.font = font
         self.autocapitalizationType = autocapitalizationType
         self.keyboardType = keyboardType

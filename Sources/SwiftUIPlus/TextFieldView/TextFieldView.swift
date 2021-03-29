@@ -71,7 +71,6 @@ public extension TextFieldView {
         case search
         case send
         
-        #if os(iOS)
         var uiReturnKey: UIReturnKeyType {
             switch self {
             case .done:
@@ -90,6 +89,5 @@ public extension TextFieldView {
                 return .send
             }
         }
-        #endif
     }
 }
