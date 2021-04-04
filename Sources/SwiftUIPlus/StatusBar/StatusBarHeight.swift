@@ -1,5 +1,5 @@
 //
-//  StatusBar.swift
+//  StatusBarHeight.swift
 //  
 //
 //  Created by Alex Nagy on 04.04.2021.
