@@ -21,7 +21,7 @@ public struct FlexibleSheetModifier: ViewModifier {
             content
                 .cornerRadius(flexibleSheetManager.isPresented ? containerConfig.animates ? containerConfig.cornerRadius : 0 : 0)
                 .scaleEffect(flexibleSheetManager.isPresented ? containerConfig.animates ? containerConfig.scale : 1 : 1)
-                .animation(containerConfig.animation)
+                .animation(.linear(duration: containerConfig.animationDuration))
                 .disabled(flexibleSheetManager.isPresented)
                 .statusBarStyle(containerConfig.animates ? .lightContent : .default, isActive: $flexibleSheetManager.isPresented)
             
@@ -45,30 +45,30 @@ public struct FlexibleSheetModifier: ViewModifier {
 }
 
 /// Configure the Flexible Sheet Container
-public struct FlexibleSheetContainerConfig {
-    public var cornerRadius: CGFloat
-    public var scale: CGFloat
-    public var coverColor: Color
-    public var coverColorOpacity: Double
-    public var animation: Animation
-    public var animates: Bool
+public struct FlexibleSheetContainerConfig: Hashable {
+    public let cornerRadius: CGFloat
+    public let scale: CGFloat
+    public let coverColor: Color
+    public let coverColorOpacity: Double
+    public let animationDuration: Double
+    public let animates: Bool
     
-    public init(cornerRadius: CGFloat = 9, scale: CGFloat = 0.91, coverColor: Color = .black, coverColorOpacity: Double = 0.2, animation: Animation = .linear(duration: 0.2), animates: Bool = true) {
+    public init(cornerRadius: CGFloat = 9, scale: CGFloat = 0.91, coverColor: Color = .black, coverColorOpacity: Double = 0.2, animationDuration: Double = 0.2, animates: Bool = true) {
         self.cornerRadius = cornerRadius
         self.scale = scale
         self.coverColor = coverColor
         self.coverColorOpacity = coverColorOpacity
-        self.animation = animation
+        self.animationDuration = animationDuration
         self.animates = animates
     }
 }
 
 /// Configure the Flexible Sheet
 public struct FlexibleSheetConfig {
-    public var cornerRadius: CGFloat
-    public var topPadding: CGFloat
-    public var animation: Animation
-    public var animates: Bool
+    public let cornerRadius: CGFloat
+    public let topPadding: CGFloat
+    public let animation: Animation
+    public let animates: Bool
     
     public init(cornerRadius: CGFloat = 9, topPadding: CGFloat = 20, animation: Animation = .linear(duration: 0.2), animates: Bool = true) {
         self.cornerRadius = cornerRadius
