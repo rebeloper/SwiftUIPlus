@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct AlertViewModifier: ViewModifier {
     
-    @ObservedObject public var alertManager: AlertManager
+    @StateObject public var alertManager = AlertManager()
     
     public func body(content: Content) -> some View {
         content
