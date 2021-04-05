@@ -8,6 +8,20 @@
 import SwiftUI
 
 public extension View {
+    /// Adds the ability to use ProgressHUD, Alert and FlexibleSheet from SwiftUIPlus
+    /// - Parameters:
+    ///   - progressHUDConfig: progress HUD configuration
+    ///   - flexibleSheetConfig: flexible sheet configuration
+    ///   - flexibleSheetContainerConfig: flexible sheet container configuration
+    /// - Returns: a view that has the ability to use ProgressHUD, Alert and FlexibleSheet from SwiftUIPlus
+    func usesSwiftUIPlus(progressHUDConfig: ProgressHUDConfig = ProgressHUDConfig(), flexibleSheetConfig: FlexibleSheetConfig = FlexibleSheetConfig(), flexibleSheetContainerConfig: FlexibleSheetContainerConfig = FlexibleSheetContainerConfig()) -> some View {
+        self.usesProgressHUDManager(progressHUDConfig)
+            .usesAlertManager()
+            .usesFlexibleSheetManager(config: flexibleSheetConfig, containerConfig: flexibleSheetContainerConfig)
+    }
+}
+
+public extension View {
     
     /// Wraps the View in a NavigationView
     /// - Returns: A view embeded in a NavigationView
