@@ -38,7 +38,7 @@ public extension View {
     /// Adds a ProgressHUDManager to the view
     /// - Parameter config: progress HUD configuration
     /// - Returns: a view that has the capability to show a ProgressvHUD
-    func usesProgressHUDManager(_ config: ProgressHUDConfig) -> some View {
+    func usesProgressHUDManager(_ config: ProgressHUDConfig = ProgressHUDConfig()) -> some View {
         self.modifier(ProgressHUDViewModifier(config: config))
     }
 }
