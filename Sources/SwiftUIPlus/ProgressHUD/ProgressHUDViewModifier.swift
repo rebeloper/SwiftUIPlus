@@ -9,12 +9,13 @@ import SwiftUI
 
 public struct ProgressHUDViewModifier: ViewModifier {
     
-    @ObservedObject public var progressHUDManager: ProgressHUDManager
+    @StateObject public var progressHUDManager = ProgressHUDManager()
+    public var config: ProgressHUDConfig
     
     public func body(content: Content) -> some View {
         ZStack {
-            content.disabled(progressHUDManager.config.shouldDisableContent ? progressHUDManager.isPresented : false)
-            ProgressHUD($progressHUDManager.isPresented, config: progressHUDManager.config)
+            content.disabled(config.shouldDisableContent ? progressHUDManager.isPresented : false)
+            ProgressHUD($progressHUDManager.isPresented, title: progressHUDManager.title, caption: progressHUDManager.caption, config: config)
         }
     }
 }

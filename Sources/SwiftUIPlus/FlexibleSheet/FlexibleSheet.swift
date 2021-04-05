@@ -21,7 +21,7 @@ public struct FlexibleSheetModifier: ViewModifier {
             content
                 .cornerRadius(flexibleSheetManager.isPresented ? containerConfig.animates ? containerConfig.cornerRadius : 0 : 0)
                 .scaleEffect(flexibleSheetManager.isPresented ? containerConfig.animates ? containerConfig.scale : 1 : 1)
-                .animation(.linear(duration: containerConfig.animationDuration))
+                .animation(containerConfig.animation)
                 .disabled(flexibleSheetManager.isPresented)
                 .statusBarStyle(containerConfig.animates ? .lightContent : .default, isActive: $flexibleSheetManager.isPresented)
             
@@ -45,20 +45,20 @@ public struct FlexibleSheetModifier: ViewModifier {
 }
 
 /// Configure the Flexible Sheet Container
-public struct FlexibleSheetContainerConfig: Hashable {
+public struct FlexibleSheetContainerConfig {
     public let cornerRadius: CGFloat
     public let scale: CGFloat
     public let coverColor: Color
     public let coverColorOpacity: Double
-    public let animationDuration: Double
+    public let animation: Animation
     public let animates: Bool
     
-    public init(cornerRadius: CGFloat = 9, scale: CGFloat = 0.91, coverColor: Color = .black, coverColorOpacity: Double = 0.2, animationDuration: Double = 0.2, animates: Bool = true) {
+    public init(cornerRadius: CGFloat = 9, scale: CGFloat = 0.91, coverColor: Color = .black, coverColorOpacity: Double = 0.2, animation: Animation = .linear(duration: 0.2), animates: Bool = true) {
         self.cornerRadius = cornerRadius
         self.scale = scale
         self.coverColor = coverColor
         self.coverColorOpacity = coverColorOpacity
-        self.animationDuration = animationDuration
+        self.animation = animation
         self.animates = animates
     }
 }
