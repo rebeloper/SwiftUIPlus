@@ -136,7 +136,7 @@ private struct ProgressHUDLabelView: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                .frame(width: UIScreen.main.bounds.width * 0.7)
+                .frame(width: UIScreen.main.bounds.width * 0.6)
             }
             
         }
