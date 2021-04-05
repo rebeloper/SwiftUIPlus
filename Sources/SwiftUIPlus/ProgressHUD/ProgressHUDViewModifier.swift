@@ -17,5 +17,6 @@ public struct ProgressHUDViewModifier: ViewModifier {
             content.disabled(config.shouldDisableContent ? progressHUDManager.isPresented : false)
             ProgressHUD($progressHUDManager.isPresented, title: progressHUDManager.title, caption: progressHUDManager.caption, config: config)
         }
+        .environmentObject(progressHUDManager)
     }
 }
