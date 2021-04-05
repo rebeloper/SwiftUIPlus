@@ -1,6 +1,6 @@
 //
 //  AlertManager.swift
-//  
+//
 //
 //  Created by Alex Nagy on 28.02.2021.
 //
@@ -34,10 +34,10 @@ public class AlertManager: ObservableObject {
 }
 
 public extension View {
-    
-    /// Adds a AlertManager to the view
-    /// - Returns: a view that has the capability to show a AlertManager
-    func usesAlertManager() -> some View {
-        self.modifier(AlertViewModifier())
+    /// Makes AlertManager available
+    /// - Parameter alertManager: alertManager
+    /// - Returns: a view that can use AlertManager
+    func uses(_ alertManager: AlertManager) -> some View {
+        self.modifier(AlertViewModifier(alertManager: alertManager))
     }
 }

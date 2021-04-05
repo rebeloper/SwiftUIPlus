@@ -1,6 +1,6 @@
 //
 //  ProgressHUDManager.swift
-//  
+//
 //
 //  Created by Alex Nagy on 04.03.2021.
 //
@@ -10,16 +10,22 @@ import SwiftUI
 public class ProgressHUDManager: ObservableObject {
     
     @Published public var isPresented: Bool = false
-    public var title: String? = nil
-    public var caption: String? = nil
+    
+    public var config: ProgressHUDConfig
+    
+    /// Creates a ProgressHUD manager
+    /// - Parameter config: ProgressHUD Configuration
+    public init(config: ProgressHUDConfig = ProgressHUDConfig()) {
+        self.config = config
+    }
     
     /// Shows a hud
     /// - Parameters:
     ///   - title: title of the hud
     ///   - caption: caption of the hud
     public func show(_ title: String? = nil, caption: String? = nil) {
-        self.title = title
-        self.caption = caption
+        self.config.title = title
+        self.config.caption = caption
         withAnimation {
             isPresented = true
         }
@@ -36,10 +42,10 @@ public class ProgressHUDManager: ObservableObject {
 
 public extension View {
     /// Adds a ProgressHUDManager to the view
-    /// - Parameter config: progress HUD configuration
-    /// - Returns: a view that has the capability to show a ProgressHUD
-    func usesProgressHUDManager(_ config: ProgressHUDConfig = ProgressHUDConfig()) -> some View {
-        self.modifier(ProgressHUDViewModifier(config: config))
+    /// - Parameter hudManager: Progress HUD Manager
+    /// - Returns: a view with a ProgressHUDManager
+    func uses(_ progressHUDManager: ProgressHUDManager) -> some View {
+        self.modifier(ProgressHUDViewModifier(progressHUDManager: progressHUDManager))
     }
 }
 

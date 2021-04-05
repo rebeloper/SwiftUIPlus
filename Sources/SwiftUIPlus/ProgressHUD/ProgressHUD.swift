@@ -9,6 +9,8 @@ import SwiftUI
 
 /// Configure the ProgressHUD
 public struct ProgressHUDConfig: Hashable {
+    var title: String?
+    var caption: String?
     
     var type: ProgressHUDType
 
@@ -136,10 +138,10 @@ private struct ProgressHUDLabelView: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                .frame(width: UIScreen.main.bounds.width * 0.6)
             }
             
         }
+        
         .multilineTextAlignment(.center)
         .vibrancyEffect()
         .vibrancyEffectStyle(.fill)
@@ -148,16 +150,12 @@ private struct ProgressHUDLabelView: View {
 
 public struct ProgressHUD: View {
     @Binding var isVisible: Bool
-    var title: String?
-    var caption: String?
     var config: ProgressHUDConfig
     
     @Environment(\.colorScheme) private var colorScheme
     
-    public init(_ isVisible: Binding<Bool>, title: String?, caption: String?, config: ProgressHUDConfig) {
+    public init(_ isVisible: Binding<Bool>, config: ProgressHUDConfig) {
         self._isVisible = isVisible
-        self.title = title
-        self.caption = caption
         self.config = config
     }
     
@@ -175,8 +173,8 @@ public struct ProgressHUD: View {
                         VStack {
                             HStack(spacing: 12) {
                                 ProgressView()
-                                if title != nil {
-                                    ProgressHUDLabelView(type: config.type, title: title, caption: caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                if config.title != nil {
+                                    ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
                                 }
                             }
                             .padding()
@@ -201,8 +199,8 @@ public struct ProgressHUD: View {
                     case .center:
                         VStack(spacing: 20) {
                             ProgressView()
-                            if title != nil {
-                                ProgressHUDLabelView(type: config.type, title: title, caption: caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                            if config.title != nil {
+                                ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
                             }
                         }
                         .padding()
@@ -227,8 +225,8 @@ public struct ProgressHUD: View {
                             
                             HStack(spacing: 12) {
                                 ProgressView()
-                                if title != nil {
-                                    ProgressHUDLabelView(type: config.type, title: title, caption: caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
+                                if config.title != nil {
+                                    ProgressHUDLabelView(type: config.type, title: config.title, caption: config.caption, titleForegroundColor: config.titleForegroundColor, captionForegroundColor: config.captionForegroundColor)
                                 }
                             }
                             .padding()

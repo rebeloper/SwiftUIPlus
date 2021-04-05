@@ -1,6 +1,6 @@
 //
 //  AlertViewModifier.swift
-//  
+//
 //
 //  Created by Alex Nagy on 28.02.2021.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct AlertViewModifier: ViewModifier {
     
-    @StateObject public var alertManager = AlertManager()
+    @ObservedObject public var alertManager: AlertManager
     
     public func body(content: Content) -> some View {
         content
@@ -36,7 +36,6 @@ public struct AlertViewModifier: ViewModifier {
                 let type = item.defaultActionSheet
                 return ActionSheet(title: Text(type.title), message: Text(type.message), buttons: type.buttons)
             }
-            .environmentObject(alertManager)
             
     }
 }
