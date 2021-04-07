@@ -18,8 +18,9 @@ public struct InlineNavigationBarView<TitleView: View, LeadingView: View, Traili
     public let content: Content
     
     public var body: some View {
-        if transparentNavBarHeight != nil {
-            GeometryReader { proxy in
+        GeometryReader { proxy in
+            if transparentNavBarHeight != nil {
+                
                 ZStack {
                     ScrollView(showsIndicators: false) {
                         content
@@ -33,9 +34,8 @@ public struct InlineNavigationBarView<TitleView: View, LeadingView: View, Traili
                     }
                 }
                 .navigationBarHidden(true)
-            }
-        } else {
-            GeometryReader { proxy in
+                
+            } else {
                 VStack(alignment: .center, spacing: 0) {
                     navBarView(proxy)
                     Spacer().frame(height: 0)
@@ -78,8 +78,8 @@ public struct InlineNavigationBarViewModifier<TitleView: View, LeadingView: View
     public var leadingView: () -> LeadingView
     public var trailingView: () -> TrailingView
     public var backgroundView: () -> BackgroundView
-    public var transparentNavBarHeight: CGFloat?
     public var showsDivider: Bool
+    public var transparentNavBarHeight: CGFloat?
     
     public func body(content: Content) -> some View {
         InlineNavigationBarView(titleView: titleView(), leadingView: leadingView(), trailingView: trailingView(), backgroundView: backgroundView(), showsDivider: showsDivider, transparentNavBarHeight: transparentNavBarHeight, content: content)
@@ -94,6 +94,8 @@ public extension View {
     ///   - leadingView: A view at the leading side of the navigation bar
     ///   - trailingView: A view at the trailing side of the navigation bar
     ///   - backgroundView: A view that is the background of the navigation bar
+    ///   - showsDivider: should show the divider
+    ///   - transparentNavBarHeight: should the nav bar be transparent
     /// - Returns: Inline navigation bar
     func inlineNavigationBar<TitleView: View, LeadingView: View, TrailingView: View, BackgroundView: View>(titleView: TitleView, leadingView: LeadingView, trailingView: TrailingView, backgroundView: BackgroundView, showsDivider: Bool = true, transparentNavBarHeight: CGFloat? = nil) -> some View {
         modifier(InlineNavigationBarViewModifier(titleView: {
@@ -116,6 +118,6 @@ public extension View {
             }
         }, backgroundView: {
             backgroundView
-        }, transparentNavBarHeight: transparentNavBarHeight, showsDivider: showsDivider))
+        }, showsDivider: showsDivider, transparentNavBarHeight: transparentNavBarHeight))
     }
 }
