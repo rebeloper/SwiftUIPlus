@@ -25,6 +25,7 @@ public struct InlineNavigationBarView<TitleView: View, LeadingView: View, Traili
                         content
                             .frame(width: proxy.width)
                             .offset(y: transparentNavBarHeight!)
+                            .padding(.bottom, transparentNavBarHeight!)
                     }
                     TightVStack {
                         navBarView(proxy)
