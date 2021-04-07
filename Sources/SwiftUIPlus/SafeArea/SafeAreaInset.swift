@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct SafeAreaInset {
+public struct SafeAreaInset {
     /// Safe area inset value
     /// - Parameter edge: edge of safe area
     /// - Returns: a CGFloat value of the safe area inset
