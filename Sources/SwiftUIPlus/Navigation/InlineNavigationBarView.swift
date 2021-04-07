@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUIPlus
 
 public struct InlineNavigationBarView<TitleView: View, LeadingView: View, TrailingView: View, BackgroundView: View, Content: View>: View {
     public let titleView: TitleView
