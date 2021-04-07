@@ -20,7 +20,6 @@ public struct InlineNavigationBarView<TitleView: View, LeadingView: View, Traili
     public var body: some View {
         GeometryReader { proxy in
             if transparentNavBarHeight != nil {
-                
                 ZStack {
                     ScrollView(showsIndicators: false) {
                         content
