@@ -19,14 +19,17 @@ public struct InlineNavigationBarView<TitleView: View, LeadingView: View, Traili
     
     public var body: some View {
         if transparentNavBarHeight != nil {
-            ZStack {
-                GeometryReader { proxy in
+            GeometryReader { proxy in
+                ZStack {
                     ScrollView(showsIndicators: false) {
                         content
                             .frame(width: proxy.width)
                             .offset(y: transparentNavBarHeight!)
                     }
-                    navBarView(proxy)
+                    TightVStack {
+                        navBarView(proxy)
+                        Spacer()
+                    }
                 }
                 .navigationBarHidden(true)
             }
