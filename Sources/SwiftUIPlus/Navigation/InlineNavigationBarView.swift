@@ -32,6 +32,7 @@ public struct InlineNavigationBarView<TitleView: View, LeadingView: View, Traili
                         navBarView(proxy)
                         Spacer()
                     }
+                    .frame(height: proxy.height)
                 }
                 .navigationBarHidden(true)
             }
