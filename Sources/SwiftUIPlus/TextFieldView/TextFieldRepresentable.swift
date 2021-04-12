@@ -9,8 +9,8 @@ import SwiftUI
 
 struct TextFieldRepresentable: UIViewRepresentable {
     @Binding var text: String
-    var focusTag: Int
-    var selectedFocus: Binding<Int>
+    var focusTag: Int?
+    var selectedFocus: Binding<Int>?
     var config: TextFieldViewConfig
     var onCommit: (() -> Void)?
     
@@ -54,7 +54,7 @@ struct TextFieldRepresentable: UIViewRepresentable {
     }
     
     private func isTextFieldFocused() -> Bool {
-        selectedFocus.wrappedValue == focusTag
+        selectedFocus?.wrappedValue == focusTag
     }
     
     private func updateFocus(_ view: UITextView, context: Context) {
@@ -112,12 +112,14 @@ class CustomUITextView: UITextView {
     }
     
     override func becomeFirstResponder() -> Bool {
-        rep.selectedFocus.wrappedValue = rep.focusTag
+//        rep.isFocused?.wrappedValue = true
+        rep.selectedFocus?.wrappedValue = rep.focusTag ?? 0
         return super.becomeFirstResponder()
     }
     
     override func resignFirstResponder() -> Bool {
-        rep.selectedFocus.wrappedValue = 0
+//        rep.isFocused?.wrappedValue = false
+        rep.selectedFocus = nil
         return super.resignFirstResponder()
     }
 }
