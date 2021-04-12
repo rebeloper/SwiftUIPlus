@@ -29,6 +29,7 @@ struct TextFieldRepresentable: UIViewRepresentable {
         view.autocapitalizationType = config.autocapitalizationType
         view.keyboardType = config.keyboardType
         view.returnKeyType = config.returnKeyType.uiReturnKey
+        view.textColor = UIColor(config.foregroundColor)
         
         DispatchQueue.main.async {
             view.text = text
@@ -136,14 +137,20 @@ public struct TextFieldViewConfig {
     var autocapitalizationType: UITextAutocapitalizationType
     var keyboardType: UIKeyboardType
     var returnKeyType: TextFieldView.ReturnKeyType
+    var titleForegroundColor: Color
+    var foregroundColor: Color
     
     public init(font: UIFont = UIFont.preferredFont(forTextStyle: .body),
                 autocapitalizationType: UITextAutocapitalizationType = .sentences,
                 keyboardType: UIKeyboardType = .default,
-                returnKeyType: TextFieldView.ReturnKeyType = .default) {
+                returnKeyType: TextFieldView.ReturnKeyType = .default,
+                titleForegroundColor: Color = Color.secondary.opacity(0.5),
+                foregroundColor: Color = Color.label) {
         self.font = font
         self.autocapitalizationType = autocapitalizationType
         self.keyboardType = keyboardType
         self.returnKeyType = returnKeyType
+        self.titleForegroundColor = titleForegroundColor
+        self.foregroundColor = foregroundColor
     }
 }

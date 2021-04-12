@@ -46,8 +46,8 @@ public struct TextFieldView: View {
     public var body: some View {
         ZStack(alignment: .topLeading) {
             Text(title)
-                .foregroundColor(.secondary)
-                .opacity(text.isEmpty ? 0.5 : 0)
+                .foregroundColor(config.titleForegroundColor)
+                .opacity(text.isEmpty ? 1 : 0)
                 .font(Font(config.font))
                 .animation(nil)
             
