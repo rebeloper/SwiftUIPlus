@@ -10,7 +10,8 @@ import SwiftUI
 public struct TextFieldView: View {
     var title: String
     @Binding var text: String
-    var isFocused: Binding<Bool>?
+    var focusTag: Int
+    var selectedFocus: Binding<Int>
     var config: TextFieldViewConfig
     var onCommit: (() -> Void)?
     
@@ -21,7 +22,7 @@ public struct TextFieldView: View {
     /// - Parameters:
     ///   - title: The title of the text field.
     ///   - text: The text to display and edit.
-    ///   - isFocused: Whether or not the field should be focused.
+    ///   - selectedFocus: The field tag that should be focused.
     ///   - config: The text field view configuration.
     ///   - onCommit: An action to perform when the user presses the
     ///     Return key while the text field has focus. If `nil`, a newline
@@ -29,13 +30,15 @@ public struct TextFieldView: View {
     public init<S: StringProtocol>(
         _ title: S,
         text: Binding<String>,
-        isFocused: Binding<Bool>? = nil,
+        focusTag: Int,
+        selectedFocus: Binding<Int>,
         config: TextFieldViewConfig = TextFieldViewConfig(),
         onCommit: (() -> Void)? = nil
     ) {
         self.title = String(title)
         _text = text
-        self.isFocused = isFocused
+        self.focusTag = focusTag
+        self.selectedFocus = selectedFocus
         self.config = config
         self.onCommit = onCommit
     }
@@ -50,7 +53,8 @@ public struct TextFieldView: View {
             
             TextFieldRepresentable (
                 text: $text,
-                isFocused: isFocused,
+                focusTag: focusTag,
+                selectedFocus: selectedFocus,
                 config: config,
                 onCommit: onCommit,
                 height: $height

@@ -9,7 +9,8 @@ import SwiftUI
 
 struct TextFieldRepresentable: UIViewRepresentable {
     @Binding var text: String
-    var isFocused: Binding<Bool>?
+    var focusTag: Int
+    var selectedFocus: Binding<Int>
     var config: TextFieldViewConfig
     var onCommit: (() -> Void)?
     
@@ -52,8 +53,12 @@ struct TextFieldRepresentable: UIViewRepresentable {
         updateFocus(view, context: context)
     }
     
+    private func isTextFieldFocused() -> Bool {
+        selectedFocus.wrappedValue == focusTag
+    }
+    
     private func updateFocus(_ view: UITextView, context: Context) {
-        guard let isFocused = isFocused?.wrappedValue else { return }
+        let isFocused = isTextFieldFocused()
         if isFocused,
            view.window != nil,
            !view.isFirstResponder,
@@ -94,7 +99,7 @@ struct TextFieldRepresentable: UIViewRepresentable {
 
 // MARK: - Custom View
 class CustomUITextView: UITextView {
-    let rep: TextFieldRepresentable
+    var rep: TextFieldRepresentable
     
     internal init(rep: TextFieldRepresentable) {
         self.rep = rep
@@ -107,12 +112,12 @@ class CustomUITextView: UITextView {
     }
     
     override func becomeFirstResponder() -> Bool {
-        rep.isFocused?.wrappedValue = true
+        rep.selectedFocus.wrappedValue = rep.focusTag
         return super.becomeFirstResponder()
     }
     
     override func resignFirstResponder() -> Bool {
-        rep.isFocused?.wrappedValue = false
+        rep.selectedFocus.wrappedValue = 0
         return super.resignFirstResponder()
     }
 }
