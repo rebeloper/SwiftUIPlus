@@ -17,12 +17,12 @@ public extension Page where Label == EmptyView {
     ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
     init(_ type: PageType = .push,
          isActive: Binding<Bool>,
-         destination: @escaping () -> Destination,
+         @ViewBuilder destination: () -> Destination,
          onDismiss: (() -> Void)? = nil) {
         self.pageStyle = .emptyView
         self.pageType = type
         self._isActiveBinding = isActive
-        self.destination = destination
+        self.destination = destination()
         self.label = { EmptyView() }
         self.onDismiss = onDismiss
     }
@@ -35,7 +35,7 @@ public struct Page<Destination: View, Label: View>: View {
     private var pageStyle: PageStyle
     private var pageType: PageType
     @Binding private var isActiveBinding: Bool
-    private let destination: () -> Destination
+    private let destination: Destination
     private let label: () -> Label
     private let onDismiss: (() -> Void)?
     
@@ -48,13 +48,13 @@ public struct Page<Destination: View, Label: View>: View {
     ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
     public init(_ style: PageStyle = .button,
                 type: PageType = .push,
-                destination: @escaping () -> Destination,
+                @ViewBuilder destination: () -> Destination,
                 label: @escaping () -> Label,
                 onDismiss: (() -> Void)? = nil) {
         self.pageStyle = style
         self.pageType = type
         self._isActiveBinding = .constant(false)
-        self.destination = destination
+        self.destination = destination()
         self.label = label
         self.onDismiss = onDismiss
     }
@@ -65,7 +65,7 @@ public struct Page<Destination: View, Label: View>: View {
             case .push:
                 switch pageStyle {
                 case .button:
-                    NavigationLink(destination: destination().onDisappear(perform: {
+                    NavigationLink(destination: destination.onDisappear(perform: {
                         onDismiss?()
                     })) {
                         label()
@@ -74,13 +74,13 @@ public struct Page<Destination: View, Label: View>: View {
                     label().onTapGesture {
                         isActive.toggle()
                     }
-                    NavigationLink(destination: destination().onDisappear(perform: {
+                    NavigationLink(destination: destination.onDisappear(perform: {
                         onDismiss?()
                     }), isActive: $isActive) {
                         EmptyView()
                     }
                 case .emptyView:
-                    NavigationLink(destination: destination().onDisappear(perform: {
+                    NavigationLink(destination: destination.onDisappear(perform: {
                         onDismiss?()
                     }), isActive: $isActiveBinding) {
                         EmptyView()
@@ -96,7 +96,7 @@ public struct Page<Destination: View, Label: View>: View {
                         label()
                     }
                     .sheet(isPresented: $isActive, onDismiss: onDismiss) {
-                        destination()
+                        destination
                     }
                 case .view:
                     label().onTapGesture {
@@ -106,14 +106,14 @@ public struct Page<Destination: View, Label: View>: View {
                         EmptyView()
                     }
                     .sheet(isPresented: $isActive, onDismiss: onDismiss) {
-                        destination()
+                        destination
                     }
                 case .emptyView:
                     Button {} label: {
                         EmptyView()
                     }
                     .sheet(isPresented: $isActiveBinding, onDismiss: onDismiss) {
-                        destination()
+                        destination
                     }
                 }
                 
@@ -126,7 +126,7 @@ public struct Page<Destination: View, Label: View>: View {
                         label()
                     }
                     .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
-                        destination()
+                        destination
                     }
                 case .view:
                     label().onTapGesture {
@@ -136,14 +136,14 @@ public struct Page<Destination: View, Label: View>: View {
                         EmptyView()
                     }
                     .fullScreenCover(isPresented: $isActive, onDismiss: onDismiss) {
-                        destination()
+                        destination
                     }
                 case .emptyView:
                     Button {} label: {
                         EmptyView()
                     }
                     .fullScreenCover(isPresented: $isActiveBinding, onDismiss: onDismiss) {
-                        destination()
+                        destination
                     }
                 }
                 
