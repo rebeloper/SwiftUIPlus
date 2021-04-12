@@ -14,6 +14,7 @@ public struct TextFieldView: View {
     var selectedFocus: Binding<Int>
     var config: TextFieldViewConfig
     var onCommit: (() -> Void)?
+    var onDidBeginEditing: (() -> Void)?
     
     @State var height: CGFloat = 0
     
@@ -25,6 +26,7 @@ public struct TextFieldView: View {
     ///   - selectedFocus: The field tag that should be focused.
     ///   - config: The text field view configuration.
     ///   - onCommit: An action to perform when the user presses the
+    ///   - onDidBeginEditing: An action performed when the editing did begin
     ///     Return key while the text field has focus. If `nil`, a newline
     ///     will be inserted.
     public init<S: StringProtocol>(
@@ -33,7 +35,8 @@ public struct TextFieldView: View {
         focusTag: Int,
         selectedFocus: Binding<Int>,
         config: TextFieldViewConfig = TextFieldViewConfig(),
-        onCommit: (() -> Void)? = nil
+        onCommit: (() -> Void)? = nil,
+        onDidBeginEditing: (() -> Void)? = nil
     ) {
         self.title = String(title)
         _text = text
@@ -41,6 +44,7 @@ public struct TextFieldView: View {
         self.selectedFocus = selectedFocus
         self.config = config
         self.onCommit = onCommit
+        self.onDidBeginEditing = onDidBeginEditing
     }
     
     public var body: some View {
