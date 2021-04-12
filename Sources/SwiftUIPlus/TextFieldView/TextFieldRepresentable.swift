@@ -13,6 +13,7 @@ struct TextFieldRepresentable: UIViewRepresentable {
     var selectedFocus: Binding<Int>?
     var config: TextFieldViewConfig
     var onCommit: (() -> Void)?
+    var onDidBeginEditing: (() -> Void)?
     
     @Binding var height: CGFloat
     
@@ -94,6 +95,11 @@ struct TextFieldRepresentable: UIViewRepresentable {
         func textViewDidChange(_ textView: UITextView) {
             rep.text = textView.text
             rep.height = textView.textHeight()
+        }
+        
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            guard let onDidBeginEditing = rep.onDidBeginEditing else { return }
+            onDidBeginEditing()
         }
     }
 }
