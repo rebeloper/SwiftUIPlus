@@ -11,16 +11,16 @@ public struct DismissView<Content: View>: View {
     
     @Environment(\.presentationMode) private var presentationMode
     
-    private let content: () -> Content
+    private let content: Content
     
     /// A View that when tapped on dismisses the currently presented view
     /// - Parameter content: a view
-    public init(content: @escaping () -> Content) {
-        self.content = content
+    public init(@ViewBuilder content: () -> Content) {
+        self.content = content()
     }
     
     public var body: some View {
-        content()
+        content
             .onTapGesture {
                 presentationMode.wrappedValue.dismiss()
             }

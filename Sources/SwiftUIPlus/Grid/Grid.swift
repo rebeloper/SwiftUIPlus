@@ -22,7 +22,7 @@ public struct Grid<Content: View>: View {
     private let pinnedViews: PinnedScrollableViews
     private let scrollsToId: Int?
     private let scrollsToIdWhenKeyboardWillShow: Bool?
-    private let content: () -> Content
+    private let content: Content
     private let usesPullToRefreshView: Bool
     @Binding private var isPullToRefreshFinished: Bool
     private var onRefreshPulled: (() -> ())?
@@ -53,7 +53,7 @@ public struct Grid<Content: View>: View {
                 pinnedViews: PinnedScrollableViews = .init(),
                 scrollsToId: Int? = nil,
                 scrollsToIdWhenKeyboardWillShow: Bool? = nil,
-                content: @escaping () -> Content,
+                @ViewBuilder content: () -> Content,
                 usesPullToRefreshView: Bool = false,
                 isPullToRefreshFinished: Binding<Bool> = .constant(true),
                 onRefreshPulled: (() -> ())? = nil) {
@@ -66,7 +66,7 @@ public struct Grid<Content: View>: View {
         self.pinnedViews = pinnedViews
         self.scrollsToId = scrollsToId
         self.scrollsToIdWhenKeyboardWillShow = scrollsToIdWhenKeyboardWillShow
-        self.content = content
+        self.content = content()
         self.usesPullToRefreshView = usesPullToRefreshView
         self._isPullToRefreshFinished = isPullToRefreshFinished
         self.onRefreshPulled = onRefreshPulled
@@ -120,7 +120,7 @@ public struct Grid<Content: View>: View {
                     
                     ScrollViewReader { proxy in
                         LazyVGrid(columns: items, alignment: horizontalAlignment, spacing: spacing, pinnedViews: pinnedViews, content: {
-                            content()
+                            content
                             
                             if isKeyboardVisible {
                                 if let scrollsToIdWhenKeyboardWillShow = scrollsToIdWhenKeyboardWillShow,
@@ -153,7 +153,7 @@ public struct Grid<Content: View>: View {
             ScrollView(axis, showsIndicators: showsIndicators, content: {
                 ScrollViewReader { proxy in
                     LazyHGrid(rows: items, alignment: verticalAlignment, spacing: spacing, pinnedViews: pinnedViews, content: {
-                        content()
+                        content
                         
                         if isKeyboardVisible {
                             if let scrollsToIdWhenKeyboardWillShow = scrollsToIdWhenKeyboardWillShow,

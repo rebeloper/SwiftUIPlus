@@ -11,14 +11,14 @@ public struct ColorSchemeKitView<Content: View>: View {
     
     @ObservedObject public var colorSchemeManager: ColorSchemeManager
     
-    public let content: () -> Content
+    public let content: Content
     
-    public init(colorSchemeManager: ColorSchemeManager, content: @escaping () -> Content) {
+    public init(colorSchemeManager: ColorSchemeManager, @ViewBuilder content: () -> Content) {
         self.colorSchemeManager = colorSchemeManager
-        self.content = content
+        self.content = content()
     }
     
     public var body: some View {
-        content().environmentObject(colorSchemeManager)
+        content.environmentObject(colorSchemeManager)
     }
 }

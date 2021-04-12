@@ -8,10 +8,10 @@
 import SwiftUI
 
 public class FlexibleSheetManager: ObservableObject {
-    
+
     @Published public var isPresented: Bool = false
     public var sheet: () -> (AnyView) = { AnyView(Color.clear.frame(width: UIScreen.main.bounds.width)) }
-    
+
     /// Shows a Flexible Sheet that has the height of its content
     /// - Parameters:
     ///   - sheet: the contents of the sheet
@@ -21,7 +21,7 @@ public class FlexibleSheetManager: ObservableObject {
             isPresented = true
         }
     }
-    
+
     /// Hides a Flexible Sheet
     public func hide() {
         withAnimation {
@@ -31,7 +31,7 @@ public class FlexibleSheetManager: ObservableObject {
             self.sheet = { AnyView(Color.clear.frame(width: UIScreen.main.bounds.width)) }
         }
     }
-    
+
 }
 
 public extension View {
