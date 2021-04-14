@@ -11,18 +11,42 @@ public struct FocusableTextField: UIViewRepresentable {
     public let label: String
     @Binding public var text: String
     
-    public var focusable: Binding<[Bool]>? = nil
-    public var isSecureTextEntry: Binding<Bool>? = nil
+    public var focusable: Binding<[Bool]>?
+    public var isSecureTextEntry: Binding<Bool>?
     
-    public var returnKeyType: UIReturnKeyType = .default
-    public var autocapitalizationType: UITextAutocapitalizationType = .none
-    public var keyboardType: UIKeyboardType = .default
-    public var textContentType: UITextContentType? = nil
+    public var returnKeyType: UIReturnKeyType
+    public var autocapitalizationType: UITextAutocapitalizationType
+    public var keyboardType: UIKeyboardType
+    public var textContentType: UITextContentType?
     
-    public var tag: Int? = nil
-    public var inputAccessoryView: UIToolbar? = nil
+    public var tag: Int?
+    public var inputAccessoryView: UIToolbar?
     
-    public var onCommit: (() -> Void)? = nil
+    public var onCommit: (() -> Void)?
+    
+    public init(label: String,
+                text: Binding<String>,
+                focusable: Binding<[Bool]>? = nil,
+                isSecureTextEntry: Binding<Bool>? = nil,
+                returnKeyType: UIReturnKeyType = .default,
+                autocapitalizationType: UITextAutocapitalizationType = .sentences,
+                keyboardType: UIKeyboardType = .default,
+                textContentType: UITextContentType? = nil,
+                tag: Int? = nil,
+                inputAccessoryView: UIToolbar? = nil,
+                onCommit: (() -> Void)? = nil) {
+        self.label = label
+        self._text = text
+        self.focusable = focusable
+        self.isSecureTextEntry = isSecureTextEntry
+        self.returnKeyType = returnKeyType
+        self.autocapitalizationType = autocapitalizationType
+        self.keyboardType = keyboardType
+        self.textContentType = textContentType
+        self.tag = tag
+        self.inputAccessoryView = inputAccessoryView
+        self.onCommit = onCommit
+    }
     
     public func makeUIView(context: Context) -> UITextField {
         let textField = UITextField(frame: .zero)
@@ -74,9 +98,9 @@ public struct FocusableTextField: UIViewRepresentable {
     }
     
     public final class Coordinator: NSObject, UITextFieldDelegate {
-        public let control: KitTextField
+        public let control: FocusableTextField
         
-        public init(_ control: KitTextField) {
+        public init(_ control: FocusableTextField) {
             self.control = control
         }
         
