@@ -27,7 +27,7 @@ public struct FocusableTextField: UIViewRepresentable {
     
     public init(label: String,
                 text: Binding<String>,
-                textColor: UIColor,
+                textColor: UIColor = .label,
                 focusable: Binding<[Bool]>? = nil,
                 isSecureTextEntry: Binding<Bool>? = nil,
                 returnKeyType: UIReturnKeyType = .default,
