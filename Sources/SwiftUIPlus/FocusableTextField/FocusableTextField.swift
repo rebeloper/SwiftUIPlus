@@ -10,6 +10,7 @@ import SwiftUI
 public struct FocusableTextField: UIViewRepresentable {
     public let label: String
     @Binding public var text: String
+    public let textColor: UIColor
     
     public var focusable: Binding<[Bool]>?
     public var isSecureTextEntry: Binding<Bool>?
@@ -26,6 +27,7 @@ public struct FocusableTextField: UIViewRepresentable {
     
     public init(label: String,
                 text: Binding<String>,
+                textColor: UIColor,
                 focusable: Binding<[Bool]>? = nil,
                 isSecureTextEntry: Binding<Bool>? = nil,
                 returnKeyType: UIReturnKeyType = .default,
@@ -37,6 +39,7 @@ public struct FocusableTextField: UIViewRepresentable {
                 onCommit: (() -> Void)? = nil) {
         self.label = label
         self._text = text
+        self.textColor = textColor
         self.focusable = focusable
         self.isSecureTextEntry = isSecureTextEntry
         self.returnKeyType = returnKeyType
@@ -53,6 +56,7 @@ public struct FocusableTextField: UIViewRepresentable {
         textField.delegate = context.coordinator
         textField.placeholder = label
         
+        textField.textColor = textColor
         textField.returnKeyType = returnKeyType
         textField.autocapitalizationType = autocapitalizationType
         textField.keyboardType = keyboardType
