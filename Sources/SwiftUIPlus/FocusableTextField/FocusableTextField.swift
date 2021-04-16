@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// A UIViewRepresentable of UITextField that can become or resign first responder.
+///
+/// Create an @State array for focusable, and tag the text fields in order of focus.
 public struct FocusableTextField: UIViewRepresentable {
     public let label: String
     @Binding public var text: String
@@ -115,7 +118,9 @@ public struct FocusableTextField: UIViewRepresentable {
                 focusable[i] = (textField.tag == i)
             }
             
-            control.focusable?.wrappedValue = focusable
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.control.focusable?.wrappedValue = focusable
+            }
         }
         
         public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -128,10 +133,12 @@ public struct FocusableTextField: UIViewRepresentable {
                 focusable[i] = (textField.tag + 1 == i)
             }
             
-            control.focusable?.wrappedValue = focusable
-            
-            if textField.tag == focusable.count - 1 {
-                textField.resignFirstResponder()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                control.focusable?.wrappedValue = focusable
+                
+                if textField.tag == focusable.count - 1 {
+                    textField.resignFirstResponder()
+                }
             }
             
             return true
