@@ -134,7 +134,7 @@ public struct FocusableTextField: UIViewRepresentable {
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                control.focusable?.wrappedValue = focusable
+                self.control.focusable?.wrappedValue = focusable
                 
                 if textField.tag == focusable.count - 1 {
                     textField.resignFirstResponder()
