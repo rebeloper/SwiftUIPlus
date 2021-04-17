@@ -70,9 +70,8 @@ public extension Page where Label == EmptyView {
 /// 2. when you want to navigate to another Page but no tappable view should be available on the screen
 /// 3. when you want to navigate to another Page upon a user initiated tap on a view, but only after a certain action has been finished after the tap
 ///
-/// Let's take a look at some examples:
 ///
-/// *IMPORTANT*: Your root view has to be inside a `NavigationView`:
+/// IMPORTANT: Your root view has to be inside a `NavigationView`:
 ///
 /// ```
 /// NavigationView {
@@ -80,7 +79,9 @@ public extension Page where Label == EmptyView {
 /// }
 /// ```
 ///
-/// Next inside `ContentView` you can create a `Page` that will navigate to the `DetailView`:
+/// Let's take a look at some examples:
+///
+/// Inside `ContentView` you can create a `Page` that will navigate to the `DetailView`:
 ///
 /// ```
 /// Page(.button, type: .push) {
@@ -129,7 +130,7 @@ public extension Page where Label == EmptyView {
 /// }
 /// ```
 ///
-/// Also you may choose the type of navigation, default is `push`. Options are: `push`, `sheet` and `fullScreenSheet`.
+/// Also you may choose the type of navigation. Options are: `push`, `sheet` and `fullScreenSheet`.
 ///
 /// ```
 /// Page(.view, type: .sheet) {
@@ -139,7 +140,7 @@ public extension Page where Label == EmptyView {
 /// }
 /// ```
 ///
-/// If you wish you may add an `action` between the moment the view is tapped and the presentation of the `Destination`. Optionally you may add here too an `onDismiss` completion.
+/// If you wish you may add an `action` between the moment the view is tapped and the presentation of the `Destination`. Optionally you may add an `onDismiss` completion here too.
 ///
 /// ```
 /// @State private var isDetailViewActive = false // declared outside of the body
