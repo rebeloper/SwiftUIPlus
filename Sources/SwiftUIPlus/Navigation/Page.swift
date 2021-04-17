@@ -62,17 +62,17 @@ public extension Page where Label == EmptyView {
 /// 2. `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
 /// 3. `View` that when tapped executes an `action` that can present a `Destination` view when `isActive` is set to `true`.
 ///
-/// Navigation is `SwiftUI` is handeled by multiple items (ex. NavigationLink, .sheet, .fullScreenCover). `Page` brings them all into one convenient syntax.
+/// Navigation in `SwiftUI` is handeled by multiple items (ex. NavigationLink, .sheet, .fullScreenCover). `Page` brings them all into one convenient syntax.
 /// `Page` behaves much like a `NavigationLink`, but with added extras.
 ///
 /// The three use cases of Page are:
-///     - when you want to navigate to another Page upon a user initiated tap on a view
-///     - when you want to navigate to another Page but no tappable view should be available on the screen
-///     - when you want to navigate to another Page upon a user initiated tap on a view, but only after a certain action has been finished after the tap
+/// 1. when you want to navigate to another Page upon a user initiated tap on a view
+/// 2. when you want to navigate to another Page but no tappable view should be available on the screen
+/// 3. when you want to navigate to another Page upon a user initiated tap on a view, but only after a certain action has been finished after the tap
 ///
 /// Let's take a look at some examples:
 ///
-/// IMPORTANT: Your root view has to be inside a ``NavigationView``:
+/// *IMPORTANT*: Your root view has to be inside a `NavigationView`:
 ///
 /// ```
 /// NavigationView {
