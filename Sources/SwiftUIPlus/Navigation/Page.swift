@@ -43,7 +43,6 @@ public extension Page where Label == EmptyView {
     init(type: PageType,
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
-         @ViewBuilder label: () -> Label,
          action: (() -> Void)?,
          onDismiss: (() -> Void)? = nil) {
         self.pageStyle = nil
