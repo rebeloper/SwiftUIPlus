@@ -33,6 +33,30 @@ public extension Page {
 }
 
 public extension Page where Label == EmptyView {
+
+    /// `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
+    /// - Parameters:
+    ///   - type: The page type presented. Default is .push.
+    ///   - isActive: A binding string whether the destination is presented.
+    ///   - destination: A closure returning the content of the destination.
+    ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
+    init(type: PageType = .push,
+         isActive: Binding<Bool>,
+         @ViewBuilder destination: () -> Destination,
+         @ViewBuilder label: () -> Label,
+         action: (() -> Void)?,
+         onDismiss: (() -> Void)? = nil) {
+        self.pageStyle = nil
+        self.pageType = type
+        self._isActiveBinding = isActive
+        self.destination = destination()
+        self.label = { EmptyView() }()
+        self.action = action
+        self.onDismiss = onDismiss
+    }
+}
+
+public extension Page where Label == EmptyView {
     
     /// `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
     /// - Parameters:
