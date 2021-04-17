@@ -15,8 +15,8 @@ public extension Page {
     ///   - isActive: A binding string whether the destination is presented.
     ///   - destination: A closure returning the content of the destination.
     ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
-    init(_ style: PageStyle = .button,
-         type: PageType = .push,
+    init(_ style: PageStyle,
+         type: PageType,
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
@@ -40,7 +40,7 @@ public extension Page where Label == EmptyView {
     ///   - isActive: A binding string whether the destination is presented.
     ///   - destination: A closure returning the content of the destination.
     ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
-    init(type: PageType = .push,
+    init(type: PageType,
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
@@ -64,7 +64,7 @@ public extension Page where Label == EmptyView {
     ///   - isActive: A binding string whether the destination is presented.
     ///   - destination: A closure returning the content of the destination.
     ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
-    init(_ type: PageType = .push,
+    init(type: PageType,
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
          onDismiss: (() -> Void)? = nil) {
@@ -173,8 +173,8 @@ public struct Page<Destination: View, Label: View>: View {
     ///   - destination: A closure returning the content of the destination.
     ///   - label: A tappable view that triggers the navigation.
     ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
-    public init(_ style: PageStyle = .button,
-                type: PageType = .push,
+    public init(_ style: PageStyle,
+                type: PageType,
                 @ViewBuilder destination: () -> Destination,
                 @ViewBuilder label: () -> Label,
                 onDismiss: (() -> Void)? = nil) {
