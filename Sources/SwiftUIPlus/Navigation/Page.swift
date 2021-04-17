@@ -136,7 +136,7 @@ public extension Page where Label == EmptyView {
 /// }
 /// ```
 ///
-/// Also you may choose the type of navigation. Options are: `push`, `sheet` and `fullScreenSheet`.
+/// Also you may choose the type of navigation. Options are: `.push`, `.sheet` and `.fullScreenSheet`.
 ///
 /// ```
 /// Page(.view, type: .sheet) {
