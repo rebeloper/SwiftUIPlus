@@ -8,13 +8,16 @@
 import SwiftUI
 
 public extension Page {
-
-    /// `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
+    
+    /// `View` that when tapped executes an `action` that can present a `Destination` view when `isActive` is set to `true`.
     /// - Parameters:
-    ///   - type: The page type presented. Default is .push.
-    ///   - isActive: A binding string whether the destination is presented.
+    ///   - style: The page style presented.
+    ///   - type: The page type presented.
+    ///   - isActive: A binding Bool whether the destination is presented.
     ///   - destination: A closure returning the content of the destination.
-    ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
+    ///   - label: A tappable view that triggers the `action` to be executed.
+    ///   - action: A closure executed when the label is tapped.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(_ style: PageStyle,
          type: PageType,
          isActive: Binding<Bool>,
@@ -33,36 +36,13 @@ public extension Page {
 }
 
 public extension Page where Label == EmptyView {
-
-    /// `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
-    /// - Parameters:
-    ///   - type: The page type presented. Default is .push.
-    ///   - isActive: A binding string whether the destination is presented.
-    ///   - destination: A closure returning the content of the destination.
-    ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
-    init(type: PageType,
-         isActive: Binding<Bool>,
-         @ViewBuilder destination: () -> Destination,
-         action: (() -> Void)?,
-         onDismiss: (() -> Void)? = nil) {
-        self.pageStyle = nil
-        self.pageType = type
-        self._isActiveBinding = isActive
-        self.destination = destination()
-        self.label = { EmptyView() }()
-        self.action = action
-        self.onDismiss = onDismiss
-    }
-}
-
-public extension Page where Label == EmptyView {
     
     /// `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
     /// - Parameters:
-    ///   - type: The page type presented. Default is .push.
-    ///   - isActive: A binding string whether the destination is presented.
+    ///   - type: The page type presented.
+    ///   - isActive: A binding Bool whether the destination is presented.
     ///   - destination: A closure returning the content of the destination.
-    ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(type: PageType,
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
@@ -77,17 +57,22 @@ public extension Page where Label == EmptyView {
     }
 }
 
-/// `Page` is a `View`  that when tapped presents a `Destination` view. It can also be an `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
+/// `Page` comes in 3 flavors:
+/// 1. `View` that when tapped presents a `Destination` view.
+/// 2. `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
+/// 3. `View` that when tapped executes an `action` that can present a `Destination` view when `isActive` is set to `true`.
 ///
 /// Navigation is `SwiftUI` is handeled by multiple items (ex. NavigationLink, .sheet, .fullScreenCover). `Page` brings them all into one convenient syntax.
-/// `Page` behaves much like a `NavigationLink`, but with added extras. It has two initializers: one has a label view, the other does not have a label property because it is set to `EmptyView` by default.
-/// The two case are:
+/// `Page` behaves much like a `NavigationLink`, but with added extras.
+///
+/// The three use cases of Page are:
 ///     - when you want to navigate to another Page upon a user initiated tap on a view
 ///     - when you want to navigate to another Page but no tappable view should be available on the screen
+///     - when you want to navigate to another Page upon a user initiated tap on a view, but only after a certain action has been finished after the tap
 ///
 /// Let's take a look at some examples:
 ///
-/// Your root view has to be inside a `NavigationView`:
+/// IMPORTANT: Your root view has to be inside a ``NavigationView``:
 ///
 /// ```
 /// NavigationView {
@@ -95,10 +80,10 @@ public extension Page where Label == EmptyView {
 /// }
 /// ```
 ///
-/// Than inside `ContentView` you can create a `Page` that will navigate to the `DetailView`:
+/// Next inside `ContentView` you can create a `Page` that will navigate to the `DetailView`:
 ///
 /// ```
-/// Page {
+/// Page(.button, type: .push) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -110,21 +95,22 @@ public extension Page where Label == EmptyView {
 /// ```
 /// @State private var isDetailViewActive = false // declared outside of the body
 /// ```
+///
 /// ```
 /// Button {
 ///     isDetailViewActive.toggle()
 /// } label: {
 ///     Text("Go to DetailView")
 /// }
-/// Page(isActive: $isDetailViewActive) {
+/// Page(type: .push, isActive: $isDetailViewActive) {
 ///     DetailView()
 /// }
 /// ```
 ///
-/// You can also choose the type of label you want to see, default is `.button` that behaves as a `Button`. Options are: `.button`, `.view` and `.emptyView`.
+/// You can also choose the label style. Options are: `.button` and `.view`.
 ///
 /// ```
-/// Page(.view) {
+/// Page(.view, type: .push) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -134,7 +120,7 @@ public extension Page where Label == EmptyView {
 /// There's an option to listen to `onDismiss` events trigerred when the Page is dismissed:
 ///
 /// ```
-/// Page(.view) {
+/// Page(.view, type: .push) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -142,13 +128,36 @@ public extension Page where Label == EmptyView {
 ///     print("DetailView was dismissed")
 /// }
 /// ```
+///
 /// Also you may choose the type of navigation, default is `push`. Options are: `push`, `sheet` and `fullScreenSheet`.
 ///
 /// ```
-/// Page(type: .sheet) {
+/// Page(.view, type: .sheet) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
+/// }
+/// ```
+///
+/// If you wish you may add an `action` between the moment the view is tapped and the presentation of the `Destination`. Optionally you may add here too an `onDismiss` completion.
+///
+/// ```
+/// @State private var isDetailViewActive = false // declared outside of the body
+/// ```
+///
+/// ```
+/// Page(.button, type: .sheet, isActive: $isDetailViewActive) {
+///     DetailView()
+/// } label: {
+///     Text("Go to DetailView")
+/// } action: {
+///     // do some work here
+///     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+///         // work has finished; set `isActive` to `true`
+///         isDetailViewActive.toggle()
+///     }
+/// } onDismiss: {
+///     print("Dismissed DetailView")
 /// }
 /// ```
 ///
@@ -167,11 +176,11 @@ public struct Page<Destination: View, Label: View>: View {
     
     /// `View` that when tapped presents a `Destination` view.
     /// - Parameters:
-    ///   - style: The style of the view that triggers the page. Default is .button.
-    ///   - type: The page type presented. Default is .push.
+    ///   - style: The style of the view that triggers the page.
+    ///   - type: The page type presented.
     ///   - destination: A closure returning the content of the destination.
     ///   - label: A tappable view that triggers the navigation.
-    ///   - onDismiss: A closure executed when the navigation dismisses the presented view.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     public init(_ style: PageStyle,
                 type: PageType,
                 @ViewBuilder destination: () -> Destination,
