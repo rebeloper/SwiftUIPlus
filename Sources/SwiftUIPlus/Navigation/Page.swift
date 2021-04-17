@@ -57,6 +57,12 @@ public extension Page where Label == EmptyView {
     }
 }
 
+/// A view that controls a navigation presentation with a unified and powerfull syntax
+///
+/// `Page` is a fully fledged replacement for, and buit on top of `NavigationLink`, `.sheet` and `.fullScreenCover`. It simplifies and unifies the navigation syntax into a consistent one. It adds extra functionality like `onDismiss` and `action` completion handlers.
+///
+/// `Page` works perfectly alongside `SwiftUI`'s built in navigation system. It's not trying to remove the existing `SwiftUI` navigation system, rather acting as a unified and more powerfull syntax built on top of it.
+///
 /// `Page` comes in 3 flavors:
 /// 1. `View` that when tapped presents a `Destination` view.
 /// 2. `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
