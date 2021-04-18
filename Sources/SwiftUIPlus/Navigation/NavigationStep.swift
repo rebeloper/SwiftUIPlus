@@ -1,5 +1,5 @@
 //
-//  Page.swift
+//  NavigationStep.swift
 //  
 //
 //  Created by Alex Nagy on 11.03.2021.
@@ -7,26 +7,26 @@
 
 import SwiftUI
 
-public extension Page {
+public extension NavigationStep {
     
     /// `View` that when tapped executes an `action` that can present a `Destination` view when `isActive` is set to `true`.
     /// - Parameters:
-    ///   - style: The page style presented.
-    ///   - type: The page type presented.
+    ///   - style: The NavigationStep style.
+    ///   - type: The NavigationStep type.
     ///   - isActive: A binding Bool whether the destination is presented.
     ///   - destination: A closure returning the content of the destination.
     ///   - label: A tappable view that triggers the `action` to be executed.
     ///   - action: A closure executed when the label is tapped.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
-    init(_ style: PageStyle,
-         type: PageType,
+    init(style: NavigationStepStyle,
+         type: NavigationStepType,
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
          action: (() -> Void)?,
          onDismiss: (() -> Void)? = nil) {
-        self.pageStyle = style
-        self.pageType = type
+        self.navigationStepStyle = style
+        self.navigationStepType = type
         self._isActiveBinding = isActive
         self.destination = destination()
         self.label = label()
@@ -35,20 +35,20 @@ public extension Page {
     }
 }
 
-public extension Page where Label == EmptyView {
+public extension NavigationStep where Label == EmptyView {
     
     /// `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
     /// - Parameters:
-    ///   - type: The page type presented.
+    ///   - type: The NavigationStep type.
     ///   - isActive: A binding Bool whether the destination is presented.
     ///   - destination: A closure returning the content of the destination.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
-    init(type: PageType,
+    init(type: NavigationStepType,
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
          onDismiss: (() -> Void)? = nil) {
-        self.pageStyle = nil
-        self.pageType = type
+        self.navigationStepStyle = nil
+        self.navigationStepType = type
         self._isActiveBinding = isActive
         self.destination = destination()
         self.label = { EmptyView() }()
@@ -59,22 +59,22 @@ public extension Page where Label == EmptyView {
 
 /// A view that controls a navigation presentation with a unified and powerfull syntax
 ///
-/// `Page` is a fully fledged replacement for, and buit on top of `NavigationLink`, `.sheet` and `.fullScreenCover`. It simplifies and unifies the navigation syntax into a consistent one. It adds extra functionality like `onDismiss` and `action` completion handlers.
+/// `NavigationStep` is a fully fledged replacement for, and buit on top of `NavigationLink`, `.sheet` and `.fullScreenCover`. It simplifies and unifies the navigation syntax into a consistent one. It adds extra functionality like `onDismiss` and `action` completion handlers.
 ///
-/// `Page` works perfectly alongside `SwiftUI`'s built in navigation system. It's not trying to remove the existing `SwiftUI` navigation system, rather acting as a unified and more powerfull syntax built on top of it.
+/// `NavigationStep` works perfectly alongside `SwiftUI`'s built in navigation system. It's not trying to remove the existing `SwiftUI` navigation system, rather acting as a unified and more powerfull syntax built on top of it.
 ///
-/// `Page` comes in 3 flavors:
+/// `NavigationStep` comes in 3 flavors:
 /// 1. `View` that when tapped presents a `Destination` view.
 /// 2. `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
 /// 3. `View` that when tapped executes an `action` that can present a `Destination` view when `isActive` is set to `true`.
 ///
-/// Navigation in `SwiftUI` is handeled by multiple items (ex. NavigationLink, .sheet, .fullScreenCover). `Page` brings them all into one convenient syntax.
-/// `Page` behaves much like a `NavigationLink`, but with added extras.
+/// Navigation in `SwiftUI` is handeled by multiple items (ex. NavigationLink, .sheet, .fullScreenCover). `NavigationStep` brings them all into one convenient syntax.
+/// `NavigationStep` behaves much like a `NavigationLink`, but with added extras.
 ///
-/// The three use cases of Page are:
-/// 1. when you want to navigate to another Page upon a user initiated tap on a view
-/// 2. when you want to navigate to another Page but no tappable view should be available on the screen
-/// 3. when you want to navigate to another Page upon a user initiated tap on a view, but only after a certain action has been finished after the tap
+/// The three use cases of `NavigationStep` are:
+/// 1. when you want to navigate to another `NavigationStep` upon a user initiated tap on a view
+/// 2. when you want to navigate to another `NavigationStep` but no tappable view should be available on the screen
+/// 3. when you want to navigate to another `NavigationStep` upon a user initiated tap on a view, but only after a certain action has been finished after the tap
 ///
 ///
 /// IMPORTANT: Your root view has to be inside a `NavigationView`:
@@ -87,10 +87,10 @@ public extension Page where Label == EmptyView {
 ///
 /// Let's take a look at some examples:
 ///
-/// Inside `ContentView` you can create a `Page` that will navigate to the `DetailView`:
+/// Inside `ContentView` you can create a `NavigationStep` that will navigate to the `DetailView`:
 ///
 /// ```
-/// Page(.button, type: .push) {
+/// NavigationStep(style: .button, type: .push) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -109,7 +109,7 @@ public extension Page where Label == EmptyView {
 /// } label: {
 ///     Text("Go to DetailView")
 /// }
-/// Page(type: .push, isActive: $isDetailViewActive) {
+/// NavigationStep(type: .push, isActive: $isDetailViewActive) {
 ///     DetailView()
 /// }
 /// ```
@@ -117,17 +117,17 @@ public extension Page where Label == EmptyView {
 /// You can also choose the label style. Options are: `.button` and `.view`.
 ///
 /// ```
-/// Page(.view, type: .push) {
+/// NavigationStep(style: .view, type: .push) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
 /// }
 /// ```
 ///
-/// There's an option to listen to `onDismiss` events trigerred when the Page is dismissed:
+/// There's an option to listen to `onDismiss` events trigerred when the `NavigationStep` is dismissed:
 ///
 /// ```
-/// Page(.view, type: .push) {
+/// NavigationStep(style: .view, type: .push) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -139,7 +139,7 @@ public extension Page where Label == EmptyView {
 /// Also you may choose the type of navigation. Options are: `.push`, `.sheet` and `.fullScreenSheet`.
 ///
 /// ```
-/// Page(.view, type: .sheet) {
+/// NavigationStep(style: .view, type: .sheet) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -153,7 +153,7 @@ public extension Page where Label == EmptyView {
 /// ```
 ///
 /// ```
-/// Page(.button, type: .sheet, isActive: $isDetailViewActive) {
+/// NavigationStep(style: .button, type: .sheet, isActive: $isDetailViewActive) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -168,13 +168,13 @@ public extension Page where Label == EmptyView {
 /// }
 /// ```
 ///
-public struct Page<Destination: View, Label: View>: View {
+public struct NavigationStep<Destination: View, Label: View>: View {
     
     @State private var isActive = false
     @State private var isDisabled = false
     
-    private var pageStyle: PageStyle?
-    private var pageType: PageType
+    private var navigationStepStyle: NavigationStepStyle?
+    private var navigationStepType: NavigationStepType
     @Binding private var isActiveBinding: Bool
     private let destination: Destination
     private let label: Label
@@ -183,18 +183,18 @@ public struct Page<Destination: View, Label: View>: View {
     
     /// `View` that when tapped presents a `Destination` view.
     /// - Parameters:
-    ///   - style: The style of the view that triggers the page.
-    ///   - type: The page type presented.
+    ///   - style: The NavigationStep style.
+    ///   - type: The NavigationStep type.
     ///   - destination: A closure returning the content of the destination.
     ///   - label: A tappable view that triggers the navigation.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
-    public init(_ style: PageStyle,
-                type: PageType,
+    public init(style: NavigationStepStyle,
+                type: NavigationStepType,
                 @ViewBuilder destination: () -> Destination,
                 @ViewBuilder label: () -> Label,
                 onDismiss: (() -> Void)? = nil) {
-        self.pageStyle = style
-        self.pageType = type
+        self.navigationStepStyle = style
+        self.navigationStepType = type
         self._isActiveBinding = .constant(false)
         self.destination = destination()
         self.label = label()
@@ -204,10 +204,10 @@ public struct Page<Destination: View, Label: View>: View {
     
     public var body: some View {
         VStack {
-            switch pageType {
+            switch navigationStepType {
             case .push:
-                if let pageStyle = pageStyle {
-                    switch pageStyle {
+                if let navigationStepStyle = navigationStepStyle {
+                    switch navigationStepStyle {
                     case .button:
                         if let action = action {
                             Button(action: {
@@ -257,8 +257,8 @@ public struct Page<Destination: View, Label: View>: View {
                 }
                 
             case .sheet:
-                if let pageStyle = pageStyle {
-                    switch pageStyle {
+                if let navigationStepStyle = navigationStepStyle {
+                    switch navigationStepStyle {
                     case .button:
                         if let action = action {
                             Button {
@@ -312,8 +312,8 @@ public struct Page<Destination: View, Label: View>: View {
                 }
                 
             case .fullScreenSheet:
-                if let pageStyle = pageStyle {
-                    switch pageStyle {
+                if let navigationStepStyle = navigationStepStyle {
+                    switch navigationStepStyle {
                     case .button:
                         if let action = action {
                             Button {
@@ -371,12 +371,12 @@ public struct Page<Destination: View, Label: View>: View {
     }
 }
 
-public enum PageStyle {
+public enum NavigationStepStyle {
     case button
     case view
 }
 
-public enum PageType {
+public enum NavigationStepType {
     case push
     case sheet
     case fullScreenSheet
