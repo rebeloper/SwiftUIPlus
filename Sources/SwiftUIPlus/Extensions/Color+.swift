@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-extension Color {
+public extension Color {
     
     /// Color from HEX
     /// - Parameter hex: HEX
-    init(hex: String) {
+    public init(hex: String) {
         let scanner = Scanner(string: hex)
         var rgbValue: UInt64 = 0
         scanner.scanHexInt64(&rgbValue)
