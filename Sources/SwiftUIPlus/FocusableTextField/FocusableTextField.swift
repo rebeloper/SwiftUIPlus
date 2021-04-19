@@ -118,7 +118,7 @@ public struct FocusableTextField: UIViewRepresentable {
                 focusable[i] = (textField.tag == i)
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 self.control.focusable?.wrappedValue = focusable
             }
         }
@@ -133,7 +133,7 @@ public struct FocusableTextField: UIViewRepresentable {
                 focusable[i] = (textField.tag + 1 == i)
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 self.control.focusable?.wrappedValue = focusable
                 
                 if textField.tag == focusable.count - 1 {
