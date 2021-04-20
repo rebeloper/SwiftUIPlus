@@ -43,13 +43,14 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             .gesture(
                 DragGesture()
                     .onChanged { gesture in
-                        if gesture.translation.height < 0 {
+                        let height = gesture.translation.height
+                        if height > 0 {
                             self.offset = CGSize(width: 0, height: gesture.translation.height)
                         }
                     }
                     .onEnded { gesture in
-                        let h = gesture.translation.height
-                        if abs(h) > 100 {
+                        let height = gesture.translation.height
+                        if abs(height) > 100 {
                             flexibleSheetManager.isPresented = false
                         } else {
                             self.offset = .zero
