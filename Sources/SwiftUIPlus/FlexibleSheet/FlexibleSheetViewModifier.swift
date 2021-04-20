@@ -14,6 +14,8 @@ public struct FlexibleSheetViewModifier: ViewModifier {
     public var config: FlexibleSheetConfig = FlexibleSheetConfig()
     public var containerConfig: FlexibleSheetContainerConfig = FlexibleSheetContainerConfig()
     
+    @State private var offset: CGSize = .zero
+    
     public func body(content: Content) -> some View {
         ZStack(alignment: .bottom){
             Color(.black)
@@ -38,6 +40,20 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + config.topPadding)
             .frame(height: flexibleSheetManager.isPresented ? nil : 0, alignment: .top)
             .animation(config.animates ? config.animation : nil)
+            .offset(offset)
+            .gesture(
+                DragGesture()
+                    .onChanged { gesture in
+                        self.offset = gesture.translation
+                    }
+                    .onEnded { _ in
+                        if abs(self.offset.height) > 100 {
+                            flexibleSheetManager.isPresented = false
+                        } else {
+                            self.offset = .zero
+                        }
+                    }
+            )
         }
         .edgesIgnoringSafeArea(.all)
         .environmentObject(flexibleSheetManager)
