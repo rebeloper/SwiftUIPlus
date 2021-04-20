@@ -19,7 +19,7 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             Color(.black)
             
             content
-                .cornerRadius(flexibleSheetManager.isPresented ? containerConfig.animates ? containerConfig.cornerRadius : 0 : 0)
+                .mask( RoundedRectangle(cornerRadius: flexibleSheetManager.isPresented ? containerConfig.animates ? containerConfig.cornerRadius : 0 : 0, style: containerConfig.cornerStyle) )
                 .scaleEffect(flexibleSheetManager.isPresented ? containerConfig.animates ? containerConfig.scale : 1 : 1)
                 .animation(containerConfig.animation)
                 .disabled(flexibleSheetManager.isPresented)
@@ -33,7 +33,7 @@ public struct FlexibleSheetViewModifier: ViewModifier {
                     .frame(width: UIScreen.main.bounds.width)
                     .layoutPriority(2)
             }
-            .cornerRadius(config.cornerRadius)
+            .mask( RoundedRectangle(cornerRadius: config.cornerRadius, style: config.cornerStyle) )
             .layoutPriority(1)
             .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + config.topPadding)
             .frame(height: flexibleSheetManager.isPresented ? nil : 0, alignment: .top)
