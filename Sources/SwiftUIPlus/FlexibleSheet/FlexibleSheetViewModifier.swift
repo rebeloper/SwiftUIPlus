@@ -43,7 +43,9 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             .gesture(
                 DragGesture()
                     .onChanged { gesture in
-                        self.offset = gesture.translation
+                        if gesture.translation.height < 0 {
+                            self.offset = CGSize(width: 0, height: gesture.translation.height)
+                        }
                     }
                     .onEnded { gesture in
                         let h = gesture.translation.height
