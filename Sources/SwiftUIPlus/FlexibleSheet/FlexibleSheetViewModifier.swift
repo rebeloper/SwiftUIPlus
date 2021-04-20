@@ -39,21 +39,22 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             .layoutPriority(1)
             .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + config.topPadding)
             .frame(height: flexibleSheetManager.isPresented ? nil : 0, alignment: .top)
-            .animation(config.animates ? config.animation : nil)
             .offset(offset)
             .gesture(
                 DragGesture()
                     .onChanged { gesture in
                         self.offset = gesture.translation
                     }
-                    .onEnded { _ in
-                        if abs(self.offset.height) > 100 {
+                    .onEnded { gesture in
+                        let h = gesture.translation.height
+                        if abs(h) > 100 {
                             flexibleSheetManager.isPresented = false
                         } else {
                             self.offset = .zero
                         }
                     }
             )
+            .animation(config.animates ? config.animation : nil)
         }
         .edgesIgnoringSafeArea(.all)
         .environmentObject(flexibleSheetManager)
