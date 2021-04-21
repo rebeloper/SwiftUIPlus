@@ -31,6 +31,17 @@ public class FlexibleSheetManager: ObservableObject {
             self.sheet = { AnyView(Color.clear.frame(width: UIScreen.main.bounds.width)) }
         }
     }
+    
+    /// Hides a Flexible Sheet and disables full screen
+    public func hide(flexibleSheetManagerFullScreenStateIsActive: Binding<Bool>) {
+        withAnimation {
+            isPresented = false
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            flexibleSheetManagerFullScreenStateIsActive.wrappedValue = false
+            self.sheet = { AnyView(Color.clear.frame(width: UIScreen.main.bounds.width)) }
+        }
+    }
 
 }
 
