@@ -41,22 +41,17 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             .gesture(
                 DragGesture()
                     .onEnded { value in
-                        print(value.translation)
-                        
                         if value.translation.width < 0 && value.translation.height > -30 && value.translation.height < 30 {
-                            print("left swipe")
-                        }
-                        else if value.translation.width > 0 && value.translation.height > -30 && value.translation.height < 30 {
-                            print("right swipe")
-                        }
-                        else if value.translation.height < 0 && value.translation.width < 100 && value.translation.width > -100 {
-                            print("up swipe")
+                            // left swipe
+                        } else if value.translation.width > 0 && value.translation.height > -30 && value.translation.height < 30 {
+                            // right swipe
+                        } else if value.translation.height < 0 && value.translation.width < 100 && value.translation.width > -100 {
+                            // up swipe
                             if config.swipeableUp {
                                 flexibleSheetFullScreenState.isActive = true
                             }
-                        }
-                        else if value.translation.height > 0 && value.translation.width < 100 && value.translation.width > -100 {
-                            print("down swipe")
+                        } else if value.translation.height > 0 && value.translation.width < 100 && value.translation.width > -100 {
+                            // down swipe
                             if config.swipeableDown {
                                 if flexibleSheetFullScreenState.isActive {
                                     flexibleSheetFullScreenState.isActive = false
@@ -64,9 +59,8 @@ public struct FlexibleSheetViewModifier: ViewModifier {
                                     flexibleSheetManager.isPresented = false
                                 }
                             }
-                        }
-                        else {
-                            print("no clue")
+                        } else {
+                            // not left, right, up or down swipe
                         }
                     }
             )

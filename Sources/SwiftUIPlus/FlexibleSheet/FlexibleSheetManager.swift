@@ -33,7 +33,7 @@ public class FlexibleSheetManager: ObservableObject {
     }
     
     /// Hides a Flexible Sheet and disables full screen
-    public func hide(flexibleSheetManagerFullScreenStateIsActive: Binding<Bool>) {
+    public func hide(with flexibleSheetManagerFullScreenStateIsActive: Binding<Bool>) {
         withAnimation {
             isPresented = false
         }
@@ -51,13 +51,9 @@ public extension View {
     ///   - config: sheet configuration
     ///   - containerConfig: container configuration
     /// - Returns: a view that has the capability to show a Flexible Sheet
-    func usesFlexibleSheetManager(config: FlexibleSheetConfig = FlexibleSheetConfig(), containerConfig: FlexibleSheetContainerConfig = FlexibleSheetContainerConfig()) -> some View {
+    func usesFlexibleSheetManager(config: FlexibleSheetConfig = FlexibleSheetConfig(), containerConfig: FlexibleSheetContainerConfig = FlexibleSheetContainerConfig(), flexibleSheetFullScreenState: FlexibleSheetFullScreenState = FlexibleSheetFullScreenState()) -> some View {
         self.modifier(FlexibleSheetViewModifier(config: config, containerConfig: containerConfig))
-            .environmentObject(FlexibleSheetFullScreenState())
+            .environmentObject(flexibleSheetFullScreenState)
             .usesStatusBarStyle()
     }
-}
-
-public class FlexibleSheetFullScreenState: ObservableObject {
-    @Published public var isActive = false
 }
