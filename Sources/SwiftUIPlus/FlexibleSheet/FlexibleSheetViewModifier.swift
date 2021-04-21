@@ -14,7 +14,7 @@ public struct FlexibleSheetViewModifier: ViewModifier {
     public var config: FlexibleSheetConfig = FlexibleSheetConfig()
     public var containerConfig: FlexibleSheetContainerConfig = FlexibleSheetContainerConfig()
     
-    @State private var offset: CGSize = .zero
+    @State private var isFullScreen = false
     
     public func body(content: Content) -> some View {
         ZStack(alignment: .bottom){
@@ -37,9 +37,8 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             }
             .mask( RoundedRectangle(cornerRadius: config.cornerRadius, style: config.cornerStyle) )
             .layoutPriority(1)
-            .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + config.topPadding)
-            .frame(height: flexibleSheetManager.isPresented ? nil : 0, alignment: .top)
-            .offset(offset)
+            .padding(.top, isFullScreen ? 0 : (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + config.topPadding)
+            .frame(height: flexibleSheetManager.isPresented ? isFullScreen ? UIScreen.main.bounds.height : nil : 0, alignment: .top)
             .gesture(
                 DragGesture()
                     .onEnded { value in
@@ -53,10 +52,16 @@ public struct FlexibleSheetViewModifier: ViewModifier {
                         }
                         else if value.translation.height < 0 && value.translation.width < 100 && value.translation.width > -100 {
                             print("up swipe")
+                            isFullScreen = true
                         }
                         else if value.translation.height > 0 && value.translation.width < 100 && value.translation.width > -100 {
                             print("down swipe")
-                            flexibleSheetManager.isPresented = false
+                            if isFullScreen {
+                                isFullScreen = false
+                            } else {
+                                flexibleSheetManager.isPresented = false
+                            }
+                            
                         }
                         else {
                             print("no clue")
