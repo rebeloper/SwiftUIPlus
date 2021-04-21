@@ -235,8 +235,10 @@ public struct NavigationStep<Destination: View, Label: View>: View {
                             })
                         } else {
                             Button(action: {
-                                isActiveBinding.toggle()
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                    isActiveBinding.toggle()
+                                }
                             }, label: {
                                 label
                             })
