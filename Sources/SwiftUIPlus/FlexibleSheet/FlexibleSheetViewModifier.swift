@@ -13,8 +13,7 @@ public struct FlexibleSheetViewModifier: ViewModifier {
     
     public var config: FlexibleSheetConfig = FlexibleSheetConfig()
     public var containerConfig: FlexibleSheetContainerConfig = FlexibleSheetContainerConfig()
-    
-    @Binding var isFullScreen: Bool
+    @EnvironmentObject var isFlexibleSheetFullScreen: IsFlexibleSheetFullScreen
     
     public func body(content: Content) -> some View {
         ZStack(alignment: .bottom){
@@ -37,8 +36,8 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             }
             .mask( RoundedRectangle(cornerRadius: config.cornerRadius, style: config.cornerStyle) )
             .layoutPriority(1)
-            .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + (isFullScreen ? 0 : config.topPadding))
-            .frame(height: flexibleSheetManager.isPresented ? isFullScreen ? UIScreen.main.bounds.height : nil : 0, alignment: .top)
+            .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + (isFlexibleSheetFullScreen.isFullScreen ? 0 : config.topPadding))
+            .frame(height: flexibleSheetManager.isPresented ? isFlexibleSheetFullScreen.isFullScreen ? UIScreen.main.bounds.height : nil : 0, alignment: .top)
             .gesture(
                 DragGesture()
                     .onEnded { value in
@@ -52,12 +51,12 @@ public struct FlexibleSheetViewModifier: ViewModifier {
                         }
                         else if value.translation.height < 0 && value.translation.width < 100 && value.translation.width > -100 {
                             print("up swipe")
-                            isFullScreen = true
+                            isFlexibleSheetFullScreen.isFullScreen = true
                         }
                         else if value.translation.height > 0 && value.translation.width < 100 && value.translation.width > -100 {
                             print("down swipe")
-                            if isFullScreen {
-                                isFullScreen = false
+                            if isFlexibleSheetFullScreen.isFullScreen {
+                                isFlexibleSheetFullScreen.isFullScreen = false
                             } else {
                                 flexibleSheetManager.isPresented = false
                             }

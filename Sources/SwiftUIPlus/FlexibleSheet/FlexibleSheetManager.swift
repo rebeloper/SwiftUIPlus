@@ -41,6 +41,12 @@ public extension View {
     ///   - containerConfig: container configuration
     /// - Returns: a view that has the capability to show a Flexible Sheet
     func usesFlexibleSheetManager(config: FlexibleSheetConfig = FlexibleSheetConfig(), containerConfig: FlexibleSheetContainerConfig = FlexibleSheetContainerConfig(), isFullScreen: Binding<Bool>) -> some View {
-        self.modifier(FlexibleSheetViewModifier(config: config, containerConfig: containerConfig, isFullScreen: isFullScreen)).usesStatusBarStyle()
+        self.modifier(FlexibleSheetViewModifier(config: config, containerConfig: containerConfig))
+            .environmentObject(IsFlexibleSheetFullScreen())
+            .usesStatusBarStyle()
     }
+}
+
+public class IsFlexibleSheetFullScreen: ObservableObject {
+    @Published public var isFullScreen = false
 }
