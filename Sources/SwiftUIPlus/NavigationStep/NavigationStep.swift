@@ -205,6 +205,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
         self.navigationStepStyle = style
         self.navigationStepType = type
         self._isActiveBinding = .constant(false)
+        self.hapticFeedbackType = hapticFeedbackType
         self.destination = destination()
         self.label = label()
         self.action = nil
