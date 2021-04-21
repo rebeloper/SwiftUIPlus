@@ -234,16 +234,25 @@ public struct NavigationStep<Destination: View, Label: View>: View {
                                 EmptyView()
                             })
                         } else {
-                            NavigationLink(destination: destination.onDisappear(perform: {
-                                onDismiss?()
-                            })) {
-                                label
-                            }
-                            .onTapGesture {
+                            Button(action: {
                                 if let hapticFeedbackType = hapticFeedbackType {
                                     UINotificationFeedbackGenerator().notificationOccurred(hapticFeedbackType)
                                 }
-                            }
+                                isActiveBinding.toggle()
+                            }, label: {
+                                label
+                            })
+                            NavigationLink(destination: destination.onDisappear(perform: {
+                                onDismiss?()
+                            }), isActive: $isActiveBinding, label: {
+                                EmptyView()
+                            })
+                            
+//                            NavigationLink(destination: destination.onDisappear(perform: {
+//                                onDismiss?()
+//                            })) {
+//                                label
+//                            }
                         }
                     case .view:
                         if let action = action {
