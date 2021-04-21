@@ -14,15 +14,13 @@ public extension NavigationStep {
     ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
     ///   - isActive: A binding Bool whether the destination is presented.
-    ///   - hapticFeedbackType: Haptic feedback when the view is tapped. Default is `nil`.
     ///   - destination: A closure returning the content of the destination.
     ///   - label: A tappable view that triggers the `action` to be executed.
     ///   - action: A closure executed when the label is tapped.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. Default is `nil`.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(style: NavigationStepStyle,
          type: NavigationStepType,
          isActive: Binding<Bool>,
-         hapticFeedbackType: UINotificationFeedbackGenerator.FeedbackType? = nil,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
          action: (() -> Void)?,
@@ -30,7 +28,6 @@ public extension NavigationStep {
         self.navigationStepStyle = style
         self.navigationStepType = type
         self._isActiveBinding = isActive
-        self.hapticFeedbackType = hapticFeedbackType
         self.destination = destination()
         self.label = label()
         self.action = action
@@ -44,18 +41,15 @@ public extension NavigationStep where Label == EmptyView {
     /// - Parameters:
     ///   - type: The NavigationStep type.
     ///   - isActive: A binding Bool whether the destination is presented.
-    ///   - hapticFeedbackType: Haptic feedback when the view is activated. Default is `nil`.
     ///   - destination: A closure returning the content of the destination.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. Default is `nil`.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(type: NavigationStepType,
          isActive: Binding<Bool>,
-         hapticFeedbackType: UINotificationFeedbackGenerator.FeedbackType? = nil,
          @ViewBuilder destination: () -> Destination,
          onDismiss: (() -> Void)? = nil) {
         self.navigationStepStyle = nil
         self.navigationStepType = type
         self._isActiveBinding = isActive
-        self.hapticFeedbackType = hapticFeedbackType
         self.destination = destination()
         self.label = { EmptyView() }()
         self.action = nil
@@ -182,7 +176,6 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     private var navigationStepStyle: NavigationStepStyle?
     private var navigationStepType: NavigationStepType
     @Binding private var isActiveBinding: Bool
-    private var hapticFeedbackType: UINotificationFeedbackGenerator.FeedbackType?
     private let destination: Destination
     private let label: Label
     private let action: (() -> Void)?
@@ -192,20 +185,17 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     /// - Parameters:
     ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
-    ///   - hapticFeedbackType: Haptic feedback when the view is tapped. Default is `nil`.
     ///   - destination: A closure returning the content of the destination.
     ///   - label: A tappable view that triggers the navigation.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. Default is `nil`.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     public init(style: NavigationStepStyle,
                 type: NavigationStepType,
-                hapticFeedbackType: UINotificationFeedbackGenerator.FeedbackType? = nil,
                 @ViewBuilder destination: () -> Destination,
                 @ViewBuilder label: () -> Label,
                 onDismiss: (() -> Void)? = nil) {
         self.navigationStepStyle = style
         self.navigationStepType = type
         self._isActiveBinding = .constant(false)
-        self.hapticFeedbackType = hapticFeedbackType
         self.destination = destination()
         self.label = label()
         self.action = nil
@@ -221,9 +211,6 @@ public struct NavigationStep<Destination: View, Label: View>: View {
                     case .button:
                         if let action = action {
                             Button(action: {
-                                if let hapticFeedbackType = hapticFeedbackType {
-                                    UINotificationFeedbackGenerator().notificationOccurred(hapticFeedbackType)
-                                }
                                 action()
                             }, label: {
                                 label
@@ -234,25 +221,11 @@ public struct NavigationStep<Destination: View, Label: View>: View {
                                 EmptyView()
                             })
                         } else {
-                            Button(action: {
-                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                    isActiveBinding.toggle()
-                                }
-                            }, label: {
-                                label
-                            })
                             NavigationLink(destination: destination.onDisappear(perform: {
                                 onDismiss?()
-                            }), isActive: $isActiveBinding, label: {
-                                EmptyView()
-                            })
-                            
-//                            NavigationLink(destination: destination.onDisappear(perform: {
-//                                onDismiss?()
-//                            })) {
-//                                label
-//                            }
+                            })) {
+                                label
+                            }
                         }
                     case .view:
                         if let action = action {
