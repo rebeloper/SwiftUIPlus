@@ -239,6 +239,11 @@ public struct NavigationStep<Destination: View, Label: View>: View {
                             })) {
                                 label
                             }
+                            .onTapGesture {
+                                if let hapticFeedbackType = hapticFeedbackType {
+                                    UINotificationFeedbackGenerator().notificationOccurred(hapticFeedbackType)
+                                }
+                            }
                         }
                     case .view:
                         if let action = action {
