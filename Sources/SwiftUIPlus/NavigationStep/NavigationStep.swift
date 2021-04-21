@@ -235,10 +235,10 @@ public struct NavigationStep<Destination: View, Label: View>: View {
                             })
                         } else {
                             Button(action: {
+                                isActiveBinding.toggle()
                                 if let hapticFeedbackType = hapticFeedbackType {
                                     UINotificationFeedbackGenerator().notificationOccurred(hapticFeedbackType)
                                 }
-                                isActiveBinding.toggle()
                             }, label: {
                                 label
                             })
