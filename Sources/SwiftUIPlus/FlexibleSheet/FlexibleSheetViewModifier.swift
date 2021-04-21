@@ -13,7 +13,7 @@ public struct FlexibleSheetViewModifier: ViewModifier {
     
     public var config: FlexibleSheetConfig = FlexibleSheetConfig()
     public var containerConfig: FlexibleSheetContainerConfig = FlexibleSheetContainerConfig()
-    @EnvironmentObject var isFlexibleSheetFullScreen: IsFlexibleSheetFullScreen
+    @EnvironmentObject var flexibleSheetFullScreenState: FlexibleSheetFullScreenState
     
     public func body(content: Content) -> some View {
         ZStack(alignment: .bottom){
@@ -36,8 +36,8 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             }
             .mask( RoundedRectangle(cornerRadius: config.cornerRadius, style: config.cornerStyle) )
             .layoutPriority(1)
-            .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + (isFlexibleSheetFullScreen.isFullScreen ? 0 : config.topPadding))
-            .frame(height: flexibleSheetManager.isPresented ? isFlexibleSheetFullScreen.isFullScreen ? UIScreen.main.bounds.height : nil : 0, alignment: .top)
+            .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + (config.swipeableUp ? (flexibleSheetFullScreenState.isActive ? 0 : config.topPadding) : config.topPadding))
+            .frame(height: flexibleSheetManager.isPresented ? (config.swipeableUp ? (flexibleSheetFullScreenState.isActive ? UIScreen.main.bounds.height : nil) : nil) : 0, alignment: .top)
             .gesture(
                 DragGesture()
                     .onEnded { value in
@@ -51,16 +51,19 @@ public struct FlexibleSheetViewModifier: ViewModifier {
                         }
                         else if value.translation.height < 0 && value.translation.width < 100 && value.translation.width > -100 {
                             print("up swipe")
-                            isFlexibleSheetFullScreen.isFullScreen = true
+                            if config.swipeableUp {
+                                flexibleSheetFullScreenState.isActive = true
+                            }
                         }
                         else if value.translation.height > 0 && value.translation.width < 100 && value.translation.width > -100 {
                             print("down swipe")
-                            if isFlexibleSheetFullScreen.isFullScreen {
-                                isFlexibleSheetFullScreen.isFullScreen = false
-                            } else {
-                                flexibleSheetManager.isPresented = false
+                            if config.swipeableDown {
+                                if flexibleSheetFullScreenState.isActive {
+                                    flexibleSheetFullScreenState.isActive = false
+                                } else {
+                                    flexibleSheetManager.isPresented = false
+                                }
                             }
-                            
                         }
                         else {
                             print("no clue")

@@ -33,13 +33,23 @@ public struct FlexibleSheetConfig {
     public let cornerRadius: CGFloat
     public let cornerStyle: RoundedCornerStyle
     public let topPadding: CGFloat
+    public let swipeableDown: Bool
+    public let swipeableUp: Bool
     public let animation: Animation
     public let animates: Bool
     
-    public init(cornerRadius: CGFloat = 9, cornerStyle: RoundedCornerStyle = .circular, topPadding: CGFloat = 20, animation: Animation = .linear(duration: 0.2), animates: Bool = true) {
+    public init(cornerRadius: CGFloat = 9,
+                cornerStyle: RoundedCornerStyle = .circular,
+                topPadding: CGFloat = 20,
+                swipeableDown: Bool = true,
+                swipeableUp: Bool = true,
+                animation: Animation = .linear(duration: 0.2),
+                animates: Bool = true) {
         self.cornerRadius = cornerRadius
         self.cornerStyle = cornerStyle
         self.topPadding = topPadding
+        self.swipeableDown = swipeableDown
+        self.swipeableUp = swipeableUp
         self.animation = animation
         self.animates = animates
     }
