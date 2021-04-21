@@ -14,7 +14,7 @@ public struct FlexibleSheetViewModifier: ViewModifier {
     public var config: FlexibleSheetConfig = FlexibleSheetConfig()
     public var containerConfig: FlexibleSheetContainerConfig = FlexibleSheetContainerConfig()
     
-    @State private var isFullScreen = false
+    @Binding var isFullScreen: Bool
     
     public func body(content: Content) -> some View {
         ZStack(alignment: .bottom){
@@ -37,7 +37,7 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             }
             .mask( RoundedRectangle(cornerRadius: config.cornerRadius, style: config.cornerStyle) )
             .layoutPriority(1)
-            .padding(.top, isFullScreen ? 0 : (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + config.topPadding)
+            .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + (isFullScreen ? 0 : config.topPadding))
             .frame(height: flexibleSheetManager.isPresented ? isFullScreen ? UIScreen.main.bounds.height : nil : 0, alignment: .top)
             .gesture(
                 DragGesture()
