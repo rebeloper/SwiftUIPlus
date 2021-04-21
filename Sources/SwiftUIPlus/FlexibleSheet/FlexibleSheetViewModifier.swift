@@ -42,18 +42,24 @@ public struct FlexibleSheetViewModifier: ViewModifier {
             .offset(offset)
             .gesture(
                 DragGesture()
-                    .onChanged { gesture in
-                        let height = gesture.translation.height
-                        if height > 0 {
-                            self.offset = CGSize(width: 0, height: gesture.translation.height)
+                    .onEnded { value in
+                        print(value.translation)
+                        
+                        if value.translation.width < 0 && value.translation.height > -30 && value.translation.height < 30 {
+                            print("left swipe")
                         }
-                    }
-                    .onEnded { gesture in
-                        let height = gesture.translation.height
-                        if abs(height) > 100 {
+                        else if value.translation.width > 0 && value.translation.height > -30 && value.translation.height < 30 {
+                            print("right swipe")
+                        }
+                        else if value.translation.height < 0 && value.translation.width < 100 && value.translation.width > -100 {
+                            print("up swipe")
+                        }
+                        else if value.translation.height > 0 && value.translation.width < 100 && value.translation.width > -100 {
+                            print("down swipe")
                             flexibleSheetManager.isPresented = false
-                        } else {
-                            self.offset = .zero
+                        }
+                        else {
+                            print("no clue")
                         }
                     }
             )
