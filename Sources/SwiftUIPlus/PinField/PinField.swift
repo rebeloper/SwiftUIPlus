@@ -36,7 +36,7 @@ public struct PinField: View {
         }
     }
     
-    private var pinDots: some View {
+    public var pinDots: some View {
         HStack(spacing: spacing) {
             Spacer()
             ForEach(0..<digitsCount) { index in
@@ -46,14 +46,14 @@ public struct PinField: View {
         }
     }
     
-    private func getImageName(at index: Int) -> String {
+    public func getImageName(at index: Int) -> String {
         if index >= self.pin.count {
             return "circle"
         }
         return "circle.fill"
     }
     
-    private var backgroundField: some View {
+    public var backgroundField: some View {
         let boundPin = Binding<String>(get: { self.pin }, set: { newValue in
             self.pin = newValue
             self.submitPin()
@@ -64,7 +64,7 @@ public struct PinField: View {
             .foregroundColor(.clear)
     }
     
-    private func submitPin() {
+    public func submitPin() {
         if pin.count == digitsCount {
             focusable = [false]
             onCompleted(pin)
@@ -72,7 +72,7 @@ public struct PinField: View {
     }
 }
 
-extension Int {
+public extension Int {
     var numberString: String {
         guard self < 10 else { return "0" }
         return String(self)
