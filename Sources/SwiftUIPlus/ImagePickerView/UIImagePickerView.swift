@@ -118,6 +118,6 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
 }
 
 public struct UIImagePickerViewSuccessResult {
-    let image: UIImage
-    let info: [UIImagePickerController.InfoKey : Any]
+    public let image: UIImage
+    public let info: [UIImagePickerController.InfoKey : Any]
 }
