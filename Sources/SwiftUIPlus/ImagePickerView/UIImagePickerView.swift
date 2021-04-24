@@ -15,23 +15,25 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
     @Binding private var info: [UIImagePickerController.InfoKey : Any]?
     private let allowsEditing: Bool
     private let sourceType: UIImagePickerController.SourceType
-    private var didCancel: ((UIImagePickerController) -> ())?
+    private var onCancel: ((UIImagePickerController) -> ())?
+    private var onSuccess: ((UIImagePickerViewSuccessResult) -> ())?
     
     /// UIImagePickerController wrapper with `image` binding
     /// - Parameters:
     ///   - image: image
     ///   - allowsEditing: allows editing
     ///   - sourceType: source type
-    ///   - didCancel: callback representing when the UIImagePickerController was canceled
+    ///   - onCancel: callback representing when the UIImagePickerController was canceled
     public init(image: Binding<UIImage?>,
                 allowsEditing: Bool = true,
                 sourceType: UIImagePickerController.SourceType = .photoLibrary,
-                didCancel: ((UIImagePickerController) -> ())? = nil) {
+                onCancel: ((UIImagePickerController) -> ())? = nil) {
         self._image = image
         self._info = .constant(nil)
         self.allowsEditing = allowsEditing
         self.sourceType = sourceType
-        self.didCancel = didCancel
+        self.onCancel = onCancel
+        self.onSuccess = nil
     }
     
     /// UIImagePickerController wrapper with `info` binding
@@ -39,16 +41,35 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
     ///   - info: info
     ///   - allowsEditing: allows editing
     ///   - sourceType: source type
-    ///   - didCancel: callback representing when the UIImagePickerController was canceled
+    ///   - onCancel: callback representing when the UIImagePickerController was canceled
     public init(info: Binding<[UIImagePickerController.InfoKey : Any]?>,
                 allowsEditing: Bool = true,
                 sourceType: UIImagePickerController.SourceType = .photoLibrary,
-                didCancel: ((UIImagePickerController) -> ())? = nil) {
+                onCancel: ((UIImagePickerController) -> ())? = nil) {
         self._image = .constant(nil)
         self._info = info
         self.allowsEditing = allowsEditing
         self.sourceType = sourceType
-        self.didCancel = didCancel
+        self.onCancel = onCancel
+        self.onSuccess = nil
+    }
+    
+    /// UIImagePickerController wrapper with `onSuccess` callback
+    /// - Parameters:
+    ///   - allowsEditing: allows editing
+    ///   - sourceType: source type
+    ///   - onCancel: callback representing when the UIImagePickerController was canceled
+    ///   - onSuccess: callback representing when the UIImagePickerController has succeeded
+    public init(allowsEditing: Bool = true,
+                sourceType: UIImagePickerController.SourceType = .photoLibrary,
+                onCancel: ((UIImagePickerController) -> ())? = nil,
+                onSuccess: @escaping ((UIImagePickerViewSuccessResult) -> ())) {
+        self._image = .constant(nil)
+        self._info = .constant(nil)
+        self.allowsEditing = allowsEditing
+        self.sourceType = sourceType
+        self.onCancel = onCancel
+        self.onSuccess = onSuccess
     }
 
     public func makeUIViewController(context: UIViewControllerRepresentableContext<UIImagePickerView>) -> UIImagePickerController {
@@ -62,7 +83,7 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
     public func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<UIImagePickerView>) { }
     
     public func makeCoordinator() -> Coordinator {
-        Coordinator(self, didCancel: didCancel)
+        Coordinator(self, didCancel: onCancel)
     }
     
     public class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
@@ -84,6 +105,8 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
             }
             parent.image = image
             parent.info = info
+            let result = UIImagePickerViewSuccessResult(image: image, info: info)
+            parent.onSuccess?(result)
             parent.presentationMode.wrappedValue.dismiss()
         }
         
@@ -92,4 +115,9 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
             parent.presentationMode.wrappedValue.dismiss()
         }
     }
+}
+
+public struct UIImagePickerViewSuccessResult {
+    let image: UIImage
+    let info: [UIImagePickerController.InfoKey : Any]
 }

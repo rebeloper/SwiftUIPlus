@@ -16,16 +16,16 @@ public struct ImagePickerView: UIViewControllerRepresentable {
     @Binding private var results: [PHPickerResult]?
     private let filter: PHPickerFilter
     private let selectionLimit: Int
-    private var didCancel: ((PHPickerViewController) -> ())?
-    private let didFail: ((ImagePickerError) -> ())?
+    private var onCancel: ((PHPickerViewController) -> ())?
+    private let onFail: ((ImagePickerError) -> ())?
     
     /// PHPickerViewController wrapper with `images` binding
     /// - Parameters:
     ///   - images: binded images
     ///   - filter: filter
     ///   - selectionLimit: selection limit
-    ///   - didCancel: callback representing when the PHPickerViewController was canceled
-    ///   - didFail: callback representing when the PHPickerViewController failed
+    ///   - onCancel: callback representing when the PHPickerViewController was canceled
+    ///   - onFail: callback representing when the PHPickerViewController failed
     public init(images: Binding<[UIImage]?>,
                 filter: PHPickerFilter = .images,
                 selectionLimit: Int = 1,
@@ -35,8 +35,8 @@ public struct ImagePickerView: UIViewControllerRepresentable {
         self._results = .constant(nil)
         self.filter = filter
         self.selectionLimit = selectionLimit
-        self.didCancel = didCancel
-        self.didFail = didFail
+        self.onCancel = didCancel
+        self.onFail = didFail
     }
     
     /// PHPickerViewController wrapper with `results` binding
@@ -44,8 +44,8 @@ public struct ImagePickerView: UIViewControllerRepresentable {
     ///   - results: binded results
     ///   - filter: filter
     ///   - selectionLimit: selection limit
-    ///   - didCancel: callback representing when the PHPickerViewController was canceled
-    ///   - didFail: callback representing when the PHPickerViewController failed
+    ///   - onCancel: callback representing when the PHPickerViewController was canceled
+    ///   - onFail: callback representing when the PHPickerViewController failed
     public init(results: Binding<[PHPickerResult]?>,
                 filter: PHPickerFilter = .images,
                 selectionLimit: Int = 1,
@@ -55,8 +55,8 @@ public struct ImagePickerView: UIViewControllerRepresentable {
         self._results = results
         self.filter = filter
         self.selectionLimit = selectionLimit
-        self.didCancel = didCancel
-        self.didFail = didFail
+        self.onCancel = didCancel
+        self.onFail = didFail
     }
     
     public func makeUIViewController(context: Context) -> PHPickerViewController {
@@ -72,7 +72,7 @@ public struct ImagePickerView: UIViewControllerRepresentable {
     public func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) { }
     
     public func makeCoordinator() -> Coordinator {
-        Coordinator(self, didCancel: didCancel, didFail: didFail)
+        Coordinator(self, didCancel: onCancel, didFail: onFail)
     }
     
     public class Coordinator: NSObject, PHPickerViewControllerDelegate {
