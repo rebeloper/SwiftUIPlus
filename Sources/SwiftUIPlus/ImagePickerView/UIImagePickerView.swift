@@ -17,6 +17,12 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
     private let sourceType: UIImagePickerController.SourceType
     private var didCancel: ((UIImagePickerController) -> ())?
     
+    /// UIImagePickerController wrapper with `image` binding
+    /// - Parameters:
+    ///   - image: image
+    ///   - allowsEditing: allows editing
+    ///   - sourceType: source type
+    ///   - didCancel: callback representing when the UIImagePickerController was canceled
     public init(image: Binding<UIImage?>,
                 allowsEditing: Bool = true,
                 sourceType: UIImagePickerController.SourceType = .photoLibrary,
@@ -28,6 +34,12 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
         self.didCancel = didCancel
     }
     
+    /// UIImagePickerController wrapper with `info` binding
+    /// - Parameters:
+    ///   - info: info
+    ///   - allowsEditing: allows editing
+    ///   - sourceType: source type
+    ///   - didCancel: callback representing when the UIImagePickerController was canceled
     public init(info: Binding<[UIImagePickerController.InfoKey : Any]?>,
                 allowsEditing: Bool = true,
                 sourceType: UIImagePickerController.SourceType = .photoLibrary,
