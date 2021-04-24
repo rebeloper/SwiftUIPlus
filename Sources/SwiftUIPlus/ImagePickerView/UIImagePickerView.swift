@@ -8,75 +8,76 @@
 import SwiftUI
 import UIKit
 
-@available(iOS 13.0, *)
 public struct UIImagePickerView: UIViewControllerRepresentable {
+    @Environment(\.presentationMode) private var presentationMode
     
-    public typealias UIViewControllerType = UIImagePickerController
-    
-    /// Image Picker with UIImagePickerController
-    /// - Parameters:
-    ///   - allowsEditing: does it allow editing
-    ///   - sourceType: source
-    ///   - delegate: Image Picker Delegate
-    public init(allowsEditing: Bool = true,
-                sourceType: UIImagePickerController.SourceType = .photoLibrary,
-                delegate: UIImagePickerControllerDelegate & UINavigationControllerDelegate) {
-        self.allowsEditing = allowsEditing
-        self.sourceType = sourceType
-        self.delegate = delegate
-    }
-
+    @Binding private var image: UIImage?
+    @Binding private var info: [UIImagePickerController.InfoKey : Any]?
     private let allowsEditing: Bool
     private let sourceType: UIImagePickerController.SourceType
-    private let delegate: UIImagePickerControllerDelegate & UINavigationControllerDelegate
+    private var didCancel: ((UIImagePickerController) -> ())?
     
-    public func makeUIViewController(context: UIViewControllerRepresentableContext<UIImagePickerView>) -> UIImagePickerController {
-        let controller = UIImagePickerController()
-        controller.allowsEditing = allowsEditing
-        controller.sourceType = sourceType
-        controller.delegate = delegate
-        return controller
+    public init(image: Binding<UIImage?>,
+                allowsEditing: Bool = true,
+                sourceType: UIImagePickerController.SourceType = .photoLibrary,
+                didCancel: ((UIImagePickerController) -> ())? = nil) {
+        self._image = image
+        self._info = .constant(nil)
+        self.allowsEditing = allowsEditing
+        self.sourceType = sourceType
+        self.didCancel = didCancel
     }
     
-    public func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<UIImagePickerView>) { }
-}
+    public init(info: Binding<[UIImagePickerController.InfoKey : Any]?>,
+                allowsEditing: Bool = true,
+                sourceType: UIImagePickerController.SourceType = .photoLibrary,
+                didCancel: ((UIImagePickerController) -> ())? = nil) {
+        self._image = .constant(nil)
+        self._info = info
+        self.allowsEditing = allowsEditing
+        self.sourceType = sourceType
+        self.didCancel = didCancel
+    }
 
-@available(iOS 13.0, *)
-extension UIImagePickerView {
+    public func makeUIViewController(context: UIViewControllerRepresentableContext<UIImagePickerView>) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.allowsEditing = allowsEditing
+        picker.sourceType = sourceType
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    public func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<UIImagePickerView>) { }
     
-    public class Delegate: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        
-        public init(isPresented: Binding<Bool>, didCancel: @escaping (UIImagePickerController) -> (), didSelect: @escaping (UIImagePickerResult) -> ()) {
-            self._isPresented = isPresented
+    public func makeCoordinator() -> Coordinator {
+        Coordinator(self, didCancel: didCancel)
+    }
+    
+    public class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        let parent: UIImagePickerView
+
+        init(_ parent: UIImagePickerView, didCancel: ((UIImagePickerController) -> ())?) {
+            self.parent = parent
             self.didCancel = didCancel
-            self.didSelect = didSelect
         }
         
-        @Binding var isPresented: Bool
-        private let didCancel: (UIImagePickerController) -> ()
-        private let didSelect: (UIImagePickerResult) -> ()
+        private let didCancel: ((UIImagePickerController) -> ())?
         
-        public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
             var image = UIImage()
             if let editedImage = info[.editedImage] as? UIImage {
                 image = editedImage
             } else if let originalImage = info[.originalImage] as? UIImage {
                 image = originalImage
             }
-            isPresented = false
-            didSelect(UIImagePickerResult(picker: picker, image: image, info: info))
+            parent.image = image
+            parent.info = info
+            parent.presentationMode.wrappedValue.dismiss()
         }
         
         public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            isPresented = false
-            didCancel(picker)
+            didCancel?(picker)
+            parent.presentationMode.wrappedValue.dismiss()
         }
     }
-    
-}
-
-public struct UIImagePickerResult {
-    public let picker: UIImagePickerController
-    public let image: UIImage
-    public let info: [UIImagePickerController.InfoKey : Any]
 }
