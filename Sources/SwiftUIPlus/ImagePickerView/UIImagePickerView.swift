@@ -83,18 +83,18 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
     public func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<UIImagePickerView>) { }
     
     public func makeCoordinator() -> Coordinator {
-        Coordinator(self, didCancel: onCancel)
+        Coordinator(self, onCancel: onCancel)
     }
     
     public class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         let parent: UIImagePickerView
 
-        init(_ parent: UIImagePickerView, didCancel: ((UIImagePickerController) -> ())?) {
+        init(_ parent: UIImagePickerView, onCancel: ((UIImagePickerController) -> ())?) {
             self.parent = parent
-            self.didCancel = didCancel
+            self.onCancel = onCancel
         }
         
-        private let didCancel: ((UIImagePickerController) -> ())?
+        private let onCancel: ((UIImagePickerController) -> ())?
         
         public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
             var image = UIImage()
@@ -111,7 +111,7 @@ public struct UIImagePickerView: UIViewControllerRepresentable {
         }
         
         public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            didCancel?(picker)
+            onCancel?(picker)
             parent.presentationMode.wrappedValue.dismiss()
         }
     }
