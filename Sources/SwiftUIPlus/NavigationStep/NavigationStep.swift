@@ -14,9 +14,17 @@ import SwiftUI
 /// `NavigationStep` works perfectly alongside `SwiftUI`'s built in navigation system. It's not trying to remove the existing `SwiftUI` navigation system, rather acting as a unified and more powerfull syntax built on top of it.
 ///
 /// `NavigationStep` comes in 3 flavors:
-/// 1. `View` that when tapped presents a `Destination` view.
-/// 2. `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
-/// 3. `View` that when tapped executes an `action` that can present a `Destination` view when `isActive` is set to `true`.
+///
+/// 1. `View` that when tapped presents a `destination` view.
+/// 2. `EmptyView` with `isActive` `Binding<Bool>` that presents a `destination` view when `isActive` is set to `true`.
+/// 3. `View` that when tapped executes an `action` that can present a `destination` view when `isActive` is set to `true`.
+///
+/// You may also use a `NavigationStep` that presents the `destination` view when
+/// a bound selection variable equals a given tag value.
+///
+/// 1. `View` that when tapped presents a `destination` view when `selection` is set to `tag`.
+/// 2. `EmptyView` that presents a `destination` view when `selection` is set to `tag`.
+/// 3. `View` that when tapped executes an `action` that can present a `destination` view when `selection` is set to `tag`.
 ///
 /// Navigation in `SwiftUI` is handeled by multiple items (ex. NavigationLink, .sheet, .fullScreenCover). `NavigationStep` brings them all into one convenient syntax.
 /// `NavigationStep` behaves much like a `NavigationLink`, but with added extras.
@@ -96,7 +104,7 @@ import SwiftUI
 /// }
 /// ```
 ///
-/// If you wish you may add an `action` between the moment the view is tapped and the presentation of the `Destination`. Optionally you may add an `onDismiss` completion here too.
+/// If you wish you may add an `action` between the moment the view is tapped and the presentation of the `destination`. Optionally you may add an `onDismiss` completion here too.
 ///
 /// ```
 /// @State private var isDetailViewActive = false // declared outside of the body
@@ -118,7 +126,8 @@ import SwiftUI
 /// }
 /// ```
 ///
-/// In some cases you might want to use a `tag` and `selection` combination:
+/// You may also use a `NavigationStep` that presents the `destination` view when
+/// a bound selection variable equals a given tag value.
 ///
 /// ```
 /// @State private var selection: Int? = nil
@@ -165,7 +174,7 @@ public struct NavigationStep<Destination: View, Label: View, Tag: Hashable>: Vie
     private let action: (() -> Void)?
     private let onDismiss: (() -> Void)?
     
-    /// `View` that when tapped presents a `Destination` view.
+    /// `View` that when tapped presents a `destination` view.
     /// - Parameters:
     ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
@@ -227,6 +236,36 @@ public extension NavigationStep where Label == EmptyView {
     }
 }
 
+public extension NavigationStep {
+    
+    /// `View` that when tapped executes an `action` that can present a `destination` view when `isActive` is set to `true`.
+    /// - Parameters:
+    ///   - style: The NavigationStep style.
+    ///   - type: The NavigationStep type.
+    ///   - isActive: A binding to a Boolean value that indicates whether the `destination` is currently presented.
+    ///   - destination: A view builder to produce the view the navigation step to present.
+    ///   - label: A view builder to produce a label describing the `destination` to present.
+    ///   - action: A closure executed when the `label` is tapped.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
+    init(style: NavigationStepStyle,
+         type: NavigationStepType,
+         isActive: Binding<Bool>,
+         @ViewBuilder destination: () -> Destination,
+         @ViewBuilder label: () -> Label,
+         action: (() -> Void)?,
+         onDismiss: (() -> Void)? = nil) {
+        self.navigationStepStyle = style
+        self.navigationStepType = type
+        self._isActiveBinding = isActive
+        self.tag = nil
+        self._selection = .constant(nil)
+        self.destination = destination()
+        self.label = label()
+        self.action = action
+        self.onDismiss = onDismiss
+    }
+}
+
 public extension NavigationStep where Label == EmptyView {
     
     /// `EmptyView` that presents a `destination` view when `selection` is set to `tag`.
@@ -255,30 +294,30 @@ public extension NavigationStep where Label == EmptyView {
 
 public extension NavigationStep {
     
-    /// `View` that when tapped executes an `action` that can present a `destination` view when `isActive` is set to `true`.
+    /// `View` that when tapped presents a `destination` view when `selection` is set to `tag`.
     /// - Parameters:
     ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
-    ///   - isActive: A binding to a Boolean value that indicates whether the `destination` is currently presented.
+    ///   - tag: The value of `selection` that causes the link to present `destination`.
+    ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
     ///   - destination: A view builder to produce the view the navigation step to present.
-    ///   - label: A view builder to produce a label describing the `destination` to present.
-    ///   - action: A closure executed when the `label` is tapped.
+    ///   - label: A view builder to produce a label that triggers the `action` to be executed.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(style: NavigationStepStyle,
          type: NavigationStepType,
-         isActive: Binding<Bool>,
+         tag: Tag?,
+         selection: Binding<Tag?>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
-         action: (() -> Void)?,
          onDismiss: (() -> Void)? = nil) {
         self.navigationStepStyle = style
         self.navigationStepType = type
-        self._isActiveBinding = isActive
-        self.tag = nil
-        self._selection = .constant(nil)
+        self._isActiveBinding = .constant(false)
+        self.tag = tag
+        self._selection = selection
         self.destination = destination()
         self.label = label()
-        self.action = action
+        self.action = nil
         self.onDismiss = onDismiss
     }
 }
@@ -311,36 +350,6 @@ public extension NavigationStep {
         self.destination = destination()
         self.label = label()
         self.action = action
-        self.onDismiss = onDismiss
-    }
-}
-
-public extension NavigationStep {
-    
-    /// `View` that when tapped executes an `action` that presents a `destination` view when `selection` is set to `tag`.
-    /// - Parameters:
-    ///   - style: The NavigationStep style.
-    ///   - type: The NavigationStep type.
-    ///   - tag: The value of `selection` that causes the link to present `destination`.
-    ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
-    ///   - destination: A view builder to produce the view the navigation step to present.
-    ///   - label: A view builder to produce a label that triggers the `action` to be executed.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
-    init(style: NavigationStepStyle,
-         type: NavigationStepType,
-         tag: Tag?,
-         selection: Binding<Tag?>,
-         @ViewBuilder destination: () -> Destination,
-         @ViewBuilder label: () -> Label,
-         onDismiss: (() -> Void)? = nil) {
-        self.navigationStepStyle = style
-        self.navigationStepType = type
-        self._isActiveBinding = .constant(false)
-        self.tag = tag
-        self._selection = selection
-        self.destination = destination()
-        self.label = label()
-        self.action = nil
         self.onDismiss = onDismiss
     }
 }
