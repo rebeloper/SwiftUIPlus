@@ -9,14 +9,14 @@ import SwiftUI
 
 public extension NavigationStep {
     
-    /// `View` that when tapped executes an `action` that can present a `Destination` view when `isActive` is set to `true`.
+    /// `View` that when tapped executes an `action` that can present a `destination` view when `isActive` is set to `true`.
     /// - Parameters:
     ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
-    ///   - isActive: A binding Bool whether the destination is presented.
-    ///   - destination: A closure returning the content of the destination.
-    ///   - label: A tappable view that triggers the `action` to be executed.
-    ///   - action: A closure executed when the label is tapped.
+    ///   - isActive: A binding to a Boolean value that indicates whether the `destination` is currently presented.
+    ///   - destination: A view builder to produce the view the navigation step to present.
+    ///   - label: A view builder to produce a label describing the `destination` to present.
+    ///   - action: A closure executed when the `label` is tapped.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(style: NavigationStepStyle,
          type: NavigationStepType,
@@ -39,11 +39,11 @@ public extension NavigationStep {
 
 public extension NavigationStep where Label == EmptyView {
     
-    /// `EmptyView` with `isActive` `Binding<Bool>` that presents a `Destination` view when `isActive` is set to `true`.
+    /// `EmptyView` with `isActive` `Binding<Bool>` that presents a `destination` view when `isActive` is set to `true`.
     /// - Parameters:
     ///   - type: The NavigationStep type.
-    ///   - isActive: A binding Bool whether the destination is presented.
-    ///   - destination: A closure returning the content of the destination.
+    ///   - isActive: A binding to a Boolean value that indicates whether the `destination` is currently presented.
+    ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(type: NavigationStepType,
          isActive: Binding<Bool>,
@@ -63,16 +63,16 @@ public extension NavigationStep where Label == EmptyView {
 
 public extension NavigationStep where Label == EmptyView {
     
-    /// `EmptyView` that presents a `Destination` view when `selection` is set to `tag`.
+    /// `EmptyView` that presents a `destination` view when `selection` is set to `tag`.
     /// - Parameters:
     ///   - type: The NavigationStep type.
-    ///   - tag: The presented view tag.
-    ///   - selection: A binding Int? to which tagged view should be presented.
-    ///   - destination: A closure returning the content of the destination.
+    ///   - tag: The value of `selection` that causes the link to present `destination`.
+    ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
+    ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(type: NavigationStepType,
-         tag: Int?,
-         selection: Binding<Int?>,
+         tag: V?,
+         selection: Binding<V?>,
          @ViewBuilder destination: () -> Destination,
          onDismiss: (() -> Void)? = nil) {
         self.navigationStepStyle = nil
@@ -89,20 +89,20 @@ public extension NavigationStep where Label == EmptyView {
 
 public extension NavigationStep {
     
-    /// `View` that when tapped executes an `action` that can present a `Destination` view when `selection` is set to `tag`.
+    /// `View` that when tapped executes an `action` that can present a `destination` view when `selection` is set to `tag`.
     /// - Parameters:
     ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
-    ///   - tag: The presented view tag.
-    ///   - selection: A binding Int? to which tagged view should be presented.
-    ///   - destination: A closure returning the content of the destination.
-    ///   - label: A tappable view that triggers the `action` to be executed.
-    ///   - action: A closure executed when the label is tapped.
+    ///   - tag: The value of `selection` that causes the link to present `destination`.
+    ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
+    ///   - destination: A view builder to produce the view the navigation step to present.
+    ///   - label: A view builder to produce a label that triggers the `action` to be executed.
+    ///   - action: A closure executed when the `label` is tapped.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(style: NavigationStepStyle,
          type: NavigationStepType,
-         tag: Int?,
-         selection: Binding<Int?>,
+         tag: V?,
+         selection: Binding<V?>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
          action: (() -> Void)?,
@@ -125,16 +125,15 @@ public extension NavigationStep {
     /// - Parameters:
     ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
-    ///   - tag: The presented view tag.
-    ///   - selection: A binding Int? to which tagged view should be presented.
-    ///   - destination: A closure returning the content of the destination.
-    ///   - label: A tappable view that triggers the `action` to be executed.
-    ///   - action: A closure executed when the label is tapped.
+    ///   - tag: The value of `selection` that causes the link to present `destination`.
+    ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
+    ///   - destination: A view builder to produce the view the navigation step to present.
+    ///   - label: A view builder to produce a label that triggers the `action` to be executed.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(style: NavigationStepStyle,
          type: NavigationStepType,
-         tag: Int?,
-         selection: Binding<Int?>,
+         tag: V?,
+         selection: Binding<V?>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
          onDismiss: (() -> Void)? = nil) {
@@ -293,7 +292,7 @@ public extension NavigationStep {
 /// selection = 3
 /// ```
 ///
-public struct NavigationStep<Destination: View, Label: View>: View {
+public struct NavigationStep<Destination: View, Label: View, V: Hashable>: View {
     
     @State private var isActive = false
     @State private var isDisabled = false
@@ -301,8 +300,8 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     private var navigationStepStyle: NavigationStepStyle?
     private var navigationStepType: NavigationStepType
     @Binding private var isActiveBinding: Bool
-    private var tag: Int?
-    @Binding private var selection: Int?
+    private var tag: V?
+    @Binding private var selection: V?
     private let destination: Destination
     private let label: Label
     private let action: (() -> Void)?
@@ -312,8 +311,8 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     /// - Parameters:
     ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
-    ///   - destination: A closure returning the content of the destination.
-    ///   - label: A tappable view that triggers the navigation.
+    ///   - destination: A view builder to produce the view the navigation step to present.
+    ///   - label: A view builder to produce a label describing the `destination` to present.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     public init(style: NavigationStepStyle,
                 type: NavigationStepType,
@@ -478,7 +477,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     // MARK: -
     
     @ViewBuilder
-    func pushButton(action: @escaping (() -> Void), tag: Int) -> some View {
+    func pushButton(action: @escaping (() -> Void), tag: V) -> some View {
         Button(action: {
             action()
         }, label: {
@@ -506,7 +505,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     }
     
     @ViewBuilder
-    func pushButton(tag: Int) -> some View {
+    func pushButton(tag: V) -> some View {
         NavigationLink(destination: destination.onDisappear(perform: {
             onDismiss?()
         }), tag: tag, selection: $selection) {
@@ -526,7 +525,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     // MARK: -
     
     @ViewBuilder
-    func pushView(action: @escaping (() -> Void), tag: Int) -> some View {
+    func pushView(action: @escaping (() -> Void), tag: V) -> some View {
         label.onTapGesture {
             action()
         }
@@ -550,7 +549,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     }
     
     @ViewBuilder
-    func pushView(tag: Int) -> some View {
+    func pushView(tag: V) -> some View {
         label.onTapGesture {
             selection = tag
         }
@@ -576,7 +575,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     // MARK: -
     
     @ViewBuilder
-    func pushEmptyView(tag: Int) -> some View {
+    func pushEmptyView(tag: V) -> some View {
         NavigationLink(destination: destination.onDisappear(perform: {
             onDismiss?()
         }), tag: tag, selection: $selection) {
@@ -596,7 +595,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     // MARK: -
     
     @ViewBuilder
-    func sheetButton(isFullScreen: Bool, action: @escaping (() -> Void), tag: Int) -> some View {
+    func sheetButton(isFullScreen: Bool, action: @escaping (() -> Void), tag: V) -> some View {
         if isFullScreen {
             Button {
                 action()
@@ -648,7 +647,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     }
     
     @ViewBuilder
-    func sheetButton(isFullScreen: Bool, tag: Int) -> some View {
+    func sheetButton(isFullScreen: Bool, tag: V) -> some View {
         if isFullScreen {
             Button {
                 selection = tag
@@ -702,7 +701,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     // MARK: -
     
     @ViewBuilder
-    func sheetView(isFullScreen: Bool, action: @escaping (() -> Void), tag: Int) -> some View {
+    func sheetView(isFullScreen: Bool, action: @escaping (() -> Void), tag: V) -> some View {
         if isFullScreen {
             label.onTapGesture {
                 action()
@@ -758,7 +757,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     }
     
     @ViewBuilder
-    func sheetView(isFullScreen: Bool, tag: Int) -> some View {
+    func sheetView(isFullScreen: Bool, tag: V) -> some View {
         if isFullScreen {
             label.onTapGesture {
                 selection = tag
@@ -816,7 +815,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     // MARK: -
     
     @ViewBuilder
-    func sheetEmptyView(isFullScreen: Bool, tag: Int) -> some View {
+    func sheetEmptyView(isFullScreen: Bool, tag: V) -> some View {
         if isFullScreen {
             Button {} label: {
                 EmptyView()
