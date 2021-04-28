@@ -159,7 +159,7 @@ import SwiftUI
 /// selection = 3
 /// ```
 ///
-public struct NavigationStep<Destination: View, Label: View, Tag: Hashable>: View {
+public struct NavigationStep<Destination: View, Label: View>: View {
     
     @State private var isActive = false
     @State private var isDisabled = false
@@ -167,8 +167,8 @@ public struct NavigationStep<Destination: View, Label: View, Tag: Hashable>: Vie
     private var navigationStepStyle: NavigationStepStyle?
     private var navigationStepType: NavigationStepType
     @Binding private var isActiveBinding: Bool
-    private var tag: Tag?
-    @Binding private var selection: Tag?
+    private var tag: Int?
+    @Binding private var selection: Int?
     private let destination: Destination
     private let label: Label
     private let action: (() -> Void)?
@@ -198,15 +198,13 @@ public struct NavigationStep<Destination: View, Label: View, Tag: Hashable>: Vie
     }
     
     public var body: some View {
-        VStack {
-            switch navigationStepType {
-            case .push:
-                push(style: navigationStepStyle)
-            case .sheet:
-                sheet(isFullScreen: false, style: navigationStepStyle)
-            case .fullScreenSheet:
-                sheet(isFullScreen: true, style: navigationStepStyle)
-            }
+        switch navigationStepType {
+        case .push:
+            push(style: navigationStepStyle)
+        case .sheet:
+            sheet(isFullScreen: false, style: navigationStepStyle)
+        case .fullScreenSheet:
+            sheet(isFullScreen: true, style: navigationStepStyle)
         }
     }
     
@@ -276,8 +274,8 @@ public extension NavigationStep where Label == EmptyView {
     ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(type: NavigationStepType,
-         tag: Tag?,
-         selection: Binding<Tag?>,
+         tag: Int?,
+         selection: Binding<Int?>,
          @ViewBuilder destination: () -> Destination,
          onDismiss: (() -> Void)? = nil) {
         self.navigationStepStyle = nil
@@ -305,8 +303,8 @@ public extension NavigationStep {
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(style: NavigationStepStyle,
          type: NavigationStepType,
-         tag: Tag?,
-         selection: Binding<Tag?>,
+         tag: Int?,
+         selection: Binding<Int?>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
          onDismiss: (() -> Void)? = nil) {
@@ -336,8 +334,8 @@ public extension NavigationStep {
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
     init(style: NavigationStepStyle,
          type: NavigationStepType,
-         tag: Tag?,
-         selection: Binding<Tag?>,
+         tag: Int?,
+         selection: Binding<Int?>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
          action: (() -> Void)?,
@@ -490,7 +488,7 @@ public extension NavigationStep {
     // MARK: -
     
     @ViewBuilder
-    func pushButton(action: @escaping (() -> Void), tag: Tag) -> some View {
+    func pushButton(action: @escaping (() -> Void), tag: Int) -> some View {
         Button(action: {
             action()
         }, label: {
@@ -518,7 +516,7 @@ public extension NavigationStep {
     }
     
     @ViewBuilder
-    func pushButton(tag: Tag) -> some View {
+    func pushButton(tag: Int) -> some View {
         NavigationLink(destination: destination.onDisappear(perform: {
             onDismiss?()
         }), tag: tag, selection: $selection) {
@@ -538,7 +536,7 @@ public extension NavigationStep {
     // MARK: -
     
     @ViewBuilder
-    func pushView(action: @escaping (() -> Void), tag: Tag) -> some View {
+    func pushView(action: @escaping (() -> Void), tag: Int) -> some View {
         label.onTapGesture {
             action()
         }
@@ -562,7 +560,7 @@ public extension NavigationStep {
     }
     
     @ViewBuilder
-    func pushView(tag: Tag) -> some View {
+    func pushView(tag: Int) -> some View {
         label.onTapGesture {
             selection = tag
         }
@@ -588,7 +586,7 @@ public extension NavigationStep {
     // MARK: -
     
     @ViewBuilder
-    func pushEmptyView(tag: Tag) -> some View {
+    func pushEmptyView(tag: Int) -> some View {
         NavigationLink(destination: destination.onDisappear(perform: {
             onDismiss?()
         }), tag: tag, selection: $selection) {
@@ -608,7 +606,7 @@ public extension NavigationStep {
     // MARK: -
     
     @ViewBuilder
-    func sheetButton(isFullScreen: Bool, action: @escaping (() -> Void), tag: Tag) -> some View {
+    func sheetButton(isFullScreen: Bool, action: @escaping (() -> Void), tag: Int) -> some View {
         if isFullScreen {
             Button {
                 action()
@@ -660,7 +658,7 @@ public extension NavigationStep {
     }
     
     @ViewBuilder
-    func sheetButton(isFullScreen: Bool, tag: Tag) -> some View {
+    func sheetButton(isFullScreen: Bool, tag: Int) -> some View {
         if isFullScreen {
             Button {
                 selection = tag
@@ -714,7 +712,7 @@ public extension NavigationStep {
     // MARK: -
     
     @ViewBuilder
-    func sheetView(isFullScreen: Bool, action: @escaping (() -> Void), tag: Tag) -> some View {
+    func sheetView(isFullScreen: Bool, action: @escaping (() -> Void), tag: Int) -> some View {
         if isFullScreen {
             label.onTapGesture {
                 action()
@@ -770,7 +768,7 @@ public extension NavigationStep {
     }
     
     @ViewBuilder
-    func sheetView(isFullScreen: Bool, tag: Tag) -> some View {
+    func sheetView(isFullScreen: Bool, tag: Int) -> some View {
         if isFullScreen {
             label.onTapGesture {
                 selection = tag
@@ -828,7 +826,7 @@ public extension NavigationStep {
     // MARK: -
     
     @ViewBuilder
-    func sheetEmptyView(isFullScreen: Bool, tag: Tag) -> some View {
+    func sheetEmptyView(isFullScreen: Bool, tag: Int) -> some View {
         if isFullScreen {
             Button {} label: {
                 EmptyView()
