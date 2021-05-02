@@ -48,7 +48,7 @@ import SwiftUI
 /// Inside `ContentView` you can create a `NavigationStep` that will navigate to the `DetailView`:
 ///
 /// ```
-/// NavigationStep(style: .button, type: .push) {
+/// NavigationStep(type: .push, style: .button) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -75,7 +75,7 @@ import SwiftUI
 /// You can also choose the label style. Options are: `.button` and `.view`.
 ///
 /// ```
-/// NavigationStep(style: .view, type: .push) {
+/// NavigationStep(type: .push, style: .view) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -85,7 +85,7 @@ import SwiftUI
 /// There's an option to listen to `onDismiss` events trigerred when the `NavigationStep` is dismissed:
 ///
 /// ```
-/// NavigationStep(style: .view, type: .push) {
+/// NavigationStep(type: .push, style: .view) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -97,7 +97,7 @@ import SwiftUI
 /// Also you may choose the type of navigation. Options are: `.push`, `.sheet` and `.fullScreenSheet`.
 ///
 /// ```
-/// NavigationStep(style: .view, type: .sheet) {
+/// NavigationStep(type: .sheet, style: .view) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -111,7 +111,7 @@ import SwiftUI
 /// ```
 ///
 /// ```
-/// NavigationStep(style: .button, type: .sheet, isActive: $isDetailViewActive) {
+/// NavigationStep(type: .sheet, style: .button, isActive: $isDetailViewActive) {
 ///     DetailView()
 /// } label: {
 ///     Text("Go to DetailView")
@@ -135,7 +135,7 @@ import SwiftUI
 ///
 /// ```
 /// ForEach(0...9, id:\.self) { index in
-///     NavigationStep(style: .button, type: .push, tag: index, selection: $selection) {
+///     NavigationStep(type: .push, style: .button, tag: index, selection: $selection) {
 ///         DetailView(selection: $selection, index: index)
 ///     } label: {
 ///         Text("Label \(index)")
@@ -164,8 +164,8 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     @State private var isActive = false
     @State private var isDisabled = false
     
-    private var navigationStepStyle: NavigationStepStyle?
     private var navigationStepType: NavigationStepType
+    private var navigationStepStyle: NavigationStepStyle?
     @Binding private var isActiveBinding: Bool
     private var tag: Int?
     @Binding private var selection: Int?
@@ -176,18 +176,18 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     
     /// `View` that when tapped presents a `destination` view.
     /// - Parameters:
-    ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
+    ///   - style: The NavigationStep style.
     ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - label: A view builder to produce a label describing the `destination` to present.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
-    public init(style: NavigationStepStyle,
-                type: NavigationStepType,
+    public init(type: NavigationStepType,
+                style: NavigationStepStyle,
                 @ViewBuilder destination: () -> Destination,
                 @ViewBuilder label: () -> Label,
                 onDismiss: (() -> Void)? = nil) {
-        self.navigationStepStyle = style
         self.navigationStepType = type
+        self.navigationStepStyle = style
         self._isActiveBinding = .constant(false)
         self.tag = nil
         self._selection = .constant(nil)
@@ -222,8 +222,8 @@ public extension NavigationStep where Label == EmptyView {
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
          onDismiss: (() -> Void)? = nil) {
-        self.navigationStepStyle = nil
         self.navigationStepType = type
+        self.navigationStepStyle = nil
         self._isActiveBinding = isActive
         self.tag = nil
         self._selection = .constant(nil)
@@ -238,22 +238,22 @@ public extension NavigationStep {
     
     /// `View` that when tapped executes an `action` that can present a `destination` view when `isActive` is set to `true`.
     /// - Parameters:
-    ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
+    ///   - style: The NavigationStep style.
     ///   - isActive: A binding to a Boolean value that indicates whether the `destination` is currently presented.
     ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - label: A view builder to produce a label describing the `destination` to present.
     ///   - action: A closure executed when the `label` is tapped.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
-    init(style: NavigationStepStyle,
-         type: NavigationStepType,
+    init(type: NavigationStepType,
+         style: NavigationStepStyle,
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
          action: (() -> Void)?,
          onDismiss: (() -> Void)? = nil) {
-        self.navigationStepStyle = style
         self.navigationStepType = type
+        self.navigationStepStyle = style
         self._isActiveBinding = isActive
         self.tag = nil
         self._selection = .constant(nil)
@@ -278,8 +278,8 @@ public extension NavigationStep where Label == EmptyView {
          selection: Binding<Int?>,
          @ViewBuilder destination: () -> Destination,
          onDismiss: (() -> Void)? = nil) {
-        self.navigationStepStyle = nil
         self.navigationStepType = type
+        self.navigationStepStyle = nil
         self._isActiveBinding = .constant(false)
         self.tag = tag
         self._selection = selection
@@ -294,22 +294,22 @@ public extension NavigationStep {
     
     /// `View` that when tapped presents a `destination` view when `selection` is set to `tag`.
     /// - Parameters:
-    ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
+    ///   - style: The NavigationStep style.
     ///   - tag: The value of `selection` that causes the link to present `destination`.
     ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
     ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - label: A view builder to produce a label that triggers the `action` to be executed.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
-    init(style: NavigationStepStyle,
-         type: NavigationStepType,
+    init(type: NavigationStepType,
+         style: NavigationStepStyle,
          tag: Int?,
          selection: Binding<Int?>,
          @ViewBuilder destination: () -> Destination,
          @ViewBuilder label: () -> Label,
          onDismiss: (() -> Void)? = nil) {
-        self.navigationStepStyle = style
         self.navigationStepType = type
+        self.navigationStepStyle = style
         self._isActiveBinding = .constant(false)
         self.tag = tag
         self._selection = selection
@@ -324,16 +324,16 @@ public extension NavigationStep {
     
     /// `View` that when tapped executes an `action` that can present a `destination` view when `selection` is set to `tag`.
     /// - Parameters:
-    ///   - style: The NavigationStep style.
     ///   - type: The NavigationStep type.
+    ///   - style: The NavigationStep style.
     ///   - tag: The value of `selection` that causes the link to present `destination`.
     ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
     ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - label: A view builder to produce a label that triggers the `action` to be executed.
     ///   - action: A closure executed when the `label` is tapped.
     ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
-    init(style: NavigationStepStyle,
-         type: NavigationStepType,
+    init(type: NavigationStepType,
+         style: NavigationStepStyle,
          tag: Int?,
          selection: Binding<Int?>,
          @ViewBuilder destination: () -> Destination,

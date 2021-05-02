@@ -68,7 +68,7 @@ public final class InternalParticlesView: UIView {
     }
 }
 
-@_functionBuilder
+@resultBuilder
 public struct EmitterCellBuilder {
     public static func buildBlock(_ cells: CAEmitterCell...) -> [CAEmitterCell] {
       Array(cells)
