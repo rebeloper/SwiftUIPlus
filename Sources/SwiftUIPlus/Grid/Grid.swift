@@ -76,32 +76,6 @@ public struct Grid<Content: View>: View {
         if axis == .vertical {
             ScrollView(axis, showsIndicators: showsIndicators, content: {
                 
-                if usesPullToRefreshView {
-                    GeometryReader { proxy -> AnyView in
-                        DispatchQueue.main.async {
-                            if scrollRefresher.startOffset == 0 {
-                                scrollRefresher.startOffset = proxy.frame(in: .global).minY
-                            }
-                            scrollRefresher.offset = proxy.frame(in: .global).minY
-                            if scrollRefresher.offset - scrollRefresher.startOffset > 80 && !scrollRefresher.started {
-                                scrollRefresher.started = true
-                            }
-                            if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && !scrollRefresher.released {
-                                withAnimation(Animation.linear) {
-                                    scrollRefresher.released = true
-                                }
-                                didPullToRefresh()
-                            }
-                            if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && scrollRefresher.released && scrollRefresher.invalid {
-                                scrollRefresher.invalid = false
-                                didPullToRefresh()
-                            }
-                        }
-                        return AnyView(Color.black.frame(width: 0, height: 0))
-                    }
-                    .frame(width: 0, height: 0)
-                }
-                
                 ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
                     if usesPullToRefreshView {
                         if scrollRefresher.started && scrollRefresher.released {
@@ -135,6 +109,32 @@ public struct Grid<Content: View>: View {
                     }
                 }
                 .offset(y: usesPullToRefreshView ? scrollRefresher.released ? 40 : 0 : 0)
+                
+                if usesPullToRefreshView {
+                    GeometryReader { proxy -> AnyView in
+                        DispatchQueue.main.async {
+                            if scrollRefresher.startOffset == 0 {
+                                scrollRefresher.startOffset = proxy.frame(in: .global).minY
+                            }
+                            scrollRefresher.offset = proxy.frame(in: .global).minY
+                            if scrollRefresher.offset - scrollRefresher.startOffset > 80 && !scrollRefresher.started {
+                                scrollRefresher.started = true
+                            }
+                            if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && !scrollRefresher.released {
+                                withAnimation(Animation.linear) {
+                                    scrollRefresher.released = true
+                                }
+                                didPullToRefresh()
+                            }
+                            if scrollRefresher.startOffset == scrollRefresher.offset && scrollRefresher.started && scrollRefresher.released && scrollRefresher.invalid {
+                                scrollRefresher.invalid = false
+                                didPullToRefresh()
+                            }
+                        }
+                        return AnyView(Color.black.frame(width: 0, height: 0))
+                    }
+                    .frame(width: 0, height: 0)
+                }
                 
             })
             .onReceive(keyboardWillAppearPublisher) { (output) in
