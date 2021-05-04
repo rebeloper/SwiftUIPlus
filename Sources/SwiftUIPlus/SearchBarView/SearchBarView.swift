@@ -115,7 +115,7 @@ public struct SearchBarView: View {
                     onCancel()
                 } label: {
                     cancelButtonLabel()
-                }
+                }.disabled(text == "")
             }
         }
         .padding()
