@@ -180,7 +180,7 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     ///   - style: The NavigationStep style.
     ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - label: A view builder to produce a label describing the `destination` to present.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
     public init(type: NavigationStepType,
                 style: NavigationStepStyle,
                 @ViewBuilder destination: () -> Destination,
@@ -217,7 +217,7 @@ public extension NavigationStep where Label == EmptyView {
     ///   - type: The NavigationStep type.
     ///   - isActive: A binding to a Boolean value that indicates whether the `destination` is currently presented.
     ///   - destination: A view builder to produce the view the navigation step to present.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
     init(type: NavigationStepType,
          isActive: Binding<Bool>,
          @ViewBuilder destination: () -> Destination,
@@ -244,7 +244,7 @@ public extension NavigationStep {
     ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - label: A view builder to produce a label describing the `destination` to present.
     ///   - action: A closure executed when the `label` is tapped.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
     init(type: NavigationStepType,
          style: NavigationStepStyle,
          isActive: Binding<Bool>,
@@ -272,7 +272,7 @@ public extension NavigationStep where Label == EmptyView {
     ///   - tag: The value of `selection` that causes the link to present `destination`.
     ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
     ///   - destination: A view builder to produce the view the navigation step to present.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
     init(type: NavigationStepType,
          tag: Int?,
          selection: Binding<Int?>,
@@ -300,7 +300,7 @@ public extension NavigationStep {
     ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
     ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - label: A view builder to produce a label that triggers the `action` to be executed.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
     init(type: NavigationStepType,
          style: NavigationStepStyle,
          tag: Int?,
@@ -331,7 +331,7 @@ public extension NavigationStep {
     ///   - destination: A view builder to produce the view the navigation step to present.
     ///   - label: A view builder to produce a label that triggers the `action` to be executed.
     ///   - action: A closure executed when the `label` is tapped.
-    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
     init(type: NavigationStepType,
          style: NavigationStepStyle,
          tag: Int?,
@@ -494,9 +494,7 @@ public extension NavigationStep {
         }, label: {
             label
         })
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        }), tag: tag, selection: $selection) {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss), tag: tag, selection: $selection) {
             EmptyView()
         }
     }
@@ -508,27 +506,21 @@ public extension NavigationStep {
         }, label: {
             label
         })
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        }), isActive: $isActiveBinding, label: {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss), isActive: $isActiveBinding, label: {
             EmptyView()
         })
     }
     
     @ViewBuilder
     func pushButton(tag: Int) -> some View {
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        }), tag: tag, selection: $selection) {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss), tag: tag, selection: $selection) {
             label
         }
     }
     
     @ViewBuilder
     func pushButton() -> some View {
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        })) {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss)) {
             label
         }
     }
@@ -540,9 +532,7 @@ public extension NavigationStep {
         label.onTapGesture {
             action()
         }
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        }), tag: tag, selection: $selection) {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss), tag: tag, selection: $selection) {
             EmptyView()
         }
     }
@@ -552,9 +542,7 @@ public extension NavigationStep {
         label.onTapGesture {
             action()
         }
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        }), isActive: $isActiveBinding) {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss), isActive: $isActiveBinding) {
             EmptyView()
         }
     }
@@ -564,9 +552,7 @@ public extension NavigationStep {
         label.onTapGesture {
             selection = tag
         }
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        }), tag: tag, selection: $selection) {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss), tag: tag, selection: $selection) {
             EmptyView()
         }
     }
@@ -576,9 +562,7 @@ public extension NavigationStep {
         label.onTapGesture {
             isActive.toggle()
         }
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        }), isActive: $isActive) {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss), isActive: $isActive) {
             EmptyView()
         }
     }
@@ -587,18 +571,14 @@ public extension NavigationStep {
     
     @ViewBuilder
     func pushEmptyView(tag: Int) -> some View {
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        }), tag: tag, selection: $selection) {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss), tag: tag, selection: $selection) {
             EmptyView()
         }
     }
     
     @ViewBuilder
     func pushEmptyView() -> some View {
-        NavigationLink(destination: destination.onDisappear(perform: {
-            onDismiss?()
-        }), isActive: $isActiveBinding) {
+        NavigationLink(destination: destination.onDisappear(perform: onDismiss), isActive: $isActiveBinding) {
             EmptyView()
         }
     }
