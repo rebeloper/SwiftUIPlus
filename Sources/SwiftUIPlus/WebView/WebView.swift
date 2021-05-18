@@ -11,7 +11,7 @@ import WebKit
 
 public struct WebView: View {
     
-    let url: String
+    let url: URL
     let tintColor: Color
     let backText: Text
     let hidesBackButton: Bool
@@ -26,7 +26,7 @@ public struct WebView: View {
     
     /// A Web View
     /// - Parameters:
-    ///   - url: URL string
+    ///   - url: URL
     ///   - tintColor: tint color
     ///   - titleColor: title color
     ///   - backText: back text
@@ -39,7 +39,7 @@ public struct WebView: View {
     ///   - forbiddenHosts: forbidden hosts
     ///   - credential: credentials
     ///   - onNavigationAction: on navigation action
-    public init(url: String,
+    public init(url: URL,
          tintColor: Color = .blue,
          titleColor: Color = .primary,
          backText: Text = Text("Back"),
@@ -77,7 +77,7 @@ public struct WebView: View {
     public var body: some View {
         
         LoadingView(isShowing: .constant(webViewStateModel.loading)) {
-            WebPresenterView(url: URL.init(string: url)!, webViewStateModel: webViewStateModel, title: title, onNavigationAction: onNavigationAction, allowedHosts: allowedHosts, forbiddenHosts: forbiddenHosts, credential: credential)
+            WebPresenterView(url: url, webViewStateModel: webViewStateModel, title: title, onNavigationAction: onNavigationAction, allowedHosts: allowedHosts, forbiddenHosts: forbiddenHosts, credential: credential)
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitle(Text(webViewStateModel.pageTitle), displayMode: .inline)
