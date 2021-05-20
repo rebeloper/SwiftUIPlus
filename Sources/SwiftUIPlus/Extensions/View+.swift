@@ -83,6 +83,15 @@ public extension View {
         self.padding(.horizontal, horizontal).padding(.vertical, vertical)
     }
     
+    /// A rectangular shape with rounded corners and corner style, aligned inside the frame of the view containing it.
+    /// - Parameters:
+    ///   - cornerRadius: corner radius
+    ///   - style: corner style
+    /// - Returns: A view that has it's corners clipped in a particular style
+    func cornerRadius(_ cornerRadius: CGFloat, style: RoundedCornerStyle) -> some View {
+        self.clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: style))
+    }
+    
 }
 
 public extension View {
