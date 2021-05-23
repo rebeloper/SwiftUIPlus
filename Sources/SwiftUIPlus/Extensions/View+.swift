@@ -92,6 +92,16 @@ public extension View {
         self.clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: style))
     }
     
+    /// Fixes a strange bug in iOS14.5 where the pushed screen is popped just after being pushed. Add this to the container of the Navigation Links.
+    func iOS14_5MultipleNavigationLinksInstantPopFix() -> some View {
+        Group {
+            self
+            NavigationLink(destination: EmptyView()) {
+              EmptyView()
+            }
+        }
+    }
+    
 }
 
 public extension View {
