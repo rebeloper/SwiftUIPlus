@@ -9,21 +9,24 @@ import SwiftUI
 
 public struct SwipeableView<Content: View>: View {
     
-    @Environment(\.colorScheme) var colorScheme
     @ObservedObject var viewModel: SwipeableViewViewModel
     var manager: SwipeableViewManager
-    var rounded: Bool
-    var leftActions: SwipeableViewActionsViewModel
+    
     var rightActions: SwipeableViewActionsViewModel
+    var leftActions: SwipeableViewActionsViewModel
+    var rounded: Bool
     let content: Content
     
     @State var finishedOffset: CGSize = .zero
     
-    public init(@ViewBuilder content: () -> Content, leftActions: [SwipeableViewAction], rightActions: [SwipeableViewAction], rounded: Bool = false) {
+    public init(rightActions: [SwipeableViewAction],
+                leftActions: [SwipeableViewAction] = [],
+                rounded: Bool = false,
+                @ViewBuilder content: () -> Content) {
         
         self.content = content()
-        self.leftActions = SwipeableViewActionsViewModel(leftActions, maxActions: leftActions.count)
         self.rightActions = SwipeableViewActionsViewModel(rightActions, maxActions: rightActions.count)
+        self.leftActions = SwipeableViewActionsViewModel(leftActions, maxActions: leftActions.count)
         self.rounded = rounded
         
         viewModel = SwipeableViewViewModel(state: .center, size: .zero)
@@ -55,7 +58,7 @@ public struct SwipeableView<Content: View>: View {
     
     private func makeRightActions() -> AnyView {
         
-        return AnyView(SwipeableViewActions(viewModel: rightActions,
+        return AnyView(SwipeableViewActions(viewModel: leftActions,
                                    offset: .init(get: {self.viewModel.dragOffset}, set: {self.viewModel.dragOffset = $0}),
                                    state: .init(get: {self.viewModel.state}, set: {self.viewModel.state = $0}),
                                    onChangeSwipe: .init(get: {self.viewModel.onChangeSwipe}, set: {self.viewModel.onChangeSwipe = $0}),
@@ -66,7 +69,7 @@ public struct SwipeableView<Content: View>: View {
     
     private func makeLeftActions() -> AnyView {
         
-        return AnyView(SwipeableViewActions(viewModel: leftActions,
+        return AnyView(SwipeableViewActions(viewModel: rightActions,
                                    offset: .init(get: {self.viewModel.dragOffset}, set: {self.viewModel.dragOffset = $0}),
                                    state: .init(get: {self.viewModel.state}, set: {self.viewModel.state = $0}),
                                    onChangeSwipe: .init(get: {self.viewModel.onChangeSwipe}, set: {self.viewModel.onChangeSwipe = $0}),
@@ -119,10 +122,10 @@ public struct SwipeableView<Content: View>: View {
             // left
             if self.viewModel.state == .center && value.translation.width <= -50 {
                 
-                var offset = (CGFloat(min(4, self.leftActions.actions.count)) * -80)
+                var offset = (CGFloat(min(4, self.rightActions.actions.count)) * -80)
                 
                 if self.rounded {
-                    offset -= CGFloat(min(4, self.leftActions.actions.count)) * 5
+                    offset -= CGFloat(min(4, self.rightActions.actions.count)) * 5
                 }
                 withAnimation(.easeOut) {
                     self.viewModel.dragOffset = CGSize.init(width: offset, height: 0)
@@ -139,9 +142,9 @@ public struct SwipeableView<Content: View>: View {
             // right
             if self.viewModel.state == .center && value.translation.width > 50{
                 
-                var offset = (CGFloat(min(4, self.rightActions.actions.count)) * +80)
+                var offset = (CGFloat(min(4, self.leftActions.actions.count)) * +80)
                 if self.rounded {
-                    offset += CGFloat(min(4, self.rightActions.actions.count)) * 5
+                    offset += CGFloat(min(4, self.leftActions.actions.count)) * 5
                 }
                 withAnimation(.easeOut) {
                     self.viewModel.dragOffset = (CGSize.init(width: offset, height: 0))
