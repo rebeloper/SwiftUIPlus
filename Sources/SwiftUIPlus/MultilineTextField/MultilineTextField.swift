@@ -16,6 +16,7 @@ public struct MultilineTextField: View {
     @State private var minHeight: CGFloat = 0
     private var maxHeight: CGFloat?
     private var font: UIFont
+    private var foregroundColor: UIColor
     private var onCommit: (() -> Void)?
     @State private var shouldShowPlaceholder = false
     
@@ -27,7 +28,7 @@ public struct MultilineTextField: View {
     }
 
     public var body: some View {
-        UITextViewWrapper(text: self.internalText, calculatedHeight: $minHeight, becomeFirstResponder: becomeFirstResponder, maxHeight: maxHeight, font: font, onDone: onCommit)
+        UITextViewWrapper(text: self.internalText, calculatedHeight: $minHeight, becomeFirstResponder: becomeFirstResponder, maxHeight: maxHeight, font: font, foregroundColor: foregroundColor, onDone: onCommit)
             .frame(minHeight: minHeight, maxHeight: minHeight)
             .background(placeholderView, alignment: .topLeading)
     }
@@ -51,8 +52,16 @@ public struct MultilineTextField: View {
     ///   - minHeight: minimum height
     ///   - maxHeight: maximum height
     ///   - font: font
+    ///   - foregroundColor: foreground color
     ///   - onCommit: on commit callback
-    public init (_ placeholder: String = "", text: Binding<String>, becomeFirstResponder: Bool = false, minHeight: CGFloat = 40, maxHeight: CGFloat? = nil, font: UIFont = UIFont.preferredFont(forTextStyle: .body), onCommit: (() -> Void)? = nil) {
+    public init (_ placeholder: String = "",
+                 text: Binding<String>,
+                 becomeFirstResponder: Bool = false,
+                 minHeight: CGFloat = 40,
+                 maxHeight: CGFloat? = nil,
+                 font: UIFont = UIFont.preferredFont(forTextStyle: .body),
+                 foregroundColor: UIColor = .label,
+                 onCommit: (() -> Void)? = nil) {
         self.placeholder = placeholder
         self.onCommit = onCommit
         self._text = text
@@ -60,6 +69,7 @@ public struct MultilineTextField: View {
         self.minHeight = minHeight
         self.maxHeight = maxHeight
         self.font = font
+        self.foregroundColor = foregroundColor
         self._shouldShowPlaceholder = State<Bool>(initialValue: self.text.isEmpty)
     }
 
@@ -74,6 +84,7 @@ private struct UITextViewWrapper: UIViewRepresentable {
     var becomeFirstResponder: Bool
     var maxHeight: CGFloat?
     var font: UIFont
+    var foregroundColor: UIColor
     var onDone: (() -> Void)?
 
     func makeUIView(context: UIViewRepresentableContext<UITextViewWrapper>) -> UITextView {
@@ -85,6 +96,7 @@ private struct UITextViewWrapper: UIViewRepresentable {
         textView.isSelectable = true
         textView.isUserInteractionEnabled = true
         textView.isScrollEnabled = true
+        textView.textColor = foregroundColor
         textView.backgroundColor = UIColor.clear
         if nil != onDone {
             textView.returnKeyType = .done
