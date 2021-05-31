@@ -35,7 +35,12 @@ public struct SwipeableView<Content: View>: View {
     }
     
     private func makeView(_ geometry: GeometryProxy) -> some View {
-        return content
+        return HStack {
+            Spacer()
+            content
+            Spacer()
+        }
+        .frame(maxHeight: .infinity)
     }
     
     public var body: some View {
