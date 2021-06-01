@@ -50,7 +50,7 @@ public struct SwipeableView<Content: View>: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .offset(x: self.viewModel.dragOffset.width)
                 .zIndex(100)
-//                .onTapGesture(count: 1, perform: { self.toCenterWithAnimation()})
+                .onTapGesture(count: 2, perform: { self.toCenterWithAnimation()})
                 .highPriorityGesture( dragGesture )
             self.makeRightActions()
         }
