@@ -112,6 +112,7 @@ public struct ScrollableView<Content: View>: View {
                                 }
                             })
                         }
+                        Spacer()
                     }
                     .frame(maxWidth: .infinity)
                 }
