@@ -18,7 +18,7 @@ public struct ImagePickerView: UIViewControllerRepresentable {
     private let selectionLimit: Int
     private var onCancel: ((PHPickerViewController) -> ())?
     private var onSuccess: ((ImagePickerViewSuccessResult) -> ())?
-    private let onFail: ((ImagePickerError) -> ())?
+    private var onFail: ((ImagePickerError) -> ())?
     
     /// PHPickerViewController wrapper with `images` binding
     /// - Parameters:
