@@ -9,11 +9,19 @@ import SwiftUI
 import MessageUI
 
 public struct MailView: UIViewControllerRepresentable {
-    
     @Environment(\.presentationMode) private var presentationMode
-    public var configure: ((MFMailComposeViewController) -> Void)?
-    public var onFinish: ((MFMailComposeResult) -> ())?
-    public var onFail: ((Error) -> ())?
+    
+    private var configure: ((MFMailComposeViewController) -> Void)?
+    private var onFinish: ((MFMailComposeResult) -> ())?
+    private var onFail: ((Error) -> ())?
+    
+    public init(configure: ((MFMailComposeViewController) -> Void)?,
+                onFinish: ((MFMailComposeResult) -> ())?,
+                onFail: ((Error) -> ())?) {
+        self.configure = configure
+        self.onFinish = onFinish
+        self.onFail = onFail
+    }
     
     public class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
         
@@ -31,9 +39,7 @@ public struct MailView: UIViewControllerRepresentable {
             self.onFail = onFail
         }
         
-        public func mailComposeController(_ controller: MFMailComposeViewController,
-                                          didFinishWith result: MFMailComposeResult,
-                                          error: Error?) {
+        public func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
             defer {
                 $presentation.wrappedValue.dismiss()
             }
