@@ -147,24 +147,61 @@ public struct NavigationDismissStep<Label: View>: View {
     }
     
     public var body: some View {
-        if let presentationMode = presentationMode {
-            if let action = action {
-                if let navigationStepStyle = navigationStepStyle {
-                    switch navigationStepStyle {
-                    case .button:
+        VStack {
+            if let presentationMode = presentationMode {
+                if let action = action {
+                    if let navigationStepStyle = navigationStepStyle {
+                        switch navigationStepStyle {
+                        case .button:
+                            Button {
+                                action()
+                            } label: {
+                                label
+                            }
+                            .onChange(of: isActive) { isActive in
+                                if isActive {
+                                    presentationMode.wrappedValue.dismiss()
+                                }
+                            }
+                        case .view:
+                            label.onTapGesture {
+                                action()
+                            }
+                            .onChange(of: isActive) { isActive in
+                                if isActive {
+                                    presentationMode.wrappedValue.dismiss()
+                                }
+                            }
+                        }
+                    } else {
                         Button {
                             action()
                         } label: {
-                            label
+                            EmptyView()
                         }
                         .onChange(of: isActive) { isActive in
                             if isActive {
                                 presentationMode.wrappedValue.dismiss()
                             }
                         }
-                    case .view:
-                        label.onTapGesture {
-                            action()
+                    }
+                } else {
+                    if let navigationStepStyle = navigationStepStyle {
+                        switch navigationStepStyle {
+                        case .button:
+                            Button {
+                                presentationMode.wrappedValue.dismiss()
+                            } label: {
+                                label
+                            }
+                        case .view:
+                            label.onTapGesture {
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                        }
+                    } else {
+                        Button {} label: {
+                            EmptyView()
                         }
                         .onChange(of: isActive) { isActive in
                             if isActive {
@@ -172,61 +209,37 @@ public struct NavigationDismissStep<Label: View>: View {
                             }
                         }
                     }
-                } else {
-                    Button {
-                        action()
-                    } label: {
-                        EmptyView()
-                    }
-                    .onChange(of: isActive) { isActive in
-                        if isActive {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }
                 }
             } else {
-                if let navigationStepStyle = navigationStepStyle {
-                    switch navigationStepStyle {
-                    case .button:
-                        Button {
-                            presentationMode.wrappedValue.dismiss()
-                        } label: {
-                            label
-                        }
-                    case .view:
-                        label.onTapGesture {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }
-                } else {
-                    Button {} label: {
-                        EmptyView()
-                    }
-                    .onChange(of: isActive) { isActive in
-                        if isActive {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }
-                }
-            }
-        } else {
-            if let action = action {
-                if let navigationStepStyle = navigationStepStyle {
-                    switch navigationStepStyle {
-                    case .button:
-                        Button {
-                            action()
-                        } label: {
-                            label
-                        }
-                        .onChange(of: isActive) { isActive in
-                            if isActive {
-                                selection = nil
+                if let action = action {
+                    if let navigationStepStyle = navigationStepStyle {
+                        switch navigationStepStyle {
+                        case .button:
+                            Button {
+                                action()
+                            } label: {
+                                label
+                            }
+                            .onChange(of: isActive) { isActive in
+                                if isActive {
+                                    selection = nil
+                                }
+                            }
+                        case .view:
+                            label.onTapGesture {
+                                action()
+                            }
+                            .onChange(of: isActive) { isActive in
+                                if isActive {
+                                    selection = nil
+                                }
                             }
                         }
-                    case .view:
-                        label.onTapGesture {
+                    } else {
+                        Button {
                             action()
+                        } label: {
+                            EmptyView()
                         }
                         .onChange(of: isActive) { isActive in
                             if isActive {
@@ -235,38 +248,27 @@ public struct NavigationDismissStep<Label: View>: View {
                         }
                     }
                 } else {
-                    Button {
-                        action()
-                    } label: {
-                        EmptyView()
-                    }
-                    .onChange(of: isActive) { isActive in
-                        if isActive {
-                            selection = nil
+                    if let navigationStepStyle = navigationStepStyle {
+                        switch navigationStepStyle {
+                        case .button:
+                            Button {
+                                selection = nil
+                            } label: {
+                                label
+                            }
+                        case .view:
+                            label.onTapGesture {
+                                selection = nil
+                            }
                         }
-                    }
-                }
-            } else {
-                if let navigationStepStyle = navigationStepStyle {
-                    switch navigationStepStyle {
-                    case .button:
-                        Button {
-                            selection = nil
-                        } label: {
-                            label
+                    } else {
+                        Button {} label: {
+                            EmptyView()
                         }
-                    case .view:
-                        label.onTapGesture {
-                            selection = nil
-                        }
-                    }
-                } else {
-                    Button {} label: {
-                        EmptyView()
-                    }
-                    .onChange(of: isActive) { isActive in
-                        if isActive {
-                            selection = nil
+                        .onChange(of: isActive) { isActive in
+                            if isActive {
+                                selection = nil
+                            }
                         }
                     }
                 }
