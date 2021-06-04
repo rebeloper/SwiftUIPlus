@@ -198,13 +198,15 @@ public struct NavigationStep<Destination: View, Label: View>: View {
     }
     
     public var body: some View {
-        switch navigationStepType {
-        case .push:
-            push(style: navigationStepStyle)
-        case .sheet:
-            sheet(isFullScreen: false, style: navigationStepStyle)
-        case .fullScreenSheet:
-            sheet(isFullScreen: true, style: navigationStepStyle)
+        VStack {
+            switch navigationStepType {
+            case .push:
+                push(style: navigationStepStyle)
+            case .sheet:
+                sheet(isFullScreen: false, style: navigationStepStyle)
+            case .fullScreenSheet:
+                sheet(isFullScreen: true, style: navigationStepStyle)
+            }
         }
     }
     
