@@ -38,3 +38,8 @@ extension CustomError: LocalizedError {
     }
 }
 
+extension CustomError {
+    func initial() -> CustomError {
+        .with(description: "", code: 0)
+    }
+}
