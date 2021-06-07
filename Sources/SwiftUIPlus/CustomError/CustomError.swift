@@ -39,7 +39,7 @@ extension CustomError: LocalizedError {
 }
 
 extension CustomError {
-    public func initial() -> CustomError {
+    public static func initial() -> CustomError {
         .with(description: "", code: 0)
     }
 }
