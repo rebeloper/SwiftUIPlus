@@ -102,6 +102,21 @@ public extension View {
         }
     }
     
+    /// Creates a `Push Out View` from a `Pull In View`
+    /// - Parameter color: the color of the area outside of the `Pull In View`
+    /// - Returns: a `Push Out View`
+    func asPushOutView(_ color: Color = Color.systemBackground) -> some View {
+        TightHStack {
+            color
+            TightVStack {
+                color
+                self
+                color
+            }
+            color
+        }
+    }
+    
 }
 
 public extension View {
