@@ -112,6 +112,22 @@ public extension View {
         }
     }
     
+    /// Widens the tappable area of the view. Use it for system images that rarely register taps.
+    /// - Parameter square: the side of the square area
+    /// - Returns: a view that is better tappable
+    func makeBetterTappable(square: CGFloat = 44) -> some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                self
+                Spacer()
+            }
+            Spacer()
+        }
+        .frame(square: square)
+    }
+    
 }
 
 public extension View {
