@@ -11,20 +11,20 @@ import WebKit
 
 @dynamicMemberLookup
 public class WebViewStore: ObservableObject {
-    @Published public var webView: WKWebView {
+    @Published public var wkWebView: WKWebView {
         didSet {
             setupObservers()
         }
     }
     
-    public init(webView: WKWebView = WKWebView()) {
-        self.webView = webView
+    public init(wkWebView: WKWebView = WKWebView()) {
+        self.wkWebView = wkWebView
         setupObservers()
     }
     
     private func setupObservers() {
         func subscriber<Value>(for keyPath: KeyPath<WKWebView, Value>) -> NSKeyValueObservation {
-            return webView.observe(keyPath, options: [.prior]) { _, change in
+            return wkWebView.observe(keyPath, options: [.prior]) { _, change in
                 if change.isPrior {
                     self.objectWillChange.send()
                 }
@@ -46,7 +46,7 @@ public class WebViewStore: ObservableObject {
     private var observers: [NSKeyValueObservation] = []
     
     public subscript<T>(dynamicMember keyPath: KeyPath<WKWebView, T>) -> T {
-        webView[keyPath: keyPath]
+        wkWebView[keyPath: keyPath]
     }
 }
 
@@ -69,7 +69,7 @@ public class WebViewStore: ObservableObject {
 ///
 ///     var body: some View {
 ///         NavigationView {
-///             WebView(webView: webViewStore.webView)
+///             WebView(wkWebView: webViewStore.wkWebView)
 ///                 .navigationBarTitle(Text(verbatim: webViewStore.title ?? ""), displayMode: .inline)
 ///                 .navigationBarItems(trailing: HStack {
 ///                     Button(action: goBack) {
@@ -86,29 +86,29 @@ public class WebViewStore: ObservableObject {
 ///                     }.disabled(!webViewStore.canGoForward)
 ///                 })
 ///         }.onAppear {
-///             self.webViewStore.webView.load(URLRequest(url: URL(string: "https://apple.com")!))
+///             self.webViewStore.wkWebView.load(URLRequest(url: URL(string: "https://apple.com")!))
 ///         }
 ///     }
 ///
 ///     func goBack() {
-///         webViewStore.webView.goBack()
+///         webViewStore.wkWebView.goBack()
 ///     }
 ///
 ///     func goForward() {
-///         webViewStore.webView.goForward()
+///         webViewStore.wkWebView.goForward()
 ///     }
 /// }
 /// ```
 public struct WebView: View, UIViewRepresentable {
     /// The WKWebView to display
-    public let webView: WKWebView
+    public let wkWebView: WKWebView
     
-    public init(webView: WKWebView) {
-        self.webView = webView
+    public init(wkWebView: WKWebView) {
+        self.wkWebView = wkWebView
     }
     
     public func makeUIView(context: UIViewRepresentableContext<WebView>) -> WKWebView {
-        webView
+        wkWebView
     }
     
     public func updateUIView(_ uiView: WKWebView, context: UIViewRepresentableContext<WebView>) {
@@ -120,14 +120,14 @@ public struct WebView: View, UIViewRepresentable {
 /// A container for using a WKWebView in SwiftUI
 public struct WebView: View, NSViewRepresentable {
     /// The WKWebView to display
-    public let webView: WKWebView
+    public let wkWebView: WKWebView
     
-    public init(webView: WKWebView) {
-        self.webView = webView
+    public init(wkWebView: WKWebView) {
+        self.wkWebView = wkWebView
     }
     
     public func makeNSView(context: NSViewRepresentableContext<WebView>) -> WKWebView {
-        webView
+        wkWebView
     }
     
     public func updateNSView(_ uiView: WKWebView, context: NSViewRepresentableContext<WebView>) {
