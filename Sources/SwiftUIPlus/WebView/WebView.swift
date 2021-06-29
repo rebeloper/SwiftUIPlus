@@ -1,145 +1,136 @@
 //
 //  WebView.swift
-//  
 //
-//  Created by Alex Nagy on 28.02.2021.
+//
+//  Created by Alex Nagy on 29.06.2021.
 //
 
 import SwiftUI
-import UIKit
+import Combine
 import WebKit
 
-public struct WebView: View {
-    
-    let url: URL
-    let tintColor: Color
-    let backText: Text
-    let hidesBackButton: Bool
-    let reloadImage: Image
-    let goForwardImage: Image
-    let goBackImage: Image
-    let title: String?
-    var allowedHosts: [String]?
-    var forbiddenHosts: [String]?
-    var credential: URLCredential?
-    var onNavigationAction: ((_ navigationAction: WebPresenterView.NavigationAction) -> Void)?
-    
-    /// A Web View
-    /// - Parameters:
-    ///   - url: URL
-    ///   - tintColor: tint color
-    ///   - titleColor: title color
-    ///   - backText: back text
-    ///   - hidesBackButton: should hide back button
-    ///   - reloadImage: reload image
-    ///   - goForwardImage: go forward image
-    ///   - goBackImage: go back image
-    ///   - title: title
-    ///   - allowedHosts: allowed hosts
-    ///   - forbiddenHosts: forbidden hosts
-    ///   - credential: credentials
-    ///   - onNavigationAction: on navigation action
-    public init(url: URL,
-         tintColor: Color = .blue,
-         titleColor: Color = .primary,
-         backText: Text = Text("Back"),
-         hidesBackButton: Bool = false,
-         reloadImage: Image = Image(systemName: "gobackward"),
-         goForwardImage: Image = Image(systemName: "chevron.forward"),
-         goBackImage: Image = Image(systemName: "chevron.backward"),
-         title: String? = nil,
-         allowedHosts: [String]? = nil,
-         forbiddenHosts: [String]? = nil,
-         credential: URLCredential? = nil,
-         onNavigationAction: ((_ navigationAction: WebPresenterView.NavigationAction) -> Void)? = nil) {
-        self.url = url
-        self.tintColor = tintColor
-        self.backText = backText
-        self.hidesBackButton = hidesBackButton
-        self.reloadImage = reloadImage
-        self.goForwardImage = goForwardImage
-        self.goBackImage = goBackImage
-        
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(titleColor)]
-        
-        self.title = title
-        
-        self.allowedHosts = allowedHosts
-        self.forbiddenHosts = forbiddenHosts
-        self.credential = credential
-        self.onNavigationAction = onNavigationAction
-           
+@dynamicMemberLookup
+public class WebViewStore: ObservableObject {
+    @Published public var webView: WKWebView {
+        didSet {
+            setupObservers()
+        }
     }
     
-    @StateObject var webViewStateModel: WebViewStateModel = WebViewStateModel()
-    @Environment(\.presentationMode) var presentationMode
+    public init(webView: WKWebView = WKWebView()) {
+        self.webView = webView
+        setupObservers()
+    }
     
-    public var body: some View {
-        
-        LoadingView(isShowing: .constant(webViewStateModel.loading)) {
-            WebPresenterView(url: url, webViewStateModel: webViewStateModel, title: title, onNavigationAction: onNavigationAction, allowedHosts: allowedHosts, forbiddenHosts: forbiddenHosts, credential: credential)
-        }
-        .navigationBarBackButtonHidden(true)
-        .navigationBarTitle(Text(webViewStateModel.pageTitle), displayMode: .inline)
-        .toolbar {
-            ToolbarItem(placement: .bottomBar) {
-                Spacer()
-            }
-            
-            ToolbarItem(placement: .bottomBar) {
-                HStack(spacing: 16) {
-                    Button {
-                        if self.webViewStateModel.canGoBack {
-                            self.webViewStateModel.goBack.toggle()
-                        }
-                    } label: {
-                        goBackImage
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 20, height: 20)
-                    }
-                    
-                    Button {
-                        if self.webViewStateModel.canGoForward {
-                            self.webViewStateModel.goForward.toggle()
-                        }
-                    } label: {
-                        goForwardImage
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 20, height: 20)
-                    }
-                    
-                    Spacer()
+    private func setupObservers() {
+        func subscriber<Value>(for keyPath: KeyPath<WKWebView, Value>) -> NSKeyValueObservation {
+            return webView.observe(keyPath, options: [.prior]) { _, change in
+                if change.isPrior {
+                    self.objectWillChange.send()
                 }
-                .accentColor(tintColor)
             }
         }
-        .navigationBarItems(
-            leading:
-                Button {
-                    if !hidesBackButton {
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
-                } label: {
-                    if !hidesBackButton {
-                        backText
-                    } else {
-                        Spacer()
-                    }
-                }
-                .accentColor(tintColor)
-            , trailing:
-                Button {
-                    self.webViewStateModel.reload.toggle()
-                } label: {
-                    reloadImage
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 20, height: 20)
-                }
-                .accentColor(tintColor)
-        )
-        
+        // Setup observers for all KVO compliant properties
+        observers = [
+            subscriber(for: \.title),
+            subscriber(for: \.url),
+            subscriber(for: \.isLoading),
+            subscriber(for: \.estimatedProgress),
+            subscriber(for: \.hasOnlySecureContent),
+            subscriber(for: \.serverTrust),
+            subscriber(for: \.canGoBack),
+            subscriber(for: \.canGoForward)
+        ]
+    }
+    
+    private var observers: [NSKeyValueObservation] = []
+    
+    public subscript<T>(dynamicMember keyPath: KeyPath<WKWebView, T>) -> T {
+        webView[keyPath: keyPath]
     }
 }
+
+#if os(iOS)
+/// A container for using a WKWebView in SwiftUI
+/// A SwiftUI component `View` that contains a `WKWebView`
+///
+/// Since `WKWebView` handles a lot of its own state, navigation stack, etc, it's almost easier to treat it as a mutable data model. You can set it up prior to how you need it, and then simply use its data within your SwiftUI View's.
+///
+/// Simply spin up a `WebViewStore` (optionally with your own `WKWebView`) and use that to access the `WKWebView` itself as if it was a data model.
+///
+/// Example usage:
+///
+/// ```swift
+/// import SwiftUI
+/// import WebView
+///
+/// struct ContentView: View {
+///     @StateObject var webViewStore = WebViewStore()
+///
+///     var body: some View {
+///         NavigationView {
+///             WebView(webView: webViewStore.webView)
+///                 .navigationBarTitle(Text(verbatim: webViewStore.title ?? ""), displayMode: .inline)
+///                 .navigationBarItems(trailing: HStack {
+///                     Button(action: goBack) {
+///                         Image(systemName: "chevron.left")
+///                             .imageScale(.large)
+///                             .aspectRatio(contentMode: .fit)
+///                             .frame(width: 32, height: 32)
+///                     }.disabled(!webViewStore.canGoBack)
+///                     Button(action: goForward) {
+///                         Image(systemName: "chevron.right")
+///                             .imageScale(.large)
+///                             .aspectRatio(contentMode: .fit)
+///                             .frame(width: 32, height: 32)
+///                     }.disabled(!webViewStore.canGoForward)
+///                 })
+///         }.onAppear {
+///             self.webViewStore.webView.load(URLRequest(url: URL(string: "https://apple.com")!))
+///         }
+///     }
+///
+///     func goBack() {
+///         webViewStore.webView.goBack()
+///     }
+///
+///     func goForward() {
+///         webViewStore.webView.goForward()
+///     }
+/// }
+/// ```
+public struct WebView: View, UIViewRepresentable {
+    /// The WKWebView to display
+    public let webView: WKWebView
+    
+    public init(webView: WKWebView) {
+        self.webView = webView
+    }
+    
+    public func makeUIView(context: UIViewRepresentableContext<WebView>) -> WKWebView {
+        webView
+    }
+    
+    public func updateUIView(_ uiView: WKWebView, context: UIViewRepresentableContext<WebView>) {
+    }
+}
+#endif
+
+#if os(macOS)
+/// A container for using a WKWebView in SwiftUI
+public struct WebView: View, NSViewRepresentable {
+    /// The WKWebView to display
+    public let webView: WKWebView
+    
+    public init(webView: WKWebView) {
+        self.webView = webView
+    }
+    
+    public func makeNSView(context: NSViewRepresentableContext<WebView>) -> WKWebView {
+        webView
+    }
+    
+    public func updateNSView(_ uiView: WKWebView, context: NSViewRepresentableContext<WebView>) {
+    }
+}
+#endif
