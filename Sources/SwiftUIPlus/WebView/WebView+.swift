@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-extension WebView {
+public extension WebView {
     
-    func configuration(webViewStore: WebViewStore) -> some View {
+    func configure(with webViewStore: WebViewStore) -> some View {
         self
             .navigationBarTitle(Text(verbatim: webViewStore.title ?? ""), displayMode: .inline)
                     .navigationBarItems(trailing: HStack {
