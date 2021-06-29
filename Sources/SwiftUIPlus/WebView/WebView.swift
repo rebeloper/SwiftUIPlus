@@ -117,6 +117,56 @@ public class WebViewStore: ObservableObject {
 ///     }
 /// }
 /// ```
+///
+/// ```swift
+/// import SwiftUI
+/// import SwiftUIPlus
+///
+/// struct ContentView: View {
+///     @StateObject var webViewStore = WebViewStore()
+///     @Environment(\.presentationMode) private var presentationMode
+///     @State private var isWebViewPresented = false
+///
+///     var body: some View {
+///         Button {
+///             isWebViewPresented.toggle()
+///         } label: {
+///             Text("Show WebView")
+///         }
+///         .sheet(isPresented: $isWebViewPresented) {
+///             NavigationView {
+///                 WebView(wkWebView: webViewStore.wkWebView)
+///                     .load(url: URL(string: "https://apple.com")!, webViewStore: webViewStore)
+///             }
+///         }
+///     }
+/// }
+/// ```
+///
+/// ```swift
+/// import SwiftUI
+/// import SwiftUIPlus
+///
+/// struct ContentView: View {
+///     @StateObject var webViewStore = WebViewStore()
+///     @Environment(\.presentationMode) private var presentationMode
+///     @State private var isWebViewPresented = false
+///
+///     var body: some View {
+///         Button {
+///             isWebViewPresented.toggle()
+///         } label: {
+///             Text("Show WebView")
+///         }
+///         .fullScreenCover(isPresented: $isWebViewPresented) {
+///             NavigationView {
+///                 WebView(wkWebView: webViewStore.wkWebView)
+///                     .load(url: URL(string: "https://apple.com")!, webViewStore: webViewStore, isActive: $isWebViewPresented)
+///             }
+///         }
+///     }
+/// }
+/// ```
 public struct WebView: View, UIViewRepresentable {
     /// The WKWebView to display
     public let wkWebView: WKWebView
