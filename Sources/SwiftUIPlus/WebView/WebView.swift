@@ -124,7 +124,6 @@ public class WebViewStore: ObservableObject {
 ///
 /// struct ContentView: View {
 ///     @StateObject var webViewStore = WebViewStore()
-///     @Environment(\.presentationMode) private var presentationMode
 ///     @State private var isWebViewPresented = false
 ///
 ///     var body: some View {
@@ -149,7 +148,6 @@ public class WebViewStore: ObservableObject {
 ///
 /// struct ContentView: View {
 ///     @StateObject var webViewStore = WebViewStore()
-///     @Environment(\.presentationMode) private var presentationMode
 ///     @State private var isWebViewPresented = false
 ///
 ///     var body: some View {
