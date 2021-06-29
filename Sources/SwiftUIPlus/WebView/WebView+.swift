@@ -9,7 +9,7 @@ import SwiftUI
 
 public extension WebView {
     
-    func load(url: URL, webViewStore: WebViewStore, presentationMode: Binding<PresentationMode>? = nil) -> some View {
+    func load(url: URL, webViewStore: WebViewStore, isActive: Binding<Bool>? = nil) -> some View {
         self
             .navigationBarTitle(Text(verbatim: webViewStore.title ?? ""), displayMode: .inline)
             .toolbar(content: {
@@ -41,15 +41,11 @@ public extension WebView {
             })
             .navigationBarItems(leading:
                                     Group {
-                                        if let presentationMode = presentationMode {
-                                            Button(action: {
-                                                presentationMode.wrappedValue.dismiss()
-                                            }, label: {
-                                                Text("Close").bold()
-                                            })
-                                        } else {
-                                            EmptyView()
-                                        }
+                                        Button {
+                                            isActive?.wrappedValue = false
+                                        } label: {
+                                            Text("Close").bold()
+                                        }.opacity(isActive != nil ? 1 : 0)
                                     },
                                 trailing:
                                     Button(action: {

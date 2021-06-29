@@ -62,7 +62,7 @@ public class WebViewStore: ObservableObject {
 ///
 /// ```swift
 /// import SwiftUI
-/// import WebView
+/// import SwiftUIPlus
 ///
 /// struct ContentView: View {
 ///     @StateObject var webViewStore = WebViewStore()
@@ -96,6 +96,24 @@ public class WebViewStore: ObservableObject {
 ///
 ///     func goForward() {
 ///         webViewStore.wkWebView.goForward()
+///     }
+/// }
+/// ```
+///
+/// Or use one of the `load` view modifiers
+///
+/// ```swift
+/// import SwiftUI
+/// import SwiftUIPlus
+///
+/// struct ContentView: View {
+///     @StateObject var webViewStore = WebViewStore()
+///
+///     var body: some View {
+///         NavigationView {
+///             WebView(wkWebView: webViewStore.wkWebView)
+///                 .load(url: URL(string: "https://apple.com")!, webViewStore: webViewStore)
+///         }
 ///     }
 /// }
 /// ```
