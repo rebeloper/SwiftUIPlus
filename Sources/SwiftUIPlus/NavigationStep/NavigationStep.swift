@@ -864,3 +864,61 @@ public enum NavigationStepType {
     case sheet
     case fullScreenSheet
 }
+
+public extension View {
+    
+    /// `View` that when tapped presents a `destination` view.
+    /// - Parameters:
+    ///   - type: The NavigationStep type.
+    ///   - style: The NavigationStep style.
+    ///   - destination: A view builder to produce the view the navigation step to present.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
+    func navigationStep<Destination: View>(type: NavigationStepType, style: NavigationStepStyle, @ViewBuilder destination: () -> Destination, onDismiss: (() -> Void)? = nil) -> some View {
+        NavigationStep(type: type, style: style, destination: destination, label: {
+            self
+        }, onDismiss: onDismiss)
+    }
+    
+    /// `View` that when tapped executes an `action` that can present a `destination` view when `isActive` is set to `true`.
+    /// - Parameters:
+    ///   - type: The NavigationStep type.
+    ///   - style: The NavigationStep style.
+    ///   - isActive: A binding to a Boolean value that indicates whether the `destination` is currently presented.
+    ///   - destination: A view builder to produce the view the navigation step to present.
+    ///   - action: A closure executed when the `label` is tapped.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
+    func navigationStep<Destination: View>(type: NavigationStepType, style: NavigationStepStyle, isActive: Binding<Bool>, @ViewBuilder destination: () -> Destination, action: (() -> Void)?, onDismiss: (() -> Void)? = nil) -> some View {
+        NavigationStep(type: type, style: style, isActive: isActive, destination: destination, label: {
+            self
+        }, action: action, onDismiss: onDismiss)
+    }
+    
+    /// `View` that when tapped presents a `destination` view when `selection` is set to `tag`.
+    /// - Parameters:
+    ///   - type: The NavigationStep type.
+    ///   - style: The NavigationStep style.
+    ///   - tag: The value of `selection` that causes the link to present `destination`.
+    ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
+    ///   - destination: A view builder to produce the view the navigation step to present.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
+    func navigationStep<Destination: View>(type: NavigationStepType, style: NavigationStepStyle, tag: Int?, selection: Binding<Int?>, @ViewBuilder destination: () -> Destination, onDismiss: (() -> Void)? = nil) -> some View {
+        NavigationStep(type: type, style: style, tag: tag, selection: selection, destination: destination, label: {
+            self
+        }, onDismiss: onDismiss)
+    }
+    
+    /// `View` that when tapped executes an `action` that can present a `destination` view when `selection` is set to `tag`.
+    /// - Parameters:
+    ///   - type: The NavigationStep type.
+    ///   - style: The NavigationStep style.
+    ///   - tag: The value of `selection` that causes the link to present `destination`.
+    ///   - selection: A bound variable that causes the link to present `destination` when `selection` becomes equal to `tag`.
+    ///   - destination: A view builder to produce the view the navigation step to present.
+    ///   - action: A closure executed when the `label` is tapped.
+    ///   - onDismiss: A closure executed when the navigation dismisses the active/presented view. If `onDismiss` is `nil`, the call has no effect.
+    func navigationStep<Destination: View>(type: NavigationStepType, style: NavigationStepStyle, tag: Int?, selection: Binding<Int?>, @ViewBuilder destination: () -> Destination, action: (() -> Void)?, onDismiss: (() -> Void)? = nil) -> some View {
+        NavigationStep(type: type, style: style, tag: tag, selection: selection, destination: destination, label: {
+            self
+        }, action: action, onDismiss: onDismiss)
+    }
+}

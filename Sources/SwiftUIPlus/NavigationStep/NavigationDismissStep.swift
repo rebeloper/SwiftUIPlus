@@ -375,3 +375,50 @@ extension NavigationDismissStep {
         self.action = action
     }
 }
+
+extension View {
+    
+    // `View` that when tapped dismisses the currently presented view.
+    /// - Parameters:
+    ///   - style: The NavigationDismissStep style.
+    ///   - presentationMode: The currently presented view's presentation mode.
+    func dismissNavigationStep(style: NavigationStepStyle, presentationMode: Binding<PresentationMode>) -> some View {
+        NavigationDismissStep(style: style, presentationMode: presentationMode) {
+            self
+        }
+    }
+    
+    /// `View` that when tapped dismisses the currently presented view.
+    /// - Parameters:
+    ///   - style: The NavigationDismissStep style.
+    ///   - presentationMode: The currently presented view's presentation mode.
+    ///   - isActive: A binding to a Boolean value that indicates whether the current view is dismissed.
+    ///   - action: A closure executed when the `label` is tapped.
+    func dismissNavigationStep(style: NavigationStepStyle, presentationMode: Binding<PresentationMode>, isActive: Binding<Bool>, action: (() -> Void)?) -> some View {
+        NavigationDismissStep(style: style, presentationMode: presentationMode, isActive: isActive, label: {
+            self
+        }, action: action)
+    }
+    
+    /// `View` with `selection` `Binding<Int?>` that dismisses the currently presented view when `selection` is set to `nil`.
+    /// - Parameters:
+    ///   - style: The NavigationDismissStep style.
+    ///   - selection: A binding to an Int? value that indicates the currently presented view's tag.
+    func dismissNavigationStep(style: NavigationStepStyle, selection: Binding<Int?>) -> some View {
+        NavigationDismissStep(style: style, selection: selection) {
+            self
+        }
+    }
+    
+    /// `View` that when tapped dismisses the currently presented view.
+    /// - Parameters:
+    ///   - style: The NavigationDismissStep style.
+    ///   - selection: A binding to an Int? value that indicates the currently presented view's tag.
+    ///   - isActive: A binding to a Boolean value that indicates whether the current view is dismissed.
+    ///   - action: A closure executed when the `label` is tapped.
+    func dismissNavigationStep(style: NavigationStepStyle, selection: Binding<Int?>, isActive: Binding<Bool>, action: (() -> Void)?) -> some View {
+        NavigationDismissStep(style: style, selection: selection, isActive: isActive, label: {
+            self
+        }, action: action)
+    }
+}
