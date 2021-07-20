@@ -376,7 +376,7 @@ extension NavigationDismissStep {
     }
 }
 
-extension View {
+public extension View {
     
     // `View` that when tapped dismisses the currently presented view.
     /// - Parameters:
